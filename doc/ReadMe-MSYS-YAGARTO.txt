@@ -1,5 +1,5 @@
 This package contains the MSYS and YAGARTO components required by the Ndless SDK.
-This is *NOT* the whole Ndless SDK. Get it from http://ndlessly.wordpress.com .
+This is *NOT* the whole Ndless SDK. Get it from http://ndless.me .
 These components are distributed separately from the Ndless SDK for ligher updates.
 
 INSTALLATION:
