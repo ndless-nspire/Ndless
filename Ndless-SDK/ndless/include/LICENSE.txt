@@ -1,0 +1,3 @@
+All the files in this directory and its sub-directories are in the public domain.
+
+See http://creativecommons.org/licenses/publicdomain/deed.fr

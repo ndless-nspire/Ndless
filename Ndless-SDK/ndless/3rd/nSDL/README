@@ -1,0 +1,11 @@
+nSDL 1.1.0 Anniversary Edition
+==============================
+
+nSDL is a port of SDL for the TI-Nspire calculator.
+
+To install nSDL, copy lib and include to the respective folders in your Ndless SDK folder.
+To build your nSDL programs, use and adapt Makefile.sample.
+
+For more information, have a look at the nSDL website: http://hoffa.github.com/nSDL/
+
+Ported by Christoffer Rehn (crehn@outlook.com)

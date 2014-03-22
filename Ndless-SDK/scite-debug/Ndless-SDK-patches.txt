@@ -1,0 +1,7 @@
+This version is based on scite-debug 0.9.1.
+Several patches have been applied:
+- load .gdb symbol file
+- remove set new-console command run on startup
+- remote connect to GDB
+- load file with full path
+- Remove command file at the end of a debug session

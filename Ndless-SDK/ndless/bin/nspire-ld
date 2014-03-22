@@ -1,0 +1,95 @@
+#!/bin/bash
+# bash and not sh: we use bash arrays
+# 
+# Legacy ld: doesn't use the bFLT binary format.
+# Used for backward compatibility and Ndless build.
+# May produce binaries that cannot be fully relocated by Ndless's lightweight relocator, for example when
+# adresses of global variables are used as static initializers of other global variables.
+# 
+# Available non-GCC options:
+# --no-startup: do not link with the startup code
+# --light-startup: use crt0light.o instead
+# --light-startup-no-header: use crt0lightnoheader.o instead
+# --light-startup-no-header-thumb-entry: use crt0lightnoheader_thumbentry.o instead
+# --no-ldscript: do not use the standard Ndless linker script
+# --cpp: link a C++ program
+
+UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
+DIRNAME=`dirname "$0"`
+
+# DIRNAME may not be in the toolchain directory if this script was symlinked.
+# try to find the symlink target	
+which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
+    SYMLINK=`readlink "$0"`
+    
+    # On MacOS X, the readlink command hasn't the same behavior than the others operating systems based on Unix.
+    if [ "$UNAME" == "darwin" ]; then
+    	DIRNAME=`dirname "$SYMLINK"`
+    else
+    	DIRNAME="$SYMLINK"/..
+    fi
+}
+
+# Cygwin owns a dedicated command to find the symlink target
+if [ "$UNAME" = "cygwin" ]; then
+	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+fi
+
+nostdlib=false
+nostartup=false
+lightstartup=false
+noprgmheader=false
+noldscript=false
+cpp=false
+# an array is used to change the arguments while supporting arguments with spaces
+declare -a args
+for arg in "$@"; do
+	case $arg in
+		-nostdlib) nostdlib=true; args=("${args[@]}" $arg);;
+		--no-startup) nostartup=true;;
+		--light-startup) lightstartup=true;;
+		--light-startup-no-header) noprgmheader=true;;
+		--light-startup-no-header-thumb-entry) thumbentry=true;;
+		--no-ldscript) noldscript=true;;
+		--cpp) cpp=true;;
+		*) args=("${args[@]}" $arg);;
+	esac
+done
+if [ $nostdlib = false ]; then
+	args=("${args[@]}" "$DIRNAME/../system/osstub.o")
+fi
+
+# some newlib symbols are not found if ld is used...
+GCC=`(which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null`
+# lazy system build: must be built with the same toolchain
+(cd "$DIRNAME/../system" && make -s all)
+ret=$?
+if [ $ret -ne 0 ]; then
+	exit $ret
+fi
+if [ $cpp = true ]; then
+	args=("$DIRNAME/../system/crti.o" "$DIRNAME/../system/cppstub.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lstdc++)
+fi
+if [ $nostartup = false ]; then
+	if [ $lightstartup = true ]; then
+		startupobj=crt0light.o
+	elif [ $noprgmheader = true ]; then
+		startupobj=crt0lightnoheader.o
+	elif [ $thumbentry = true ]; then
+		startupobj=crt0lightnoheader_thumbentry.o
+	else
+		if [ $cpp = true ]; then
+			startupobj=crt0-cpp.o
+		else
+			startupobj=crt0.o
+		fi
+	fi
+	args=("$DIRNAME/../system/$startupobj" "${args[@]}")
+fi
+if [ $noldscript = false ]; then
+	args=("-T" "$DIRNAME/../system/ldscript" "${args[@]}")
+fi
+home="${USERPROFILE:-$HOME}"
+mkdir -p "$home/.ndless/lib"
+# -nostartfiles: avoids newlib startup which would be added before ours
+"$GCC" -nostartfiles -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lndls

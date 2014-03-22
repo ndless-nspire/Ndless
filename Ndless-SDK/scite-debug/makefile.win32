@@ -1,0 +1,3 @@
+spawner-ex.dll: win32-spawner-ex.c
+	gcc -shared -o spawner-ex.dll -I..\..\lua\include win32-spawner-ex.c scite.la
+

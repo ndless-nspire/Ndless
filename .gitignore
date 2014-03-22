@@ -1,18 +1,21 @@
-# Object files
-*.o
-*.ko
-
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
+*.bin
+*.elf
 *.exe
-*.out
-*.app
+*.img
+*.gdb
+*.o
+*.tmp
+*.tns
+*.zip
+prompt.cmd
+/arm/*.lua
+/bin
+/calcbin
+/dist
+/distsdk
+/distsdk-msys-yagarto
+/Makefile.config
+/Ndless-SDK/ndless_pc/lib/libnavnet.def
+/Ndless-SDK/mingw-get
+/Ndless-SDK/yagarto
+/upload_cookies.txt

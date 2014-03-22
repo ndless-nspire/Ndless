@@ -1,0 +1,28 @@
+CC = gcc
+CFLAGS = -Wall -W -DNAVNET_TESTS_PC
+LDFLAGS = -lnavnet
+OBJS = $(patsubst %.c,%.o,$(wildcard *.c))
+EXE = ndless_navnet_tests.exe
+DISTDIR = .
+vpath %.exe $(DISTDIR)
+OS ?= `uname -s`
+
+ifeq ($(OS),Windows_NT)
+all: $(EXE)
+
+ndless_navnet_tests_pc.o: ndless_navnet_tests.c
+	echo $$C_INCLUDE_PATH
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(EXE): ndless_navnet_tests_pc.o
+	mkdir -p $(DISTDIR)
+	$(CC) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+
+clean:
+	rm -f *.o $(DISTDIR)/$(EXE) 
+
+# OS
+else
+all:
+clean:
+endif

@@ -1,0 +1,11 @@
+# Included by other Makefiles
+# Common targets and variables
+
+OS ?= `uname -s`
+
+# You should append $(EXEEXT) to the name of any host executable target
+# and use $(VPATH_EXEEXT) as pattern for an executable directory declared with vpath
+ifeq ($(OS),Windows_NT)
+  EXEEXT = .exe
+  VPATH_EXEEXT = %.exe
+endif

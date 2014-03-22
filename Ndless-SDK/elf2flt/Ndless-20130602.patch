@@ -1,0 +1,30 @@
+Index: elf2flt.c
+===================================================================
+RCS file: /var/cvs/elf2flt/elf2flt.c,v
+retrieving revision 1.64
+diff -r1.64 elf2flt.c
+647a648,654
+> 				case R_ARM_NONE:
+> 				case R_ARM_PREL31:
+> 				case R_ARM_TARGET1:
+> 				case R_ARM_TARGET2:
+> 				case R_ARM_CALL:
+> 				case R_ARM_V4BX:
+> 				case R_ARM_JUMP24:
+Index: cygwin-elf.h
+===================================================================
+RCS file: /var/cvs/elf2flt/cygwin-elf.h,v
+retrieving revision 1.4
+diff -r1.4 cygwin-elf.h
+1850c1850
+< #define PF_ARM_SB          0x10000000   /* Segment contains the location
+---
+> #define PF_	SB          0x10000000   /* Segment contains the location
+1878a1879,1880
+> #define R_ARM_CALL	28
+> #define R_ARM_JUMP24	29
+1884a1887,1890
+> #define R_ARM_TARGET1	38
+> #define R_ARM_V4BX	40
+> #define R_ARM_TARGET2	41
+> #define R_ARM_PREL31	42

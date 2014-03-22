@@ -1,0 +1,369 @@
+<html><head><title>SciTE extensions Documentation</title>
+
+<link rel="stylesheet" href="doc.css" type="text/css"></head><body>
+
+<div id="main">
+
+<div id="navigation">
+<h2>SciteDebug</h2><img src="SciTEIco.png">
+<ul>
+  <li><a href="#debug_scite">Debugging Using Scite</a></li>
+  <li><a href="#debug_specific">Some Specific Features</a></li>
+  <li><a href="#tips">Tips and Tricks</a></li>
+  <li><a href="#debug_scripts">Debugging Scripts</a></li>
+  <li><a href="#installation">Installation</a></li>
+  <li><a href="#implementation">Implementation</a></li>
+  <li><a href="#work">Further Work</a></li>
+  <li><a href="#utilities">Extra Utilies</a></li>
+</ul>
+</div>
+
+<div id="content">
+
+<h2>Using symbolic debuggers with SciTE</h2>
+<p>
+SciTE has limited support for spawning interactive programs; currently
+only the Win32 version can do this (for instance, python) and it is
+very bound into the job queue mechanism. I wanted to use <code>gdb</code> and other debuggers
+with my favourite code editor on both platforms, so the solution was to create a <i>Lua extension library</i>
+which provides the missing functionality without interfering with any existing, delicate machinery. 
+</p><p>
+This release has generalized the debugger machinery to accept different
+debugger backends, so now you can also debug Python, Lua, Java and C#
+Mono programs. Thanks to the <code>OnKey</code>
+extension, it can now use the same shortcut keys on both platforms -
+I've integrated this useful functionality into the new version of <code>extman</code>
+</p>
+
+<a name="debug_scite"/>
+<h3>Debugging Using SciTE</h3>
+<img src="scite-debug.png">
+<p>
+This extension assumes that your
+debugger/language of choice is on your path, so if you have Python or
+Lua on Windows make sure of this.
+</p><p>
+The property <code>debug.target</code> should be set to the full path
+of the program you wish to debug. If it is not set, then <code>debugger.lua</code> will deduce the actual debugger 
+needed from the extension of the target; if '.lua' it will choose <code>clidebugger</code>, if '.py' it will choose
+<code>pydb</code>, if '.java' it will choose <code>jdb</code>, if '.cs'  or '.exe'
+it will choose <code>mdb</code>. Otherwise, it falls back to <code>gdb</code>.  
+</p><p>
+In the output window, you can type <code>$debug.target = PATH-TO-FILE</code>;
+any SciTE property can be set in this way.
+</p><p>
+<code>Tools|Run(Alt+R)</code>
+will start the session; if there are any breakpoints already defined with <code>Tools|Breakpoint(F9)</code>
+they will be set and you will then move to any break position. Once
+there you may then add other breakpoints in a similar way. Note that <code>mdb</code>
+and <code>pydb</code>
+work slightly differently; you are always taken to the first executable
+line of the program. In the case of Python, this is probably not where
+you want to start, so put a breakpoint where the main program actually
+starts running. The Lua debugger <code>clidebugger</code> normally works like this, but I'm driving it in a way which requires an explicit breakpoint.
+</p><p>
+<code>Tools|Step(Alt+C)</code> and <code>Tools|Step Over(Alt+N)</code> can be used to step through code, and <code>Tools|Inspect(Alt+I) </code> and <code>Tools|Locals(Alt+Ctrl+L)</code>
+can be used to view the value of any variable under the cursor. You can
+of course enter any debugger command in the output pane, but any <i>simplifications</i> will not take place.
+</p><p>
+Alt+R</code> will resume execution. You can also use <code>Tools|Go to (Alt+G)</code> to create a temporary breakpoint and resume execution to that location. (This may not be supported for all debuggers.)
+</p><p>
+If there was a crash, the position will be highlighted in red. <code>Tools|Backtrace(Alt+Ctrl+B)</code>
+will show the stack trace, and double-clicking on a stack trace line
+will take you to that frame number. (Currently only implemented for
+gdb, mdb and clidebug.) <code>Tools|Up(Alt+U)</code> and <code>Tools|Down(Alt+D)</code> are also useful at this point; <code>Alt+U</code> will take you to the function that called the current function, and so forth; the function stack has <i>depth</i>, so any error or breakpoint defines the deepest function level.
+</p><p>
+If the mouse hovers over a symbol while halted, <code>scite-debug</code> will attempt to evaluate that symbol and present it as a tooltip.
+</p>
+
+<a name="debug_specific"/></p>
+<h3>Some debugger-specific Features</h3>
+<img src="cpp.png">
+<p>
+This version comes with two simplications which recognize two common C++ string patterns; <code>std::string</code> and Scintilla's <code>SString</code>.
+These attempt to extract the actual string value from the structure
+dump. (Obviously these patterns are very dependent on the actual
+implementation of the type concerned!) Here is the raw dump of a <code>std::string</code> value in gdb:
+</p>
+<pre class="example">
+(gdb) p s
+$1 = {static npos = 4294967295,
+  _M_dataplus = {&lt;allocator&lt;char&gt;&gt; = {&lt;No data fields&gt;},
+    _M_p = 0x3d3acc "hellohelp"}, static _S_empty_rep_storage = {0, 0, 0, 0}}
+(gdb) quit
+</pre>
+<p>
+It will also attempt to simplify frame dumps by collecting each frame into one line.
+</p><p>
+It is possible to <i>skip through</i> library
+calls. These typically happen in C++ when you are calling a Standard
+Library feature implemented as a template, and with Python if you call
+a module method. (You can switch this off by setting the property <code>debug.skip.includes</code> to false.) On Windows you will also have to specify where your compiler's include files sit by setting <code>debug.skip.file.matching</code> (for gdb) and <code>debug.skip.file.matching.py</code>
+(for Python). By default on GTK platforms we will skip through any file
+begining with '/usr/'. On my Windows box I have these definitions -
+note the forward slashes for Mingw and the lower-case for Python (even
+though it started with a capital in Explorer!)
+</p>
+<pre class="example">
+debug.skip.file.matching=d:/stuff/MinGW
+debug.skip.file.matching.py=d:\python25
+</pre>
+<p>
+A cool new feature is automatic pointer value expansion. If an expression is evaluated, and works out as a pointer, then we attempt to dereference the pointer. This isn't always possible (e.g. NULL or invalid pointers) but you will be told if such evaluation was not successful.
+</p><p>
+<a name="debug_shared_libraries"/>
+You may debug shared libraries (.so or .dll) even if you do not have a debug version of the host program.<code> GDB</code> allows
+breakpoints to be <i>pending</i>, but refuses to set any breakpoints until it has a symbol table. <code>scite-debug gets</code> around this by feeling <code>GDB</code> a small shared library (stubby) in the case where the program has no symbols. (If you are using Mingw, then you will have to get an updated <code>GDB</code> that supports pending breakpoints (but keep the old version, the new one is still 'experimental'). You will also have to set the <code>debug.breakpoint.pending</code> property to be true.)  But you must indicate that your debug target has no symbols up front; for example, if you were debugging Python extensions, then the debug target will be <code>[n]python</code>,
+where the '[n]' prefix indicates that we know that the global instance of Python has no debug symbols.
+</p><p>
+Environment variables can be set for the debug target using the <code>debug.environment</code> property. This is a semi-colon separated list of VAR=VAL pairs.
+</p>
+
+<a name="tips"/>
+<h3>Tips and Tricks</h3>
+<p>
+As always you can type debugger commands directly into
+the output pane. A useful trick is if you want to see when a global
+variable changes in <code>gdb</code>; when stopped at a break, you can type <code>watch var</code> at the prompt and type <code>Alt+R</code> to continue, and you will break when <code>var</code> changes.
+</p><p>
+If the program has finished, or not yet run, then the
+prompt works differently. You can set and evaluate SciTE properties
+interactively. For instance, if I type the command <code>$SciteDefaultHome</code> on my machine, I get the response <code>SciteDefaultHome = "/usr/share/scite"</code>.  Properties can also be set. To get around the limitation of only being able to set one <code>debug.target</code> at once, I put in a few alternatives in my user properties file:
+</p>
+<pre class="example">
+ucc=/home/sdonovan/underC/src/ucc
+aggregator=/home/sdonovan/serial/cpp_client/aggregator
+</pre>
+<p>
+Then if I wish to debug underC, I can simply type <code>$debug.target=$(ucc)</code> and the magic of SciTE property expansion does the rest.
+</p><p>
+If the line doesn't start with $, then the default
+action is to evaluate a Lua expression. This is very useful generally
+for debugging, or if in case you need to do some arithmetic ;).
+</p>
+<pre class="example">
+= 20+10
+30
+(lua) 
+</pre>
+<p>
+New with this version is the ability to also execute
+shell commands. If the first character on the line is '&gt;', then the
+rest of the line is assumed to be a shell command and will be executed
+using <code>spawner.popen</code>
+</p><p>
+It is perfectly possible to run more than one SciTE
+instance, debugging different targets. This is useful if you want to
+debug both an application written in C++ while debugging any embedded
+scripts in Lua.
+</p>
+<a name="debug_scripts"/><h3>Debugging Embedded Lua Scripts</h3>
+<p>
+The case here is where there is a <i>host</i> program, like Lua or SciTE itself, and a <i>script</i> running in that environment.  If the host has no debug symbols, then <a href="#debug_shared_libraries">these considerations</a> 
+apply; either way, you will need a GDB version that supports pending breakpoints.
+</p><p>
+A major new feature of this release is the ability to step from Lua code into C/C++ extension code. To do this you specify both the host and the script in the same debug  target string, in the form <code>:gdb;PATH-TO-PROG;LUA-SCRIPT</code>. If the host has no debug symbols, then it will need a prefixed '[n]'. For example:
+
+<pre class="example">
+debug.target=[n]:gdb;lua;testlfs.lua
+</pre>
+<p>
+Now the cool thing here is that if this Lua script loads binary extensions that have debug symbols, then it is possible to step from Lua to C code.  Alternatively, you could have put the full path to a debug build of Lua, in which case you can step through the operation of common functions like <code>print</code>.  This can get irritating, but remember that you can always step over such calls.
+</p><p>
+Some extra notes are found <a href="http://lua-users.org/wiki/SciteDebug">here</a>.
+</p><p>
+With a little bit of patience, you can use SciTE not only to debug the executable, but any SciTE Lua scripts.
+In fact, <code>scite-debug</code> can debug itself, which shows its flexibility. There are two distinct ways of doing this, 
+using the above approach, and doing remote Lua debugging.
+</p><p>
+These instructions apply
+in fact to any program which uses Lua as its extension language. I have
+provided a modified version of the Lua remote debugger, <code>remDebug</code>. (This package requires <code>lfs</code> and <code>luasocket</code>)
+</p><p>
+The first thing  you need to do is put this in your Lua startup script (I put these lines at the end of <code>extman.lua</code>)
+</p>
+<pre class="example">
+package.path=package.path..";c:/lang/lua/lua/?.lua"
+ require "remdebug.engine"
+ remdebug.engine.start()
+</pre>
+<p>
+The first statement ensures that SciTE can find other Lua packages using <code>require</code>; alternatively you can put a copy of <code>engine.lua</code> in a directory <code>remdebug</code> in your SciTE <code>package.path</code>
+</p><p>
+In the debugger SciTE, you will have to set the property <code>debug.target</code> to be <code>:remote.lua</code>
+(this can be done from the debugger prompt as discussed before.) The
+colon is important, it distinguishes this from ordinary Lua scripts,
+which are debugged using <code>clidebugger</code>.
+</p><p>
+Go to the function you want, set breakpoint with <code>F9</code>; Start the debugger with <code>Alt+R</code>; it will wait for the remote program to start. Finally, launch the other SciTE.
+</p><p>
+The absolutely cool thing about <code>remDebug</code>
+is that the program you are debugging does not actually have to be on
+the same machine, since all communications are done with sockets. To
+debug a <i>truly</i> remote Lua program, start the SciTE debugger running with <code>:debug.target=remote.lua</code> as before, and put these lines in front of the remote script (note the braces):
+</p>
+<pre class="example">
+require "remdebug.engine"
+remdebug.engine.start()
+remdebug.engine.config { host = your-ip-address }
+</pre>
+
+<a name="installation"/><h3>Installation</h3>
+<p>
+Download from <a href="http://luaforge.net/frs/?group_id=327">LuaForge</a>
+</p>
+<p>
+For this release, you will need a fresh version of SciTE which exports
+its Lua symbols and has loadlib enabled. The latest public release is :
+<a href="http://scintilla.sourceforge.net/">SciTE 1.76</a>.
+</p><p>
+On Windows, I usually have this in my user properties file:
+</p>
+<pre class="example">ext.lua.startup.script=$(SciteDefaultHome)\scite-debug\extman.lua
+</pre>
+<p>
+which means you have to unzip <code>scite-debug.zip</code> in the <code>scite\bin</code>
+directory next to your SciTE executable. On Linux, unzip this file in
+your home directory and put this in your user properties file:
+</p>
+<pre class="example">ext.lua.startup.script=$(SciteUserHome)/scite-debug/extman.lua
+</pre>
+<a name="implementation"/><h3>Implementation Notes</h3>
+<p>
+This extension is a small DLL (or shared
+library) which captures the debugger process and sends debugger output
+back to the Lua subsystem. It is important that Lua code is called in
+the main SciTE thread, since the subprocess runs in its own thread. On
+Windows, I use the same trick as in <code>SingleThreadExtension.cxx</code>, which is to create a hidden window and send output to it using a message; on GTK, I use <code>gtk_input_add</code>.
+</p><p>
+For Windows, I freely used the existing SciTE code for spawning a process. Usually we are blocking on a <code>ReadFile</code>
+call, except at the end where we keep peeking to ensure that the
+process loop ends gracefully (I found that always peeking leads to
+performance problems.)
+</p><p>
+On the GTK/Unix side, I use <code>forkpty</code> to capture an interactive process like <code>gdb</code>.
+It is then running in a pseudo-terminal which by default is
+line-buffered. (This is similar to 'canonical' serial communications
+and one can use the same <code>termios</code> structure to control
+pseudo-terminals). The debugger prompt is set to something ending in a
+line feed, so that we always get the prompt; for <code>gdb</code>, 'set height 0' is used to disable <code>gdb</code>'s
+default paging. Note that not every debugger allows one to do this,
+which will probably require a rethink of always operating on a
+line-per-line basis.
+</p><p>
+I launch <code>gdb</code> using the <code>-fullname</code> flag, which tells <code>gdb</code>
+to specially encode any break lines with the fullpath of the file,
+begining with a repeated '\032' character - this is the mode used by
+Emacs. Parsing of <code>gdb</code> output is largely platform-independent. There is a function <code>simplify_term</code> which attempts to unmangle managed strings like <code>std::string</code> and <code>SString</code>; this is a useful customization point.
+</p><p>
+<a name="work"/></p><h3>Further Work</h3>
+<p>
+This version of <code>scite-debug</code> has implemented an important goal, which was to factor out the common code for all debuggers and make <code>gdb</code> a special case. It is now a proper object-oriented framework where all debuggers derive from the <code>Dbg</code>
+class and override methods as needed. The Python and Lua debuggers are
+already useful, but the others need some work. In particular, <code>jdb</code> is a strange beast because you specify breakpoints using the <i>classname</i>,
+not the filename. Well, normally that is how Java code should be
+organized, but anonymous classes are annoying because they get given
+classnames like <code>OuterClass$1</code>, etc and this I can't
+automate yet. Also, the classes must all be in the same directory,
+since I'm not doing packages yet. But good enough for doing your
+homework! The Mono debugger <code>mdb</code> is still rather young but
+Mono is a platform that badly needs better debugging integration. So
+SciTE is now one of the few options available to people who need to
+debug C# (or Boo!) on Mono.
+</p><p>
+There are other candidate debuggers; for instance the counterpart of <code>mdb</code> on Windows is <code>cordbg</code>,
+which comes with the .NET SDK. . Another candidate would be the Intel
+Fortran debugger, which is a good deal more intelligent than the free
+Fortran systems. Generally, it gets easier to add debuggers since they
+tend to follow patterns (e.g. do they quit automatically when the
+process ends, or do they wait for a quit command?) and these can be
+captured generically. Remote debugging is important for people working
+in embedded environments and I'd like to add the few hooks necessary
+for this to work in SciTE.
+</p><p>
+SciTE has some interface limitations; it would be very
+useful for a debug interface to have a general library of common
+graphical widgets (such as floating toolbars, listboxes, and the common
+file dialogs). These can be interfaced using exactly the same
+techniques as the spawner library is using. Here I completely agree
+with the SciTE philosophy that <i>SciTE is not an IDE</i>, that it
+should provide the hooks for developers to add the functionality that
+they need, and not burden any other users. (For an example of why this
+minimalist view is important, have a look at KDevelop and Anjuta.)
+</p><p>
+As a final note, the danger of supporting everything is
+that nothing gets supported thoroughly. I am currently concentrating on
+C/C++ and Lua, but any core enhancements made would of course be
+available to the other debuggers.
+</p>
+<h2><a name="utilities"/>Extra Utilities</h2>
+
+<h3>ctags Support</h3>
+<p>
+SciTE has had some built-in ctags support for a while,
+but it is a little awkward. What you do have to do is create a tags
+file using the Exuberant ctags utility, which is widely available. For
+instance, for SciTE itself, I run <code>ctags src/*.cxx gtk/*.cxx</code> on Linux, and <code>ctags src\*.cxx gtk\*.cxx</code> on Windows. ctagsdx.lua will read this tags file into an internal table and you can then navigate to any tag using <code>Tools|Find Tag</code> (Ctrl+. - that is, period). Once there, you can use <code>Tools|Go to Mark</code>
+(Alt+.) to get back to where you started. If there is more than one
+matching tag (which commonly happens with C++) you are given a
+drop-down list of candidates to choose from.
+</p><p>
+<code>Tools|Set Mark</code> (Ctrl+')
+is useful if you just want to remember your last position (say, at the
+start of a find operation); Find Tag automatically pushes the <i>mark stack</i>. If a mark has been set, you can use <code>Tools|Select From Mark</code> (Ctrl+/) to select up to the current position.
+</p><p>
+You can change the shortcuts to something more intuitive for you ;)
+</p><p>
+</p><h3>Buffer Switching and Moving</h3>
+<p>
+I've always missed the ability to switch between the last two recently used buffers in SciTE. <code>switch_buffers.lua</code> provides two things: <code>Ctrl+F12</code> switches the last two buffers, and <code>Alt+F12</code> gives a drop-down list of the buffers in recently-used order.
+</p><p>
+For C/C++ files, <code>Tools|Switch Source/Header(Ctrl+Shift+H)</code> can be used to move between source and header files.
+</p><p>
+If you have more than one SciTE instance open, <code>Tools|Move to Other(Ctrl+Alt+M)</code> will move a buffer to the other instance. (This requires SciTE 1.76 to work on GTK platforms.)
+</p><p>
+
+</p><h3>Smart Selection</h3>
+<p>
+With <code>select_string.lua</code> enabled, you get a
+more intelligent double-click selection. This extension attempts to
+collect all characters together with the same style, for instance, a
+string or a block-comment. With symbols, it will behave as before. As
+always, if this feature irritates you, then simply remove <code>select_string.lua</code> from the scite_lua directory.
+</p><p>
+A common operation is selecting blocks. <code>Tools|Block Select (Ctrl+Shift+A)</code> will select the current block. To grab a whole function or class, make sure the cursor is on the first line.  <code>Tools|Smart Paste (Ctrl+Shift+V)</code> will attempt to paste a block with the correct indentation. Position the cursor on a line, and the block will be inserted afterwards. The block remains indented, in case the paste wasn't smart enough and you need to manually adjust the identation with <code>tab</code> and <code>shift-tab</code>.
+</p>
+<h3>Micromodes</h3>
+<p>
+This comes from an idea I explored in the Sciboo editor.
+It gives you precise control about exactly what tool is used to build
+or run a file. Normally Build (F7) is usually set to 'make'. Using <code>make</code>
+is overkill for simple projects, especially if you have a number of
+these in the same directory. With micromodes you can supply a build
+command directly in the source file. For instance, if your C file
+begins like this: </p>
+
+<pre class="example">
+// build@ gcc fred.c alice.o -o fred
+</pre>
+
+<p>
+then that will set the <code>property command.build.*</code> to 'gcc fred.c alice.o -o fred'.
+
+</p><p>
+The general format is <code>OPERATION@ COMMAND ARGS</code>. 'build','compile' and 'go' are valid operations.
+For instance, if you had a file which was to be processed with a custom command, then <code>go@myprog myfile.txt</code> would invoke <code>myprog</code> on <code>myfile.txt</code>.
+If COMMAND is a global Lua function, then it will be called directly rather than executing the command as a program. For instance, <code>-- go@dofile $(FileNamePath)</code> in front of a Lua file will cause the file to be executed using SciTE's built-in Lua interpreter. Please note that any of the usual built-in SciTE properties can be used.
+</p><p>
+A useful shortcut is to end the command with a '*' (asterisk). For instance, the above example could be written as
+<code>go@dofile *</code>. The current file name <code>$(FileNamePath)</code> will replace '*'. If the command is a GNU-style compile tool like <code>gcc</code>, then <code> -o $(FileName)</code> is also appended.  So if I want a file to be compiled with gcc in debug mode, then this is sufficient:
+
+<pre class="example">
+// build@ gcc -g *
+</pre>
+
+</p>
+Steve Donovan, 2007-2008
+</div>
+</div>
+</body></html>

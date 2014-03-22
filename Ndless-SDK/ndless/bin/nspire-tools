@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function usage() {
+	echo "Usage: nspire-tools <command> <args>"
+	echo -e "   new <program>:   Generate a standard Makefile for <program>.tns"
+	echo -e "   main:            Create an empty main.c"
+}
+
+
+UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
+DIRNAME=`dirname "$0"`
+
+# DIRNAME may not be in the toolchain directory if this script was symlinked.
+# try to find the symlink target	
+which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
+    SYMLINK=`readlink "$0"`
+    
+    # On MacOS X, the readlink command hasn't the same behavior than the others operating systems based on Unix.
+    if [ "$UNAME" == "darwin" ]; then
+    	DIRNAME=`dirname "$SYMLINK"`
+    else
+    	DIRNAME="$SYMLINK"/..
+    fi
+}
+
+# Cygwin owns a dedicated command to find the symlink target
+if [ "$UNAME" = "cygwin" ]; then
+	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+fi
+
+if [ $# -eq 0 ]; then
+	usage
+	exit 0
+fi
+
+case "$1" in
+	new)
+		if [ -f Makefile ]; then
+			if [ $# -eq 1 ]; then
+				usage
+				exit 1
+			fi
+			echo -n "Makefile already exists. Overwrite? (y/n) "
+			read yn
+			if [ "$yn" != "y" ]; then
+				exit 0
+			fi
+		fi
+		prgmname=`echo "$2" | tr -d ' '`
+		sed -e "s/@@EXENAME@@/$prgmname/" "$DIRNAME/Makefile.tpl" > Makefile
+		echo "Makefile created. You can now build with the 'make' command or Ndless Editor's Tools>Build command."
+		;;
+	main)
+		if [ -f main.c ]; then
+			echo -n "main.c already exists. Overwrite? (y/n) "
+			read yn
+			if [ "$yn" != "y" ]; then
+				exit 0
+			fi
+		fi
+		cp "$DIRNAME/main.c.tpl" main.c
+		;;
+	*)
+		usage
+		exit 1
+esac

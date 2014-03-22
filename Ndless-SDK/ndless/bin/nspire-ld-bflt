@@ -1,0 +1,69 @@
+#!/bin/bash
+# bash and not sh: we use bash arrays
+# New ld which produce bFLT binaries.
+#
+# Available non-GCC options:
+# --no-startup: do not link with the startup code
+# --cpp: link a C++ program
+# --debug: keep debugging symbols (.gdb)
+
+UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
+DIRNAME=`dirname "$0"`
+
+# DIRNAME may not be in the toolchain directory if this script was symlinked.
+# try to find the symlink target	
+which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
+    SYMLINK=`readlink "$0"`
+    
+    # On MacOS X, the readlink command hasn't the same behavior than the others operating systems based on Unix.
+    if [ "$UNAME" == "darwin" ]; then
+    	DIRNAME=`dirname "$SYMLINK"`
+    else
+    	DIRNAME="$SYMLINK"/..
+    fi
+}
+
+# Cygwin owns a dedicated command to find the symlink target
+if [ "$UNAME" = "cygwin" ]; then
+	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+fi
+
+nostdlib=false
+cpp=false
+debug=false
+# an array is used to change the arguments while supporting arguments with spaces
+declare -a args
+for arg in "$@"; do
+	case $arg in
+		-nostdlib) nostdlib=true; args=("${args[@]}" $arg);;
+		--cpp) cpp=true;;
+		--debug) debug=true;;
+		*) args=("${args[@]}" $arg);;
+	esac
+done
+if [ $nostdlib = false ]; then
+	args=("${args[@]}" "$DIRNAME/../system/osstub.o")
+fi
+
+# some newlib symbols are not found if ld is used...
+GCC=`(which arm-elf-g++ arm-none-eabi-g++ arm-linux-gnueabi-g++ | head -1) 2>/dev/null`
+# lazy system build: must be built with the same toolchain
+(cd "$DIRNAME/../system" && make -s all)
+ret=$?
+if [ $ret -ne 0 ]; then
+	exit $ret
+fi
+if [ $cpp = true ]; then
+	args=("$DIRNAME/../system/crt0-bflt-cpp.o" "$DIRNAME/../system/crti.o" "$DIRNAME/../system/cppstub.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lstdc++)
+else
+	args=("$DIRNAME/../system/crt0-bflt.o" "${args[@]}")
+fi
+home="${USERPROFILE:-$HOME}"
+mkdir -p "$home/.ndless/lib"
+# -nostartfiles: avoids newlib startup which would be added before ours
+"$GCC" -Wl,-elf2flt -nostartfiles -T "$DIRNAME/../system/ldscript-bflt" -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lndls
+# Emitted by elf2flt, useless
+if [ $debug = false ]; then
+	# compatibility with previous programe Makefiles. Should now be removed by the Makefile, since we don't know where the output directory is?
+	rm -f *.gdb
+fi

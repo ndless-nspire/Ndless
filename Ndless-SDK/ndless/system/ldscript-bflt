@@ -1,0 +1,50 @@
+/* See http://sourceware.org/binutils/docs-2.20/ld/Scripts.html#Scripts */
+/* Compatible with bFLT */
+
+SECTIONS {
+    .text 0x0 : {
+        . = ALIGN(0x4) ;
+        *(.text)
+        *(.text.*)
+    }
+
+    .data : {
+        . = ALIGN(0x4) ;
+        *(.got.plt*)
+        *(.got)
+        LONG(-1)
+
+        /* The .shlb section is a workaround for calling across
+           shared libraries. The automatically generated code veneers
+           don't seem to have their addresses relocated properly.
+
+           The workaround involves using the --wrap option in ld
+           to wrap library calls into our own code veneers which are
+           located in the data section and get relocated properly.
+
+           I've tested putting this section in the .text section
+           (argubly where it should belong) but it seems it doesn't get
+           relocated correctly if I place it in that section either.
+
+           See the README in https://github.com/tangrs/ndless-bflt-toolchain/tree/master/shared_library_test for more info
+        */
+        *(.shlb)
+
+
+        *(.rodata*)
+        *(.data*)
+        /* symbols used by asm statements in Ndless macros, optimized out by GCC, we want to emit only if used */
+        . = ALIGN(4);
+        PROVIDE(_syscallvar_savedlr = .);
+        . += 4;
+    }
+    . = ALIGN(4);
+    .ARM.extab : { *(.ARM.extab) }
+    .bss : {
+        . = ALIGN(0x4) ;
+        *(.bss*)
+    }
+    
+}
+__exidx_start = .;
+__exidx_end = .;

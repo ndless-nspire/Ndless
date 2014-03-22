@@ -1,0 +1,25 @@
+/* See http://sourceware.org/binutils/docs-2.20/ld/Scripts.html#Scripts */
+
+/* Avoid the useless default padding between sections */
+SECTIONS
+{
+	. = 0x0;
+	.text : { *(.text); }
+	/* .bss before .data, to make sure space is allocated for it in the binary file */
+	.bss : {
+		/* symbol required by newlib */
+		__bss_start__ = .;
+		*(.bss);
+		__bss_end__ = .;
+		}
+	.data : {
+		*(.data);
+		/* symbols used by asm statements in Ndless macros, optimized out by GCC, we want to emit only if used */
+		. = ALIGN(4);
+		PROVIDE(_syscallvar_savedlr = .);
+		. += 4;
+	}
+}
+__got_size = SIZEOF(.got) / 4;
+__exidx_start = .;
+__exidx_end = .;

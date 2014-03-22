@@ -1,0 +1,30 @@
+NSPIRE_HARDWARE ?= NON_CAS
+
+GCC = nspire-gcc
+LD = nspire-ld
+GCCFLAGS = -Os -Wall -W -fpic -fno-merge-constants -D $(NSPIRE_HARDWARE)
+OBJCOPY := "$(shell which arm-elf-objcopy 2>/dev/null)"
+ifeq (${OBJCOPY},"")
+	OBJCOPY := arm-none-eabi-objcopy
+endif
+OBJS = polydumper.o screen.o console.o tools.o touchpad.o
+vpath %.tns  ../../res/$(NSPIRE_HARDWARE)
+
+all: polydumper.tns
+
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -c $<
+
+%.o: %.S
+	$(GCC) $(GCCFLAGS) -c $<
+
+polydumper.tns: $(OBJS)
+	$(LD) $^ -o $(@:.tns=.elf)
+	$(OBJCOPY) -O binary $(@:.tns=.elf) $(@:.tns=.bin)
+	MakeTNS $(@:.tns=.bin)
+	rm -f $(@:.tns=.bin)
+
+.PHONY: clean
+
+clean:
+	rm -f *.o *.elf
