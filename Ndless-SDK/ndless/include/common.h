@@ -225,7 +225,7 @@ typedef struct{} FILE;
 #define EOF (-1)
 
 static inline int abs(int x) {return x >= 0 ? x : -x;}
-#ifndef max
+#if !defined(max) && !defined(__cplusplus)
 #define max(a,b) ({typeof(a) __a = (a); typeof(b) __b = (b); (__a > __b) ? __a : __b;})
 #define min(a,b) ({typeof(a) __a = (a); typeof(b) __b = (b); (__a < __b) ? __a : __b;})
 #endif
@@ -356,7 +356,11 @@ typedef struct {
   tpad_arrow_t tpad_arrow;
 } t_key;
 
+#ifndef __cplusplus
 #define ADDR_(addr) (void*)addr
+#else
+#define ADDR_(addr) addr
+#endif
 /* Use when the row and column are the same for both models */
 #define KEY_(row, col) (t_key){row, col, row, col, TPAD_ARROW_NONE}
 #define KEYTPAD_(row, col, tpad_row, tpad_col) (t_key){row, col, tpad_row, tpad_col, TPAD_ARROW_NONE}

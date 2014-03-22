@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 // So that subsequent standard #include don't conflict
+#define _GLIBCXX_CSTDIO 1
 #define _STDIO_H_
 #define _STRING_H_
 
