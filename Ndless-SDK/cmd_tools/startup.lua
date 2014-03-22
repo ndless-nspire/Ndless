@@ -61,5 +61,5 @@ end
 -- =========================
 
 if not folder_exists(props['SciteDefaultHome'] .. '/yagarto') or not folder_exists(props['SciteDefaultHome'] .. '/mingw-get') then
-	print "WARNING: MSYS and YAGARTO components are missing, some commands won't work. Get them from http://ndlessly.wordpress.com/ ."
+	print "WARNING: MSYS and YAGARTO components are missing, some commands won't work. Get them: http://www.unsads.com/projects/nsptools/downloader/download/release/7"
 end
