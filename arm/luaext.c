@@ -54,7 +54,7 @@ require_not_found:
   return 1;
 }
 
-static int ndless_uninstall(lua_State *L) {
+static int ndless_uninstall(__attribute__((unused)) lua_State *L) {
 	ins_uninstall();
 	return 1;
 }
