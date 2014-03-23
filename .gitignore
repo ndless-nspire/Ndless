@@ -15,12 +15,14 @@ prompt.cmd
 /distsdk
 /distsdk-msys-yagarto
 /Makefile.config
+/Ndless-SDK/emu_resources/*.tcc
+/Ndless-SDK/ndless/lib/libndls.a
 /Ndless-SDK/ndless_pc/lib/libnavnet.def
+/Ndless-SDK/ndless_pc/lib/libnavnet.a
 /Ndless-SDK/mingw-get
 /Ndless-SDK/yagarto
 /upload_cookies.txt
 !/Ndless-SDK/NdlessEditor.exe
 !/arm/ndless_version.lua
-/Ndless-SDK/ndless/lib/libndls.a
-/Ndless-SDK/ndless_pc/lib/libnavnet.a
-/Ndless-SDK/emu_resources/*.tcc
+!/arm/ndless.cfg.tns
+!/arm/tests/ndless.cfg.tns
