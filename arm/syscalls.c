@@ -83,7 +83,7 @@ int sc_nl_exec(const char *prgm_path, int argsn, char *args[]) {
 unsigned const sc_syscall_num = __SYSCALLS_LAST;
 
 BOOL sc_nl_hassyscall(unsigned syscall_id) {
-	return syscall_id <= sc_syscall_num && sc_addrs_ptr[syscall_id] != NULL;
+	return syscall_id <= sc_syscall_num && sc_addrs_ptr[syscall_id];
 }
 
 /* Extension syscalls table */
