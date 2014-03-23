@@ -78,11 +78,6 @@ function refreshAtStart()
     counter = (counter + 1) % 100
     if counter == 5 then
         on.getFocus()
-        
-        if not ndless and s then
-            toolpalette.register{ { s } }
-            s = nil
-        end
     end
 end
 
@@ -340,12 +335,12 @@ function on.charIn(ch)
     if ch == "h" then
         help = not help
     end
-    on.getFocus()
+    platform.window:invalidate()
 end
 
 function on.enterKey()
     help = false
-    on.getFocus()
+    platform.window:invalidate()
 end
 on.escapeKey = on.enterKey
 
@@ -462,7 +457,6 @@ end
 
 function on.resize()
     local device, has_cas, min_os = getVersion()
-    local s = s
 
     DEVICE_MODEL = device
     DEVICE_HAS_CAS = has_cas
@@ -480,6 +474,9 @@ function on.resize()
             s = s .. s_cascx
         end
 
+        if not ndless and s then
+            toolpalette.register{ { s } }
+        end
     end
 
     -- avoid running again
@@ -487,3 +484,4 @@ function on.resize()
 end
 
 -- The "s" string building code goes here as produced by MakeLuaInst
+
