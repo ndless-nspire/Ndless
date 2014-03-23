@@ -21,3 +21,6 @@ prompt.cmd
 /upload_cookies.txt
 !/Ndless-SDK/NdlessEditor.exe
 !/arm/ndless_version.lua
+/Ndless-SDK/ndless/lib/libndls.a
+/Ndless-SDK/ndless_pc/lib/libnavnet.a
+/Ndless-SDK/emu_resources/*.tcc
