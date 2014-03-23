@@ -65,16 +65,16 @@ ndless_installer.bin: ndless_installer.elf
 stage0.bin: stage0.o
 	$(OBJCOPY) -O binary $< $@
 
-ndless_installer.lua: ndless_installer.tpl.lua
+ndless_installer.lua: ndless_installer.lua.tpl
 ndless_installer.lua: ndless_installer.bin stage0.bin
 	EscapeInst $< $(<:.bin=-escaped.bin)
 	cat stage0.bin $(<:.bin=-escaped.bin) > $(<:.bin=-escaped.bin.tmp)
 	mv $(<:.bin=-escaped.bin.tmp) $(<:.bin=-escaped.bin)
 	MakeLuaInst $(<:.bin=-escaped.bin) $(<:.bin=-escaped.lua.tmp)
 	@# skip the UTF-8 BOM marker
-	tail --bytes=+4 ndless_installer.tpl.lua > ndless_installer.tpl.nobom.lua.tmp
-	cat ndless_version.lua ndless_installer.tpl.nobom.lua.tmp $(<:.bin=-escaped.lua.tmp) > $@
-	rm $(<:.bin=-escaped.lua.tmp) $(<:.bin=-escaped.bin) ndless_installer.tpl.nobom.lua.tmp
+	tail --bytes=+4 ndless_installer.lua.tpl > ndless_installer.lua.nobom.tpl.tmp
+	cat ndless_version.lua ndless_installer.lua.nobom.tpl.tmp $(<:.bin=-escaped.lua.tmp) > $@
+	rm $(<:.bin=-escaped.lua.tmp) $(<:.bin=-escaped.bin) ndless_installer.lua.nobom.tpl.tmp
 
 ndless_installer.tns: ndless_installer.lua
 	@mkdir -p $(DISTDIR)
