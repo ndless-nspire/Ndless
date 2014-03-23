@@ -71,6 +71,10 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	} else {
 		installed = TRUE;
 	}
+	
+	if (installed && nl_loaded_by_3rd_party_loader()) {
+		return 0; // do nothing
+	}
 
 	if (!installed) {
 		// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
