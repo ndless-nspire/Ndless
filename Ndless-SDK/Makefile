@@ -1,4 +1,10 @@
-SUBDIRS = nspire_emu ndless_pc/lib cmd_tools/navnetcmd luna _samples
+SUBDIRS = luna _samples
+WIN_SUBDIRS = nspire_emu ndless_pc/lib cmd_tools/navnetcmd
+
+OS ?= `uname -s`
+ifeq ($(OS),Windows_NT)
+	SUBDIRS += $(WIN_SUBDIRS)
+endif
 
 all:
 	@for i in $(SUBDIRS); do \
