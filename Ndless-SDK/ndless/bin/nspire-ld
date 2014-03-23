@@ -40,6 +40,7 @@ nostartup=false
 lightstartup=false
 noprgmheader=false
 noldscript=false
+thumbentry=false
 cpp=false
 # an array is used to change the arguments while supporting arguments with spaces
 declare -a args
