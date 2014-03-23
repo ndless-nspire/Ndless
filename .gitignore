@@ -20,3 +20,4 @@ prompt.cmd
 /Ndless-SDK/yagarto
 /upload_cookies.txt
 !/Ndless-SDK/NdlessEditor.exe
+!/arm/ndless_version.lua
