@@ -21,7 +21,7 @@ distdir:
 
 distsamples: distdir samples
 	mkdir -p dist/samples
-	cp Ndless-SDK/_samples/particles/particles.tns dist/samples
+	cp Ndless-SDK/_samples/link-sdl/Link.tns dist/samples
 
 # Incremental binary dist for development
 distbin: distdir all distsamples
