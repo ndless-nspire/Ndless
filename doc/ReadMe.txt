@@ -8,6 +8,9 @@ third-party C and assembly development.
 As a TI-Nspire user, installing Ndless on your calculator will enhance the 
 Operating System with the functions required to run assembly programs.
 
+The latest version of Ndless is available on:
+        ->    http://ndless.me
+
 The Ndless User Guide is available online, make sure to read for installation 
 instructions:
 
