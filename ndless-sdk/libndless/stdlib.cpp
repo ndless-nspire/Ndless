@@ -290,6 +290,9 @@ int _kill(pid_t pid, int sig)
 	return errno_set(ENOSYS);
 }
 
+/* libstdc++ needs this for iostream */
+void *__dso_handle;
+
 /* programs linked to newlib use malloc, but newlib itself uses _malloc_r... */
 void *malloc(size_t size)
 {
