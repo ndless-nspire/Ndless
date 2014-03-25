@@ -57,4 +57,4 @@ fi
 [ -f .built_gdb ] || (cd build && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
  
 # Section 6: elf2flt.
-[ -f .built_elf2flt ] || (cd build && ../../tools/elf2flt/configure $OPTIONS_ELF2FLT && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_elf2flt) || exit 1;
+[ -f .built_elf2flt ] || (cd build && ../elf2flt/configure $OPTIONS_ELF2FLT && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_elf2flt) || exit 1;
