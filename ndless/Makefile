@@ -1,4 +1,4 @@
-SUBDIRS = ndless ndless-sdk
+SUBDIRS = tools src
 
 all:
 	@for i in $(SUBDIRS); do \
