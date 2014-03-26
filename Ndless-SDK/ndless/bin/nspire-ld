@@ -57,7 +57,8 @@ for arg in "$@"; do
 	esac
 done
 if [ $nostdlib = false ]; then
-	args=("${args[@]}" "$DIRNAME/../system/osstub.o")
+	echo "Please use nspire-ld-bflt for linking with newlib!"
+	exit 1
 fi
 
 # some newlib symbols are not found if ld is used...
