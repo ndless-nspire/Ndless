@@ -532,7 +532,7 @@ dump_symbols(symbols, number_of_symbols);
 				rc = -1;
 				continue;
 			}
-#ifndef TARGET_bfin
+#if !defined(TARGET_bfin) && !defined(TARGET_arm)
 			/* Adjust the address to account for the GOT table which wasn't
 			 * present in the relative file link.
 			 */

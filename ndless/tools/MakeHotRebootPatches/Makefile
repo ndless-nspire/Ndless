@@ -5,7 +5,7 @@ CFLAGS = -W -Wall
 
 all: MakeHotRebootPtch$(EXEEXT)
 
-MakeHotRebootPatch$(EXEEXT): main.c
+MakeHotRebootPtch$(EXEEXT): main.c
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:

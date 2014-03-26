@@ -23,12 +23,12 @@ GDB=gdb-7.7 # http://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -mcpu=arm926ej-s -fpic -mlong-calls"
+export CXXFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -mcpu=arm926ej-s -fpic -mlong-calls"
 export PATH=$PREFIX/bin:$PATH
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
-OPTIONS_GCC_STEP1="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
+OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
-OPTIONS_GCC_STEP2="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
 OPTIONS_ELF2FLT="--target=$TARGET --prefix=$PREFIX -with-libbfd=../build-binutils/bfd/libbfd.a --with-libiberty=../build-binutils/libiberty/libiberty.a --with-bfd-include-dir=../build-binutils/bfd --with-binutils-include-dir=../$BINUTILS/include"
 
@@ -42,19 +42,19 @@ if [ ! -f .downloaded ]; then
 fi
  
 # Section 1: GNU Binutils.
-[ -f .built_binutils ] || (cd build-binutils && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
+[ -f .built_binutils ] || (cd build-binutils && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
  
 # Section 2: GCC, step 1.
-[ -f .built_gcc_step1 ] || (cd build && ../$GCC/configure $OPTIONS_GCC_STEP1 && make $PARALLEL all-gcc && make install-gcc && cd .. && rm -rf build/* && touch .built_gcc_step1) || exit 1;
+[ -f .built_gcc_step1 ] || (cd build && rm -rf * && ../$GCC/configure $OPTIONS_GCC && make $PARALLEL all-gcc && make install-gcc && cd .. && rm -rf build/* && touch .built_gcc_step1) || exit 1;
  
 # Section 3: Newlib.
-[ -f .built_newlib ] || (wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/newlib.tar.gz && tar xvzf download/newlib.tar.gz && cd build && ../$NEWLIB/configure $OPTIONS_NEWLIB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_newlib) || exit 1;
+[ -f .built_newlib ] || (wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/newlib.tar.gz && tar xvzf download/newlib.tar.gz && cd build && rm -rf * && ../$NEWLIB/configure $OPTIONS_NEWLIB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_newlib) || exit 1;
  
 # Section 4: GCC, step 2. Yes, this is necessary.
-[ -f .built_gcc_step2 ] || (cd build && ../$GCC/configure $OPTIONS_GCC_STEP2 && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gcc_step2) || exit 1
+[ -f .built_gcc_step2 ] || (cd build && ../$GCC/configure $OPTIONS_GCC && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gcc_step2) || exit 1
  
 # Section 5: GDB.
-[ -f .built_gdb ] || (cd build && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
+[ -f .built_gdb ] || (cd build && rm -rf * && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
  
 # Section 6: elf2flt.
-[ -f .built_elf2flt ] || (cd build && ../elf2flt/configure $OPTIONS_ELF2FLT && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_elf2flt) || exit 1;
+[ -f .built_elf2flt ] || (cd build && rm -rf * && ../elf2flt/configure $OPTIONS_ELF2FLT && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_elf2flt) || exit 1;

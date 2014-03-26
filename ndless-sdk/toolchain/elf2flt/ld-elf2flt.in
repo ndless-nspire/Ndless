@@ -198,7 +198,7 @@ then
 		fi
 		if $NM "$OFILE.gdb" | grep _GLOBAL_OFFSET_TABLE_ > /dev/null 
 		then
-			$ELF2FLT $FLTFLAGS -o "$OFILE" -p "$OFILE.gdb" "$RFILE" || exit $?
+			$ELF2FLT $FLTFLAGS -a -o "$OFILE" -p "$OFILE.gdb" "$RFILE" || exit $?
 		else
 			$ELF2FLT $FLTFLAGS -o "$OFILE" -r "$RFILE" || exit $?
 		fi

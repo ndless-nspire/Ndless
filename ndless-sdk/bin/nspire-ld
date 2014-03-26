@@ -3,7 +3,7 @@
 # New ld which produce bFLT binaries.
 #
 # Available non-GCC options:
-# --debug: keep debugging symbols (.gdb)
+# --debug: show elf2flt verbose messages
 
 UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
 DIRNAME=`dirname "$0"`
@@ -48,8 +48,9 @@ fi
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-"$GCC" -Wl,-elf2flt -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lndless
+elf2flt_args=""
+if $debug; then
+	elf2flt_args="-v"
+fi	
 
-if [ $debug = false ]; then
-	rm -f *.gdb
-fi
+"$GCC" -Wl,-elf2flt=$elf2flt_args -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lstdc++ -lc -lndless -lgcc
