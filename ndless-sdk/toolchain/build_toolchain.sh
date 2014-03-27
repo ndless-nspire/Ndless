@@ -23,11 +23,11 @@ GDB=gdb-7.7 # http://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -mcpu=arm926ej-s -fpic -mlong-calls"
-export CXXFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -mcpu=arm926ej-s -fpic -mlong-calls"
+export CXXFLAGS_FOR_TARGET="-mcpu=arm926ej-s -fpic -mlong-calls"
 export PATH=$PREFIX/bin:$PATH
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
-OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
+OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --disable-threads --disable-libstdcxx-threads --disable-libstdcxx-time --disable-extern-template --disable-libstdcxx-verbose --with-system-zlib --with-newlib --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
 OPTIONS_ELF2FLT="--target=$TARGET --prefix=$PREFIX -with-libbfd=../build-binutils/bfd/libbfd.a --with-libiberty=../build-binutils/libiberty/libiberty.a --with-bfd-include-dir=../build-binutils/bfd --with-binutils-include-dir=../$BINUTILS/include"
