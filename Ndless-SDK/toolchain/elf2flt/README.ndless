@@ -1,9 +1,7 @@
-Source: http://cvs.uclinux.org/cgi-bin/cvsweb.cgi/elf2flt/
+This version includes minor patches for Ndless that fix some unsupported reloc errors.
 
-Must be built and install to YAGARTO for bFLT to work with nspire-ld-bflt.
-Some patches have been applied for the Ndless SDK.
-
-To build and install on Windows:
+Windows Installation
+====================
 
 - Install MSYS/MinGW
 - Install mingw32-lz : mingw-get install mingw32-lz
