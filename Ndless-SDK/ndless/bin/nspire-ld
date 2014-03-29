@@ -57,8 +57,7 @@ for arg in "$@"; do
 	esac
 done
 if [ $nostdlib = false ]; then
-	echo "Please use nspire-ld-bflt for linking with newlib!"
-	exit 1
+	echo "Linking with newlib. For this use nspire-ld with care, prefer nspire-ld-bflt."
 fi
 
 # some newlib symbols are not found if ld is used...
