@@ -22,3 +22,4 @@ elf2flt
 elf2flt.ld
 flthdr
 ld-elf2flt
+ld-elf2flt.sh

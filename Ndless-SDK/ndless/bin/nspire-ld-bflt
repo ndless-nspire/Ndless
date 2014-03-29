@@ -42,7 +42,7 @@ for arg in "$@"; do
 	esac
 done
 if [ $nostdlib = false ]; then
-	args=("${args[@]}" "$DIRNAME/../system/osstub.o")
+	args=("${args[@]}" "$DIRNAME/../system/libfornewlib.a")
 fi
 
 # some newlib symbols are not found if ld is used...

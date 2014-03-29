@@ -89,6 +89,16 @@ const char *elf2flt_progname;
 #define	ARCH	"m68k/coldfire"
 #elif defined(TARGET_arm)
 #define	ARCH	"arm"
+/* Patched for Ndless */
+	#define R_ARM_CALL    28
+	#define R_ARM_JUMP24  29
+	#define R_ARM_TARGET1 38
+	#define R_ARM_V4BX    40
+	#define R_ARM_TARGET2 41
+	#define R_ARM_PREL31  42
+	#define R_ARM_CALL	28
+	#define R_ARM_JUMP24 29
+/* End patch */
 #elif defined(TARGET_sparc)
 #define	ARCH	"sparc"
 #elif defined(TARGET_v850)
@@ -522,7 +532,7 @@ dump_symbols(symbols, number_of_symbols);
 				rc = -1;
 				continue;
 			}
-#ifndef TARGET_bfin
+#if !defined(TARGET_bfin)
 			/* Adjust the address to account for the GOT table which wasn't
 			 * present in the relative file link.
 			 */
