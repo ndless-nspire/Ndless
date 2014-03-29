@@ -1,9 +1,12 @@
 /* See http://sourceware.org/binutils/docs-2.20/ld/Scripts.html#Scripts */
 /* Compatible with bFLT */
 
+ENTRY(__base)
+
 SECTIONS {
     .text 0x0 : {
         . = ALIGN(0x4) ;
+		__base = .;
         *(.text)
         *(.text.*)
     }
