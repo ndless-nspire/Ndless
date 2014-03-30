@@ -1,20 +1,21 @@
 CC:=gcc
-CFLAGS:=-W -Wall -m32
-LDFLAGS:= -lssl -lz -m32
-VPATH := minizip-1.1
+CFLAGS:=-W -Wall
+LDFLAGS:= -lssl -lz
+DISTDIR := ../ndless/bin
+VPATH := minizip-1.1 $(DISTDIR)
 
 OS ?= `uname -s`
 ifeq ($(OS),Windows_NT)
   EXEEXT = .exe
 else
-	CFLAGS := $(CFLAGS) -DUSE_FILE32API
+	CFLAGS := $(CFLAGS)
 	LDFLAGS:= $(LDFLAGS) -lcrypto
 endif
 
 all: luna$(EXEEXT)
 
 luna$(EXEEXT): luna.o zip.o ioapi.o
-	gcc -o $@ $^ $(LDFLAGS)
+	gcc -o $(DISTDIR)/$@ $^ $(LDFLAGS)
 
 dist: clean all
 	mkdir -p dist/src
@@ -23,4 +24,5 @@ dist: clean all
 	cp luna$(EXEEXT) *.dll *.txt dist
 
 clean:
-	rm -rf *.o luna$(EXEEXT) dist
+	rm -rf *.o $(DISTDIR)/luna$(EXEEXT) dist
+
