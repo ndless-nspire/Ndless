@@ -1,6 +1,7 @@
 To be able to use the 'nspire_emu' TI-Nspire emulator integration with the 
-NdlessEditor, you must first drop several resources to this directory and let 
-the OS image install itself to a NAND image.
+Windows NdlessEditor, or to use Linux's wrapper_nspire_emu.sh, you must
+first drop several resources to this directory and let the OS image install
+itself to a NAND image.
 
 1) Download the OS corresponding to your calculator model from
    http://tiplanet.org/forum/archives_list.php?id=OS+Nspire (v3.6)
@@ -16,8 +17,10 @@ the OS image install itself to a NAND image.
 4) Transfer the files boot1.img.tns and boot2.img.tns produced by PolyDumper 
    from your TI-Nspire to the directory emu_resources/ on the computer side
 
-5) Set up the NAND image from the NdlessEditor with
-   Tools > 'TI-Nspire emulator'. Let the OS reboot, then press 'I' when asked.
+5) Set up the NAND image:
+   * On Windows from the NdlessEditor with Tools > 'TI-Nspire emulator'
+   * On Linux with nspire_emu/wrapper_nspire_emu.sh
+   Let the OS reboot, then press 'I' when asked.
    The OS will install and boot up.
    
 6) Install Ndless v3.6:
@@ -29,5 +32,7 @@ the OS image install itself to a NAND image.
 
 7) Save the NAND (flash) image with the File > 'Save Flash As...' option of 
    nspire_emu to a file named 'nand.img' in this directory.
-   The image will be loaded the next time you launch the emulator from the 
-   NdlessEditor (Tools > TI-Nspire emulator).
+   The image will be loaded the next time you launch the emulator
+   * On Windows from the NdlessEditor (Tools > TI-Nspire emulator)
+   * On Linux with nspire_emu/wrapper_nspire_emu.sh
+
