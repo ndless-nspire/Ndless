@@ -3,6 +3,8 @@ Windows NdlessEditor, or to use Linux's wrapper_nspire_emu.sh, you must
 first drop several resources to this directory and let the OS image install
 itself to a NAND image.
 
+0) On Linux, install Wine first with your system's packet manager.
+
 1) Download the OS corresponding to your calculator model from
    http://tiplanet.org/forum/archives_list.php?id=OS+Nspire (v3.6)
 
