@@ -5,7 +5,7 @@ GCC = nspire-gcc
 GXX = nspire-g++
 GCCFLAGS = -Os
 
-all: crt0.o crt0light.o crt0lightnoheader.o crt0lightnoheader_thumbentry.o crt0-bflt.o crt0-cpp.o crt0-bflt-cpp.o crtn.o crti.o crt0sym.o libfornewlib.a cppstub.o
+all: crt0.o crt0light.o crt0lightnoheader.o crt0lightnoheader_thumbentry.o crt0-bflt.o crt0-cpp.o crt0-bflt-cpp.o crtn.o crti.o crt0sym.o cppstub.o for-newlib
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -31,8 +31,12 @@ crt0-cpp.o: crt0.S
 crt0-bflt-cpp.o: crt0-bflt.S
 	$(AS) $(GCCFLAGS) -D CRT0_CPP -c $< -o $@
 
-libfornewlib.a:
+.PHONY: for-newlib
+
+for-newlib:
 	cd for-newlib && make
 
 clean:
-	rm -f *.o libfornewlib.a
+	rm -f *.o
+	cd for-newlib && make clean
+
