@@ -5,7 +5,7 @@ GCC = nspire-gcc
 GXX = nspire-g++
 GCCFLAGS = -Os
 
-all: crt0.o crt0light.o crt0lightnoheader.o crt0lightnoheader_thumbentry.o crt0-bflt.o crt0-cpp.o crt0-bflt-cpp.o crtn.o crti.o crt0sym.o cppstub.o for-newlib
+all: crt0.o crt0light.o crt0lightnoheader.o crt0lightnoheader_thumbentry.o crt0-bflt.o crt0-cpp.o crt0-bflt-cpp.o crtn.o crti.o crt0sym.o for-newlib
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<

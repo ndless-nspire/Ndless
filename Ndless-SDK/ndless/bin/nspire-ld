@@ -69,7 +69,7 @@ if [ $ret -ne 0 ]; then
 	exit $ret
 fi
 if [ $cpp = true ]; then
-	args=("$DIRNAME/../system/crti.o" "$DIRNAME/../system/cppstub.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lstdc++)
+	args=("$DIRNAME/../system/crti.o" "${args[@]}" "$DIRNAME/../system/crtn.o" -lstdc++)
 fi
 if [ $nostartup = false ]; then
 	if [ $lightstartup = true ]; then
