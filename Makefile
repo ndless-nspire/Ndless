@@ -28,7 +28,7 @@ distbin: distdir all distsamples
 	@# system's artefacts shouldn't be distributed
 	(cd Ndless-SDK/ndless/system && make clean)
 	cp -r $(DISTDIRS) dist
-	cp "Mozilla-Public-License-v1.1.html" doc/ReadMe.txt doc/ndless-particle-demo.gif dist
+	cp "Mozilla-Public-License-v1.1.html" doc/ReadMe.txt dist
 	find dist -name .svn -o -name "*~" | xargs rm -rf
 
 # Dist with cleanup, binary and source
