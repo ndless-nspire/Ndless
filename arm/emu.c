@@ -39,7 +39,7 @@ void *emu_debug_alloc_ptr;
  * Returns a pointer to the memory block, or null in case of error. */
 static void *emu_debug_alloc(void) {
 	if (!emu_debug_alloc_ptr)
-	emu_debug_alloc_ptr = malloc(500*1024);
+	emu_debug_alloc_ptr = malloc(8*1024*1024);
 	return emu_debug_alloc_ptr;
 }
 
