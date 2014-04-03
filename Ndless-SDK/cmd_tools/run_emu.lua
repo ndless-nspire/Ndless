@@ -50,7 +50,7 @@ for line in out:lines() do
 			if boot1 then
 				local nand_path = getres("*.img")
 				if nand_path then
-					local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/F=" .. nand_path .. "\" " .. modelswitch .. " \"/G=" .. props['ndless.gdb.port'] .."\"")
+					local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/F=" .. nand_path .. "\" " .. modelswitch .. " \"/C=" .. props['ndless.rdebug.port'] .. "\" \"/G=" .. props['ndless.gdb.port'] .."\"")
 					ns_spawner:run()
 				
 				else

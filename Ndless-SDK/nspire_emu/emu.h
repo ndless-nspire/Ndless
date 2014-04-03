@@ -154,6 +154,8 @@ enum DBG_REASON {
 void *virt_mem_ptr(u32 addr, u32 size);
 void backtrace(u32 fp);
 void debugger(enum DBG_REASON reason, u32 addr);
+void rdebug_recv(void);
+void rdebug_bind(int port);
 void *debug_save_state(size_t *size);
 void debug_reload_state(void *state);
 

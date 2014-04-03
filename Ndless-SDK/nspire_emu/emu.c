@@ -26,6 +26,7 @@ bool is_halting;
 bool show_speed;
 
 int gdb_port = 0;
+int rdebug_port = 0;
 
 jmp_buf restart_after_exception;
 
@@ -124,7 +125,9 @@ void throttle_interval_event(int index) {
 
 	if (gdb_port)
 		gdbstub_recv();
-
+	if (rdebug_port)
+		rdebug_recv();
+	
 	get_messages();
 
 	os_time_t interval_end;
@@ -264,6 +267,14 @@ int main(int argc, char **argv) {
 						return 1;
 					}
 					break;
+				case 'C':
+					if (*arg == '=') arg++;
+					rdebug_port = atoi(arg);
+					if (!rdebug_port) {
+						printf("Invalid listen port for remote debugging%s%s\n", *arg ? ": " : "", arg);
+						exit(1);
+					}
+					break;
 				case 'D':
 					if (cpu_events & EVENT_DEBUG_STEP) goto usage;
 					cpu_events |= EVENT_DEBUG_STEP;
@@ -358,6 +369,7 @@ usage:
 						"nspire emulator v0.70[+Ndless-SDK patches]\n"
 						"  /1=boot1	- location of BOOT1 image\n"
 						"  /B=boot2	- location of decompressed BOOT2 image\n"
+						"  /C=port  - enable remote debugging through the TCP port\n"
 						"  /D[=cmdfile]	- enter debugger on startup (optionally read from file)\n"
 						"  /F=file	- flash image filename\n"
 						"  /G=port	- enable GDB remote protocol through the TCP port\n"
@@ -441,6 +453,8 @@ usage:
 
 	if (gdb_port)
 		gdbstub_init(gdb_port);
+	if (rdebug_port)
+		rdebug_bind(rdebug_port);
 
 reset:
 	memset(&arm, 0, sizeof arm);
