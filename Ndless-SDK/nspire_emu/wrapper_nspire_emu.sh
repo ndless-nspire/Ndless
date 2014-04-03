@@ -1,6 +1,7 @@
 #!/bin/sh
 #### CONFIG
 GDB_PORT=3333
+REMOTE_DEBUG_PORT=3334
 #### END OF CONFIG - DON'T EDIT ANYTHING BELOW
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -35,7 +36,7 @@ fi
 
 if [ -f *.img ]; then
 	img="$(ls *.img)"
-	"$SCRIPTPATH/nspire_emu.exe" /R /N /1=boot1.img.tns /F="$img" $modelswitch /G=$GDB_PORT
+	"$SCRIPTPATH/nspire_emu.exe" /R /N /1=boot1.img.tns /F="$img" $modelswitch /G=$GDB_PORT /C=$REMOTE_DEBUG_PORT
 else
 	if [ ! -f boot2.img.tns ]; then
 		echo "Error: boot2 image not found.\nYou should either dump it from your calc with emu_resources/polydumper or unzip it from the OS file."
