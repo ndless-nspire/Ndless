@@ -1,4 +1,4 @@
-SUBDIRS = tools src
+SUBDIRS = src
 
 all:
 	@for i in $(SUBDIRS); do \

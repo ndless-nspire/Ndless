@@ -1,6 +1,6 @@
 CC:=gcc
-CFLAGS:=-W -Wall -m32
-LDFLAGS:= -lssl -lz -m32
+CFLAGS:=-W -Wall
+LDFLAGS:= -lssl -lz
 VPATH := minizip-1.1
 
 OS ?= `uname -s`

@@ -27,6 +27,11 @@
 BOOL touchpad_info_cached = FALSE;
 touchpad_info_t touchpad_info;
 
+inline int bswap16(short s)
+{
+	return ((s & 0xFF) << 8) | ((s & 0xFF00) >> 8);
+}
+
 /* Returns NULL if error */
 touchpad_info_t *touchpad_getinfo(void) {
 	if (touchpad_info_cached) return &touchpad_info;

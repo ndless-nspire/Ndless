@@ -1,4 +1,4 @@
-SUBDIRS = ndless ndless-sdk
+SUBDIRS = ndless-sdk ndless
 
 all:
 	@for i in $(SUBDIRS); do \

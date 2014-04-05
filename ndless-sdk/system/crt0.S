@@ -1,3 +1,4 @@
+__base: .global __base /* For backwards compatibility */
 _start: .global _start
 	/* r12 doesn't need to be pushed, but this preserves 8-byte stack alignment */
     push {r4-r12,lr}
@@ -9,8 +10,13 @@ _start: .global _start
 	bl   main
 	bl __cpp_fini /* C++ static destructors */
 	
+__crt0exit:.global __crt0exit /* For backwards compatibility */
 __crt0_exit: .global __crt0_exit
 	pop {r4-r12,pc}
 
 __crt0_savedsp: .global __crt0_savedsp
 	.long 0
+
+/* If linked with -nostdlib */
+initialise_monitor_handles: .weak initialise_monitor_handles
+	bx lr

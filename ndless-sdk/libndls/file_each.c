@@ -34,9 +34,9 @@ static int scmp(const void *sp1, const void *sp2) {
 // Returns non-zero if callback() asked to abort.
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context) {
 	char subfolder_or_file[FILENAME_MAX];
-	DIR *dp;
-	struct dirent *ep;     
-	struct stat statbuf;
+	NUC_DIR *dp;
+	struct nuc_dirent *ep;     
+	struct nuc_stat statbuf;
 	#define MAX_FILES_IN_DIR 100
 	#define MEAN_FILE_NAME_SIZE 50
 	#define FILENAMES_BUF_SIZE (MEAN_FILE_NAME_SIZE * MAX_FILES_IN_DIR)
@@ -44,7 +44,7 @@ int file_each(const char *folder, int (*callback)(const char *path, void *contex
 	char *filenames_ptrs[MAX_FILES_IN_DIR];
 	if (!(filenames = malloc(FILENAMES_BUF_SIZE)))
 		return 0;
-	if (!(dp = opendir(folder))) {
+	if (!(dp = nuc_opendir(folder))) {
 		free(filenames);
 		return 0;
 	}
@@ -52,7 +52,7 @@ int file_each(const char *folder, int (*callback)(const char *path, void *contex
 	unsigned i;
 	unsigned filenames_used_bytes = 0;
 	char *ptr;
-	for (i = 0, ptr = filenames; (ep = readdir(dp)) && i < MAX_FILES_IN_DIR && ptr < filenames + FILENAMES_BUF_SIZE; i++) {
+	for (i = 0, ptr = filenames; (ep = nuc_readdir(dp)) && i < MAX_FILES_IN_DIR && ptr < filenames + FILENAMES_BUF_SIZE; i++) {
 		if (!strcmp(ep->d_name, ".") || !strcmp(ep->d_name, "..")) {
 			i--;
 			continue;
@@ -72,23 +72,23 @@ int file_each(const char *folder, int (*callback)(const char *path, void *contex
 		if (subfolder_or_file[strlen(subfolder_or_file) - 1] != '/')
 			strcat(subfolder_or_file, "/");
 		strcat(subfolder_or_file, filenames_ptrs[i]);
-		if (stat(subfolder_or_file, &statbuf) == -1)
+		if (nuc_stat(subfolder_or_file, &statbuf) == -1)
 			continue;
 		int next_action = callback(subfolder_or_file, context);
 		if (next_action == 1) {
-			closedir(dp);
+			nuc_closedir(dp);
 			free(filenames);
 			return 1;
 		}
 		if (S_ISDIR(statbuf.st_mode) && next_action != 2) {
 			if (file_each(subfolder_or_file, callback, context)) {
-				closedir(dp);
+				nuc_closedir(dp);
 				free(filenames);
 				return 1;
 			}
 		}
 	}
-	closedir(dp);
+	nuc_closedir(dp);
 	free(filenames);
 	return 0;
 }

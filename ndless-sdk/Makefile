@@ -1,4 +1,4 @@
-SUBDIRS = tools samples libndless
+SUBDIRS = tools libsyscalls libndls samples
 
 all:
 	@for i in $(SUBDIRS); do \

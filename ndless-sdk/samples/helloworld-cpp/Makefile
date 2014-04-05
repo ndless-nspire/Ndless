@@ -2,7 +2,7 @@ DEBUG = TRUE
 GCC = nspire-gcc
 AS = nspire-as
 GXX=nspire-g++
-LD = nspire-ld-bflt
+LD = nspire-ld
 GCCFLAGS = -Wall -W -marm
 LDFLAGS =
 ifeq ($(DEBUG),FALSE)
@@ -13,9 +13,6 @@ else
 endif
 CPPOBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 OBJS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.S,%.o,$(wildcard *.S)) $(CPPOBJS)
-ifneq ($(strip $(CPPOBJS)),)
-	LDFLAGS += --cpp
-endif
 EXE = helloworld-cpp.tns
 DISTDIR = .
 vpath %.tns $(DISTDIR)

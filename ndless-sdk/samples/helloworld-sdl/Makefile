@@ -1,5 +1,5 @@
 GCC = nspire-gcc
-LD = nspire-ld-bflt
+LD = nspire-ld
 GCCFLAGS = -Os -Wall -W -marm
 LDFLAGS = 
 EXE = helloworld-sdl.tns

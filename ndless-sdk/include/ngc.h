@@ -21,8 +21,8 @@
 #ifndef _NGC_H_
 #define _NGC_H_
 
-#include <os.h>
 #include <libndls.h>
+#include <nucleus.h>
 
 typedef enum {
     GC_CRO_RESET = 0,
@@ -111,81 +111,81 @@ typedef void ** Gc;
 
 /* from gui_gc_getGC */
 /* CAUTION: cache this value */
-_SYSCALL_OSVAR(Gc *, gui_gc_global_GC_ptr)
+Gc *gui_gc_global_GC_ptr();
 #define gui_gc_global_GC_ptr gui_gc_global_GC_ptr()
 
 /*********************************/
 /*     Init/Dispose functions    */
 /*********************************/
 
-_SYSCALL1(void, gui_gc_free, Gc)
-_SYSCALL3(Gc, gui_gc_copy, Gc, int /* w */, int /* h */)
-_SYSCALL1(int, gui_gc_begin, Gc)
-_SYSCALL1(void, gui_gc_finish, Gc)
+void gui_gc_free(Gc);
+Gc gui_gc_copy(Gc, int w, int h);
+int gui_gc_begin(Gc);
+void gui_gc_finish(Gc);
 
 /*********************************/
 /* Set/Get Attributes functions  */
 /*********************************/
 
-_SYSCALL(void, gui_gc_clipRect, Gc gc, int x, int y, int w, int h, gui_gc_ClipRectOp op) _SYSCALL_ARGS(void, gui_gc_clipRect, gc, x, y, w, h, op)
-_SYSCALL4(void, gui_gc_setColorRGB, Gc, int /* r */, int /* g */, int /* b */)
-_SYSCALL2(void, gui_gc_setColor, Gc, int /* 0xRRGGBB */)
-_SYSCALL2(void, gui_gc_setAlpha, Gc, gui_gc_Alpha)
-_SYSCALL2(void, gui_gc_setFont, Gc, gui_gc_Font)
-_SYSCALL1(gui_gc_Font, gui_gc_getFont, Gc)
-_SYSCALL3(void, gui_gc_setPen, Gc, gui_gc_PenSize, gui_gc_PenMode)
+void gui_gc_clipRect(Gc gc, int x, int y, int w, int h, gui_gc_ClipRectOp op);
+void gui_gc_setColorRGB(Gc, int r, int g, int b);
+void gui_gc_setColor(Gc, int);
+void gui_gc_setAlpha(Gc, gui_gc_Alpha);
+void gui_gc_setFont(Gc, gui_gc_Font);
+gui_gc_Font gui_gc_getFont(Gc);
+void gui_gc_setPen(Gc, gui_gc_PenSize, gui_gc_PenMode);
 
 /* Position and size (x, y, w, h) of the current GC related to a given offset from the screen (xs, ys, ws, hs) */
 /* CAUTION: Doesn't affect Strings nor Arcs */
-_SYSCALL(void, gui_gc_setRegion, Gc gc, int xs, int ys, int ws, int hs, int x, int y, int w, int h) _SYSCALL_ARGS(void, gui_gc_setRegion, gc, xs, ys, ws, hs, x, y, w, h)
+void gui_gc_setRegin(Gc gc, int xs, int ys, int ws, int hs, int x, int y, int w, int h);
 
 /*********************************/
 /*         Draw functions        */
 /*********************************/
 
 /* Notice: start and end angles have to be multiplied by 10 */
-_SYSCALL(void, gui_gc_drawArc, Gc gc, int x, int y, int w, int h, int start, int end) _SYSCALL_ARGS(void, gui_gc_drawArc, gc, x, y, w, h, start, end)
+void gui_gc_drawArc(Gc gc, int x, int y, int w, int h, int start, int end);
 
-_SYSCALL(void, gui_gc_drawIcon, Gc gc, e_resourceID res, int icon, int x, int y) _SYSCALL_ARGS(void, gui_gc_drawIcon, gc, res, icon, x, y)
-_SYSCALL4(void, gui_gc_drawSprite, Gc, gui_gc_Sprite *, int /* x */, int /* y */)
-_SYSCALL(void, gui_gc_drawLine, Gc gc, int x1, int y1, int x2, int y2) _SYSCALL_ARGS(void, gui_gc_drawLine, gc, x1, y1, x2, y2)
-_SYSCALL(void, gui_gc_drawRect, Gc gc, int x, int y, int w, int h) _SYSCALL_ARGS(void, gui_gc_drawRect, gc, x, y, w, h)
-_SYSCALL(void, gui_gc_drawString, Gc gc, char *utf16, int x, int y, gui_gc_StringMode mode) _SYSCALL_ARGS(void, gui_gc_drawString, gc, utf16, x, y, mode)
-_SYSCALL3(void, gui_gc_drawPoly, Gc, unsigned * /* points */, unsigned /* count */)
+void gui_gc_drawIcon(Gc gc, e_resourceID res, int icon, int x, int y);
+void gui_gc_drawSprite(Gc, gui_gc_Sprite *, int x, int y);
+void gui_gc_drawLine(Gc, int x1, int y1, int x2, int y2);
+void gui_gc_drawRect(Gc, int x, int y, int w, int h);
+void gui_gc_drawString(Gc gc, char *utf16, int x, int y, gui_gc_StringMode mode);
+void gui_gc_drawPoly(Gc, unsigned int *points, unsigned int count);
 
 /* Notice: start and end angles have to be multiplied by 10 */
-_SYSCALL(void, gui_gc_fillArc, Gc gc, int x, int y, int w, int h, int start, int end) _SYSCALL_ARGS(void, gui_gc_fillArc, gc, x, y, w, h, start, end)
+void gui_gc_fillArc(Gc, int x, int y, int w, int h, int start, int end);
 
-_SYSCALL3(void, gui_gc_fillPoly, Gc, unsigned * /* points */, unsigned /* count */)
-_SYSCALL(void, gui_gc_fillRect, Gc gc, int x, int y, int w, int h) _SYSCALL_ARGS(void, gui_gc_fillRect, gc, x, y, w, h)
+void gui_gc_fillPoly(Gc, unsigned int *points, unsigned int count);
+void gui_gc_fillRect(Gc, int x, int y, int w, int h);
 
 /* CAUTION: do not go over 239 of height. It may freeze somehow the OS after exit */
 /* CAUTION: works if you're lucky on your color choice ! */
-_SYSCALL(void, gui_gc_fillGradient, Gc gc, int x, int y, int w, int h, int start_color, int end_color, int vertical) _SYSCALL_ARGS(void, gui_gc_fillGradient, gc, x, y, w, h, start_color, end_color, vertical)
+void gui_gc_fillGradient(Gc, int x, int y, int w, int h, int start_color, int end_color, int vertical);
 
-_SYSCALL4(void, gui_gc_drawImage, Gc, char * /* TI_Image */, int /* x */, int /* y */)
+void gui_gc_drawImage(Gc, char *TI_Image, int x, int y);
 
 /*********************************/
 /*        Metric functions       */
 /*********************************/
 
-_SYSCALL(int, gui_gc_getStringWidth, Gc gc, gui_gc_Font font, char *utf16, int start, int length) _SYSCALL_ARGS(int, gui_gc_getStringWidth, gc, font, utf16, start, length)
-_SYSCALL3(int, gui_gc_getCharWidth, Gc, gui_gc_Font, short /* utf16 char */)
-_SYSCALL(int, gui_gc_getStringSmallHeight, Gc gc, gui_gc_Font font, char *utf16, int start, int length) _SYSCALL_ARGS(int, gui_gc_getStringSmallHeight, gc, font, utf16, start, length)
-_SYSCALL3(int, gui_gc_getCharHeight, Gc, gui_gc_Font, short /* utf16 char */)
-_SYSCALL(int, gui_gc_getStringHeight, Gc gc, gui_gc_Font font, char *utf16, int start, int length) _SYSCALL_ARGS(int, gui_gc_getStringHeight, gc, font, utf16, start, length)
-_SYSCALL2(int, gui_gc_getFontHeight, Gc, gui_gc_Font)
-_SYSCALL(int, gui_gc_getIconSize, Gc gc, e_resourceID res, unsigned icon, unsigned *w, unsigned *h) _SYSCALL_ARGS(int, gui_gc_getIconSize, gc, res, icon, w, h)
+int gui_gc_getStringWidth(Gc, gui_gc_Font, char *utf16, int start, int length);
+int gui_gc_getCharWidth(Gc, gui_gc_Font, short c);
+int gui_gc_getStringSmallHeight(Gc, gui_gc_Font font, char *utf16, int start, int length);
+int gui_gc_getCharHeight(Gc, gui_gc_Font, short c);
+int gui_gc_getStringHeight(Gc, gui_gc_Font font, char *utf16, int start, int length);
+int gui_gc_getFontHeight(Gc, gui_gc_Font);
+int gui_gc_getIconSize(Gc, e_resourceID res, unsigned int icon, unsigned int *w, unsigned int *h);
 
 /*********************************/
 /*         Blit functions        */
 /*********************************/
 
-_SYSCALL(void, gui_gc_blit_gc, Gc source, int xs, int ys, int ws, int hs, Gc dest, int xd, int yd, int wd, int hd) _SYSCALL_ARGS(void, gui_gc_blit_gc, source, xs, ys, ws, hs, dest, xd, yd, wd, hd)
+void gui_gc_blit_gc(Gc source, int xs, int ys, int ws, int hs, Gc dest, int xd, int yd, int wd, int hd);
 
 /* CAUTION: w and h SHOULD be exactly of gc's w and gc's h (i.e. 320x240 in general). If not, nothing is drawn */
 /* CAUTION: buffer has to be the same size of SCREEN_BYTES_SIZE (i.e. platform dependant) */
-_SYSCALL(void, gui_gc_blit_buffer, Gc gc, char * buffer, int x, int y, int w, int h) _SYSCALL_ARGS(void, gui_gc_blit_buffer, gc, buffer, x, y, w, h)
+void gui_gc_blit_buffer(Gc gc, char *buffer, int x, int y, int w, int h);
 
 void gui_gc_blit_to_screen(Gc gc);
 void gui_gc_blit_to_screen_region(Gc gc, unsigned x, unsigned y, unsigned w, unsigned h);

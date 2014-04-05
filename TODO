@@ -1,8 +1,4 @@
 For newlib:
--Add syscalls to libndls
--Fix up some Makefiles
--Visit the ndless/src tree and port it away from os.h and NDLS_LIGHT
--Add -nostdlib to nspire-ld again
+-<dirent.h> not supported by newlib, provide own
 -Test
--Port examples and tests
 -Write some documentation how it works and how to set a development environment up

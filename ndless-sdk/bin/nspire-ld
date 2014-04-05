@@ -1,6 +1,6 @@
 #!/bin/bash
 # bash and not sh: we use bash arrays
-# New ld which produce bFLT binaries.
+# New ld which produces bFLT binaries.
 #
 # Available non-GCC options:
 # --debug: show elf2flt verbose messages
@@ -27,11 +27,13 @@ if [ "$UNAME" = "cygwin" ]; then
 fi
 
 debug=false
+stdlib="-lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lstdc++ -lndls -lsyscalls -lc -lgcc"
 # an array is used to change the arguments while supporting arguments with spaces
 declare -a args
 for arg in "$@"; do
 	case $arg in
 		--debug) debug=true;;
+		-nostdlib) stdlib="";;
 		*) args=("${args[@]}" $arg);;
 	esac
 done
@@ -51,6 +53,6 @@ mkdir -p "$home/.ndless/lib"
 elf2flt_args=""
 if $debug; then
 	elf2flt_args="-v"
-fi	
+fi
 
-"$GCC" -Wl,-elf2flt=$elf2flt_args -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lstdc++ -lc -lndless -lgcc "$DIRNAME/../system/crtn.o"
+"$GCC" -Wl,-elf2flt=$elf2flt_args -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"

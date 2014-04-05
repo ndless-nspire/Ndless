@@ -1,5 +1,5 @@
 GCC = nspire-gcc
-LD = nspire-ld-bflt
+LD = nspire-ld
 GCCFLAGS = -Os -nostdlib -Wall -W -marm
 LDFLAGS = -nostdlib
 EXE = luaextdemo.luax.tns

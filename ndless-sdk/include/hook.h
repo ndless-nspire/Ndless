@@ -1,6 +1,8 @@
 #ifndef HOOK_H
 #define HOOK_H
 
+#include <os.h>
+
 /* Hooked functions and hooks must be built in ARM and not Thumb.
  * 8 bytes are overwritten. They musn't contain relative accesses such as jumps. */
 #define HOOK_INSTALL(address, hookname) do { \

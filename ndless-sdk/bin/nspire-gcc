@@ -25,3 +25,4 @@ home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
 #-flong-calls: elf2flt is unable to relocate direct calls "bl addr"
 "$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -fpic -mlong-calls -D _TINSPIRE "$@"
+

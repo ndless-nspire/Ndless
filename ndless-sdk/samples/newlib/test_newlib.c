@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <nucleus.h>
+#include <libndls.h>
 
 int main(int argc, char **argv)
 {

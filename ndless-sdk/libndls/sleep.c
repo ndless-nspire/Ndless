@@ -21,7 +21,7 @@
 
 #include <os.h>
 
-void sleep(unsigned millisec) {
+unsigned sleep(unsigned millisec) {
 	if (is_classic) {
 		volatile unsigned *timer = (unsigned*)0x900D0000;
 		volatile unsigned *control = (unsigned*)0x900D0008;
@@ -54,4 +54,6 @@ void sleep(unsigned millisec) {
 		*load = orig_load;
 		*control = orig_control; // enable timer
 	}
+	
+	return 0;
 }

@@ -23,19 +23,24 @@
 void gui_gc_blit_to_screen(Gc gc)
 {
     char * off_screen = (((((char *****)gc)[9])[0])[0x8])[0];
-    memcpy(SCREEN_BASE_ADDRESS, off_screen, SCREEN_BYTES_SIZE);
+    memcpy((void*) SCREEN_BASE_ADDRESS, off_screen, SCREEN_BYTES_SIZE);
 }
 
 void gui_gc_blit_to_screen_region(Gc gc, unsigned x, unsigned y, unsigned w, unsigned h)
 {
     unsigned W = SCREEN_WIDTH;
     char ** off_buff = ((((char *****)gc)[9])[0])[0x8];
-    char * buff = SCREEN_BASE_ADDRESS;
+    char * buff = (char*) SCREEN_BASE_ADDRESS;
 
     h += y;
-    (h > SCREEN_HEIGHT) && (h = SCREEN_HEIGHT);
-    (x > SCREEN_WIDTH) && (x = SCREEN_WIDTH);
-    (x + w > SCREEN_WIDTH) && (w = SCREEN_WIDTH - x);
+	if(h > SCREEN_HEIGHT)
+		h = SCREEN_HEIGHT;
+	
+	if(x > SCREEN_WIDTH)
+		x = SCREEN_WIDTH;
+	
+	if(x + w > SCREEN_WIDTH)
+		w = SCREEN_WIDTH - x;
 
     switch (lcd_isincolor())
     {

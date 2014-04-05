@@ -4,16 +4,12 @@
 ** See Copyright Notice in lua.h
 */
 
-
 #ifndef lualib_h
 #define lualib_h
-#include "os.h"
 #include "lua.h"
-
 
 /* Key to file-handle type */
 #define LUA_FILEHANDLE		"FILE*"
-
 
 #define LUA_COLIBNAME	"coroutine"
 LUALIB_API int (luaopen_base) (lua_State *L);
@@ -39,11 +35,8 @@ LUALIB_API int (luaopen_debug) (lua_State *L);
 #define LUA_LOADLIBNAME	"package"
 LUALIB_API int (luaopen_package) (lua_State *L);
 
-
 /* open all previous libraries */
 LUALIB_API void (luaL_openlibs) (lua_State *L); 
-
-
 
 #ifndef lua_assert
 #define lua_assert(x)	((void)0)

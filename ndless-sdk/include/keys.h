@@ -5,6 +5,16 @@
  * Keys (key=(offset, 2^bit #)
  ***********************************/
 
+typedef enum tpad_arrow 
+{
+	TPAD_ARROW_NONE,
+	TPAD_ARROW_UP, TPAD_ARROW_UPRIGHT,
+	TPAD_ARROW_RIGHT, TPAD_ARROW_RIGHTDOWN,
+	TPAD_ARROW_DOWN, TPAD_ARROW_DOWNLEFT,
+	TPAD_ARROW_LEFT, TPAD_ARROW_LEFTUP,
+	TPAD_ARROW_CLICK
+} tpad_arrow_t;
+
 typedef struct {
   int row, col, tpad_row, tpad_col;
   tpad_arrow_t tpad_arrow;

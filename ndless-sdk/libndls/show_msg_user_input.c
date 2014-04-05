@@ -39,8 +39,6 @@
 #include <os.h>
 
 int show_msg_user_input(const char * title, const char * msg, char * defaultvalue, char ** value_ref) {
-
-	unsigned len_input = strlen(defaultvalue);
 	String request_value = string_new();
 	String s_title = string_new();	
 	String s_msg = string_new();	

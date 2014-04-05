@@ -1,10 +1,10 @@
 AS = nspire-as
-AR := "$(shell (which arm-elf-ar arm-none-eabi-ar arm-linux-gnueabi-ar | head -1) 2>/dev/null)"
 GCC = nspire-gcc
-GCCFLAGS = -Os -nostdlib
 LD = nspire-ld
+AR := "$(shell (which arm-elf-ar arm-none-eabi-ar arm-linux-gnueabi-ar | head -1) 2>/dev/null)"
+
+GCCFLAGS = -Os -nostdlib -fpic -Wall
 LDFLAGS = -nostdlib
-OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 LIB = libndls.a
 DISTDIR = ../lib
 vpath %.a $(DISTDIR)

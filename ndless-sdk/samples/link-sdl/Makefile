@@ -3,7 +3,7 @@ TARGET = Link.tns
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = nspire-gcc
-LD = nspire-ld-bflt
+LD = nspire-ld
 OBJCOPY = arm-none-eabi-objcopy
 CFLAGS = -Wall -Wextra -Ofast
 LDFLAGS =

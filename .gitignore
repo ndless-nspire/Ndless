@@ -1,12 +1,1 @@
-*.bin
-*.elf
-*.exe
-*.img
-*.gdb
-*.o
-*.tmp
-*.tns
-*.zip
-/ndless-sdk/toolchain/*
-!/ndless-sdk/toolchain/elf2flt
-!/ndless-sdk/toolchain/build_toolchain.sh
+/Makefile.config
