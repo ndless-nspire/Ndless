@@ -27,7 +27,7 @@ if [ "$UNAME" = "cygwin" ]; then
 fi
 
 debug=false
-stdlib="-lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lstdc++ -lndls -lsyscalls -lc -lgcc"
+stdlib="-lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lstdc++ -lndls -Wl,--start-group -lsyscalls -lc -Wl,--end-group -lgcc"
 # an array is used to change the arguments while supporting arguments with spaces
 declare -a args
 for arg in "$@"; do

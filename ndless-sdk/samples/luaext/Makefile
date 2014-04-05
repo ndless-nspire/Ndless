@@ -1,7 +1,7 @@
 GCC = nspire-gcc
 LD = nspire-ld
-GCCFLAGS = -Os -nostdlib -Wall -W -marm
-LDFLAGS = -nostdlib
+GCCFLAGS = -Os -Wall -W -marm
+LDFLAGS =
 EXE = luaextdemo.luax.tns
 LUATNS = runluaextdemo.tns
 OBJS = $(patsubst %.c,%.o,$(wildcard *.c))
