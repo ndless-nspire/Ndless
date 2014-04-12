@@ -38,6 +38,8 @@ if [ ! -f "$1" ]; then
 	exit 1
 fi
 
+abs_tns_path=$(cd `dirname "$1"` && pwd)/`basename "$1"`
+
 if [ $# -ge 2 ]; then
 	st_cmd="ln st $2"
 fi
@@ -55,7 +57,7 @@ fi
 sleep 1
 nc localhost "$rdebug_port" <<EOT
 $st_cmd
-ln s $1
+ln s $abs_tns_path
 EOT
 ret=$?
 
