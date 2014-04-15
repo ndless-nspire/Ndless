@@ -12,7 +12,7 @@
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
  
 TARGET=arm-none-eabi
-PREFIX=$HOME/ndless-toolchain # or the directory where the toolchain should be installed in
+PREFIX=$PWD/install # or the directory where the toolchain should be installed in
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
 BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
@@ -37,18 +37,17 @@ echo "Building and installing to '$PREFIX'..."
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 mkdir -p "$PREFIX"
-cd "$PREFIX"
-mkdir -p download build-binutils build
 
 # Section 0: prerequisites
 echo 'int main() {return 0;}' > test.c
 error=0
-if ! gcc -lgmp test.c -o test; then error=1; echo 'GMP (libgmp-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpfr test.c -o test; then error=1; echo 'MPFR (libmpfr-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpc test.c -o test; then error=1; echo 'MPC (libmpc-dev) dependency seems to be missing!'; fi
-if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib1g-dev) dependency seems to be missing!'; fi
-if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (libtinfo-dev) dependency seems to be missing!'; fi
-if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python2.7-dev) dependency seems to be missing!'; fi
+if ! gcc -lgmp test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpfr test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpc test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
+if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
+#TODO: This test fails on openSUSE
+#if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (termcap/libtinfo-dev) dependency seems to be missing!'; fi
+if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python-devel/python2.7-dev) dependency seems to be missing!'; fi
 rm test test.c
 if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (textinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1

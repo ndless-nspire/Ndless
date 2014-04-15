@@ -645,6 +645,7 @@ dump_symbols(symbols, number_of_symbols);
 				default:
 					goto good_32bit_resolved_reloc;
 #elif defined(TARGET_arm)
+				case R_ARM_TARGET1:
 				case R_ARM_ABS32:
 					relocation_needed = 1;
 					break;
@@ -657,7 +658,6 @@ dump_symbols(symbols, number_of_symbols);
 				case R_ARM_GOT32:
 				case R_ARM_NONE:
 				case R_ARM_PREL31:
-				case R_ARM_TARGET1:
 				case R_ARM_TARGET2:
 				case R_ARM_CALL:
 				case R_ARM_V4BX:
