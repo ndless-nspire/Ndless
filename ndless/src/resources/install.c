@@ -114,7 +114,7 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
         gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
 		gui_gc_setFont(gc, SerifRegular9);
-		gui_gc_drawString(gc, "N\0d\0l\0e\0s\0s\0 \0i\0n\0s\0t\0a\0l\0l\0e\0d\0!\0\0", 25, 4, GC_SM_TOP);
+		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
         if (!i--) {        
             HOOK_UNINSTALL(ins_successmsg_hook_addrs[ut_os_version_index], ins_successsuccessmsg_hook);
             clear_cache();

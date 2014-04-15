@@ -3,7 +3,7 @@ GCC := nspire-gcc
 LD := "$(shell (which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null)"
 OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 
-GCCFLAGS := -Os -Wall -W -Wno-strict-aliasing -fpic
+GCCFLAGS := -Os -Wall -W -Wno-strict-aliasing -fpic -std=gnu99
 LDFLAGS := -Tldscript -nostartfiles -L../../../ndless-sdk/lib -nostdlib
 DISTDIR := ../../calcbin
 vpath %.tns $(DISTDIR)

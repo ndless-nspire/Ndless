@@ -33,6 +33,8 @@ extern "C" {
 #include <string.h>
 #include <ngc.h>
 #include <nucleus.h>
+#include <lualib.h>
+#include <lauxlib.h>
 
 <?php
 $header = <<<EOF

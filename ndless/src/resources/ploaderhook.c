@@ -58,9 +58,9 @@ enum e_ld_bin_format ld_bin_format = LD_ERROR_BIN;
 
 static int ndless_load(char *docpath, void **base, size_t *size, int (**entry_address_ptr)(int, char*[]))
 {
-    FILE *docfile = fopen(docpath, "rb");
-	struct stat docstat;
-	if (!docfile || stat(docpath, &docstat)) {
+    NUC_FILE *docfile = nuc_fopen(docpath, "rb");
+	struct nuc_stat docstat;
+	if (!docfile || nuc_stat(docpath, &docstat)) {
 		puts("ndless_load: can't open doc");
 		return 1;
 	}
@@ -69,13 +69,13 @@ static int ndless_load(char *docpath, void **base, size_t *size, int (**entry_ad
 		puts("ndless_load: can't malloc");
 		return 1;
 	}
-	if (!fread(docptr, docstat.st_size, 1, docfile)) {
+	if (!nuc_fread(docptr, docstat.st_size, 1, docfile)) {
 		puts("ndless_load: can't read doc");
 		if (!emu_debug_alloc_ptr)
 			free(docptr);
 		return 1;
 	}
-	fclose(docfile);
+	nuc_fclose(docfile);
 	if (strcmp(PRGMSIG, docptr)) { /* not a plain-old Ndless program */
 		if (!emu_debug_alloc_ptr)
 			free(docptr);

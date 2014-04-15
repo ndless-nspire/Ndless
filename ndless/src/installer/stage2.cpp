@@ -33,6 +33,7 @@
 
 extern "C" {
 extern int ut_os_version_index;
+int sc_addrs_ptr; // Required by utils.c
 void ut_disable_watchdog();
 void ut_read_os_version_index();
 void ut_disable_watchdog();

@@ -24,8 +24,8 @@ all: ndless_installer.tns
 %.elf: %.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
-ndless_installer.elf: stage2.o
-	$(LD) $(LDFLAGS) $^ -o $@ ../resources/utils.o
+ndless_installer.elf: stage1.o stage2.o
+	$(LD) $(LDFLAGS) stage2.o -o $@ ../resources/utils.o
 
 ndless_installer.bin: ndless_installer.elf
 	$(OBJCOPY) -O binary $< $@

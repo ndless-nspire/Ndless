@@ -58,8 +58,8 @@ static inline void endian_fix32(uint32_t * tofix, size_t count) {
 }
 
 static int read_header(FILE* fp, struct flat_hdr * header) {
-    fseek(fp, 0, SEEK_SET);
-    size_t bytes_read = fread(header, 1, sizeof(struct flat_hdr), fp);
+    nuc_fseek(fp, 0, SEEK_SET);
+    size_t bytes_read = nuc_fread(header, 1, sizeof(struct flat_hdr), fp);
     endian_fix32(&header->rev, ( &header->build_date - &header->rev ) + 1);
 
     if (bytes_read == sizeof(struct flat_hdr)) {
@@ -84,7 +84,7 @@ static int copy_segments(FILE* fp, struct flat_hdr * header, void * mem, size_t 
     /* [   .text   ][   .data   ][   .bss   ]         */
     /* ^entry       ^data_start  ^data_end  ^bss_end  */
     /* that means we can copy them all at once */
-    fseek(fp, header->entry, SEEK_SET);
+    nuc_fseek(fp, header->entry, SEEK_SET);
 
     size_t size_required = header->bss_end - header->entry;
     size_t size_to_copy = header->data_end - header->entry;
@@ -93,7 +93,7 @@ static int copy_segments(FILE* fp, struct flat_hdr * header, void * mem, size_t 
     /* zero out memory for bss */
     memset( (char*)mem + size_to_copy, 0, size_required - size_to_copy );
 
-    if (fread(mem, 1, size_to_copy, fp) == size_to_copy) {
+    if (nuc_fread(mem, 1, size_to_copy, fp) == size_to_copy) {
         return 0;
     }else{
         error_return("Could not read all segments");
@@ -118,12 +118,12 @@ static inline void* calc_reloc(uint32_t offset, void *base) {
 
 static int process_relocs(FILE *fp, struct flat_hdr * header, void * base) {
     if (!header->reloc_count) { info("No relocation needed"); return 0; }
-    fseek(fp, header->reloc_start, SEEK_SET);
+    nuc_fseek(fp, header->reloc_start, SEEK_SET);
     size_t size_to_copy = sizeof(uint32_t) * header->reloc_count;
     uint32_t * offset_list = malloc(size_to_copy);
     if (!offset_list) error_return("Failed to allocate temporary memory in process_relocs");
 
-    size_t size_read = fread(offset_list, sizeof(uint32_t), header->reloc_count, fp);
+    size_t size_read = nuc_fread(offset_list, sizeof(uint32_t), header->reloc_count, fp);
     if (size_read < size_to_copy/sizeof(uint32_t)) {
         free(offset_list);
         error_return("Failed to read relocs");
@@ -161,13 +161,13 @@ static int process_got(struct flat_hdr * header, void * base) {
 }
 
 int bflt_load(char* filename, void **mem_ptr, size_t *mem_size, int (**entry_address_ptr)(int,char*[])) {
-    FILE* fp = fopen(filename, "rb");
+    NUC_FILE* fp = nuc_fopen(filename, "rb");
     int ret;
     if (!fp) error_user_return("Can't open file %s", filename);
 
     ret = bflt_fload(fp, mem_ptr, mem_size, entry_address_ptr);
 
-    fclose(fp);
+    nuc_fclose(fp);
     return ret;
 }
 

@@ -7,17 +7,17 @@
 extern "C" {
 __attribute__((section(".text"))) int savedlr_stack[10];
 __attribute__((section(".text"))) int savedlr_stack_nr = 0;
-NUC_FILE* nuc_fopen(const char *p1)
+NUC_FILE* nuc_fopen(const char *p1, const char *p2)
 {
-	return syscall<e_fopen, NUC_FILE*>(p1);
+	return syscall<e_fopen, NUC_FILE*>(p1,p2);
 }
-int nuc_fread(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
+size_t nuc_fread(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
 {
-	return syscall<e_fread, int>(p1,p2,p3,p4);
+	return syscall<e_fread, size_t>(p1,p2,p3,p4);
 }
-int nuc_fwrite(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
+size_t nuc_fwrite(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
 {
-	return syscall<e_fwrite, int>(p1,p2,p3,p4);
+	return syscall<e_fwrite, size_t>(p1,p2,p3,p4);
 }
 int nuc_fclose(NUC_FILE *p1)
 {

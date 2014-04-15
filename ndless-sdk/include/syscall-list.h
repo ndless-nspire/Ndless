@@ -15,9 +15,9 @@
  */
 
 // START_OF_LIST (always keep this line before the fist constant, used by mksyscalls.sh)
-#define e_fopen 0 // NUC_FILE* nuc_fopen(const char *p1)
-#define e_fread 1 // int nuc_fread(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
-#define e_fwrite 2 // int nuc_fwrite(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
+#define e_fopen 0 // NUC_FILE* nuc_fopen(const char *p1, const char *p2)
+#define e_fread 1 // size_t nuc_fread(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
+#define e_fwrite 2 // size_t nuc_fwrite(void *p1, size_t p2, size_t p3, NUC_FILE *p4)
 #define e_fclose 3 // int nuc_fclose(NUC_FILE *p1)
 #define e_fgets 4 // char* nuc_fgets(char *p1, int p2, NUC_FILE *p3)
 #define e_malloc 5
