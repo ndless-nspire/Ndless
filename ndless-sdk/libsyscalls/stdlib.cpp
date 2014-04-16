@@ -155,7 +155,10 @@ int _lseek(int file, int ptr, int dir)
 	NUC_FILE *f;
 	GETFD(f);
   
-	return errno_check(syscall<e_fseek, int>(f, ptr, dir));
+	if(syscall<e_fseek, int>(f, ptr, dir) == -1)
+		return errno_update(-1);
+	
+	return syscall<e_ftell, int>(f);
 }
 
 int _open(const char *path, int flags)
@@ -239,6 +242,11 @@ int _link(const char *oldpath, const char *newpath)
 int _rename(const char *oldpath, const char *newpath)
 {
 	return errno_check(syscall<e_rename, int>(oldpath, newpath));
+}
+
+int _mkdir(const char *path, mode_t mode)
+{
+	return errno_check(syscall<e_mkdir, int>(path, mode));
 }
 
 int _gettimeofday(struct timeval *tv, struct timezone *tz)
