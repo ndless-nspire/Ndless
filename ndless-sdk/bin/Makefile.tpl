@@ -3,7 +3,7 @@ GCC = nspire-gcc
 AS = nspire-as
 GXX=nspire-g++
 LD = nspire-ld
-GCCFLAGS = -Wall -W -marm -mlong-calls
+GCCFLAGS = -Wall -W -marm
 LDFLAGS =
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -12,7 +12,9 @@ else
 	LDFLAGS += --debug
 endif
 CPPOBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-OBJS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.S,%.o,$(wildcard *.S)) $(CPPOBJS)
+COBJS = $(patsubst %.c,%.o,$(wildcard *.c)) 
+ASMOBJS = $(patsubst %.S,%.o,$(wildcard *.S))
+OBJS = $(CPPOBJS) $(COBJS) $(ASMOBJS)
 EXE = @@EXENAME@@.tns
 DISTDIR = .
 vpath %.tns $(DISTDIR)
