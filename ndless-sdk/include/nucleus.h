@@ -7,8 +7,9 @@ extern "C" {
 	
 #include <stdint.h>
 #include <string.h>
-#define BUFSIZ 1024
 
+#define BUFSIZ 1024
+#define PATH_MAX 1024
 #define OS_BASE_ADDRESS 0x10000000
 
 typedef struct {

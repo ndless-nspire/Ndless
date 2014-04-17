@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <limits.h>
 #include <nucleus.h>
 
 // errno is a macro which calls a newlib function, which creates a circular dependency.
@@ -71,6 +72,29 @@ static int errno_check(int result)
 
 	errno = *syscall<e_errno_addr, int*>();
 	return -1;
+}
+
+void *__dso_handle __attribute__((weak));
+
+/* programs linked to newlib use malloc, but newlib itself uses _malloc_r... */
+void *malloc(size_t size)
+{
+	return syscall<e_malloc, void*>(size);
+}
+
+void free(void *mem)
+{
+	return syscall<e_free, void>(mem);
+}
+
+void *realloc(void *mem, size_t size)
+{
+	return syscall<e_realloc, void*>(mem, size);
+}
+
+void *calloc(size_t nmemb, size_t size)
+{
+	return syscall<e_calloc, void*>(nmemb, size);
 }
   
 int _puts(const char *s)
@@ -244,9 +268,42 @@ int _rename(const char *oldpath, const char *newpath)
 	return errno_check(syscall<e_rename, int>(oldpath, newpath));
 }
 
-int _mkdir(const char *path, mode_t mode)
+int mkdir(const char *path, mode_t mode)
 {
 	return errno_check(syscall<e_mkdir, int>(path, mode));
+}
+
+int rmdir(const char *path, mode_t mode)
+{
+	return errno_check(syscall<e_rmdir, int>(path));
+}
+
+int chdir(const char *path)
+{
+	return errno_check(syscall<e_NU_Set_Current_Dir, int>(path) ? 0 : -1);
+}
+
+char *getwd(char *buf)
+{
+	syscall<e_NU_Current_Dir, int>("A:\\", buf);
+	return buf;
+}
+
+char *getcwd(char *buf, size_t size)
+{
+	if(size < PATH_MAX)
+	{
+		errno = ERANGE;
+		return nullptr;
+	}
+	
+	return getwd(buf);
+}
+
+char *get_current_dir_name()
+{
+	char *buf = reinterpret_cast<char*>(malloc(PATH_MAX));
+	return getwd(buf);
 }
 
 int _gettimeofday(struct timeval *tv, struct timezone *tz)
@@ -273,30 +330,6 @@ int _getpid(void*)
 int _kill(pid_t pid, int sig)
 {
 	return errno_set(ENOSYS);
-}
-
-/* libstdc++ needs this for iostream */
-void *__dso_handle __attribute__((weak));
-
-/* programs linked to newlib use malloc, but newlib itself uses _malloc_r... */
-void *malloc(size_t size)
-{
-	return syscall<e_malloc, void*>(size);
-}
-
-void free(void *mem)
-{
-	return syscall<e_free, void>(mem);
-}
-
-void *realloc(void *mem, size_t size)
-{
-	return syscall<e_realloc, void*>(mem, size);
-}
-
-void *calloc(size_t nmemb, size_t size)
-{
-	return syscall<e_calloc, void*>(nmemb, size);
 }
 
 /* The unused void* here are structs used for reentrancy */
