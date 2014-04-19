@@ -1,19 +1,29 @@
 OBJ = armloader.o asmcode.o casplus.o cpu.o des.o debug.o emu.o flash.o gdbstub.o gui.o interrupt.o keypad.o lcd.o link.o memory.o misc.o mmu.o os-win32.o resource.o schedule.o serial.o sha256.o snippets.o translate.o usb.o usblink.o
 
 FLAGS = -W -Wall -m32
+ifneq ($(OS),Windows_NT)
+PREFIX=i686-w64-mingw32-
+endif
+CC = $(PREFIX)gcc
+LD = $(PREFIX)ld
+WINDRES = $(PREFIX)windres
+OBJCOPY = $(PREFIX)objcopy
+DISTDIR := ../bin
+vpath %.exe $(DISTDIR)
 
-CC ?= gcc
-LD ?= ld
-WINDRES ?= windres
-OBJCOPY ?= objcopy
+ifneq ($(shell (which $(CC) | head -1) 2>/dev/null),)
+all : nspire_emu.exe static
+else
+all : static
+endif
 
-all : nspire_emu.exe
-
-emu.exe : $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $@ -lgdi32 -lcomdlg32 -lwinmm -lws2_32
+static:
+	mkdir -p $(DISTDIR)
+	cp *.sh *.bat $(DISTDIR)
 
 nspire_emu.exe : $(OBJ)
-	$(CC) $(FLAGS) $(OBJ) -o $@ -lgdi32 -lcomdlg32 -lwinmm -lws2_32 -s -Wl,--nxcompat
+	mkdir -p $(DISTDIR)
+	$(CC) $(FLAGS) $(OBJ) -o  $(DISTDIR)/$@ -lgdi32 -lcomdlg32 -lwinmm -lws2_32 -s -Wl,--nxcompat
 
 cpu.o : cpu.c
 	$(CC) $(FLAGS) -O3 -c $< -o $@
@@ -40,4 +50,5 @@ snippets.o: armsnippets.o
 	$(CC) $(FLAGS) -Os -c $< -o $@
 
 clean : 
-	rm -f *.o nspire_emu.exe emu.exe
+	rm -rf *.o  $(DISTDIR)
+

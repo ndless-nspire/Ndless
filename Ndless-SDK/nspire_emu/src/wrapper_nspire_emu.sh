@@ -16,7 +16,7 @@ if [ ! -f "$SCRIPTPATH/nspire_emu.exe" ]; then
 	exit 1
 fi
 
-cd "$SCRIPTPATH/../emu_resources"
+cd "$SCRIPTPATH/../../emu_resources"
 
 modelswitch=""
 [ -f *.tco ] && modelswitch="/MX"

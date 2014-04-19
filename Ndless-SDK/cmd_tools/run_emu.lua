@@ -50,13 +50,13 @@ for line in out:lines() do
 			if boot1 then
 				local nand_path = getres("*.img")
 				if nand_path then
-					local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/F=" .. nand_path .. "\" " .. modelswitch .. " \"/C=" .. props['ndless.rdebug.port'] .. "\" \"/G=" .. props['ndless.gdb.port'] .."\"")
+					local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\bin\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/F=" .. nand_path .. "\" " .. modelswitch .. " \"/C=" .. props['ndless.rdebug.port'] .. "\" \"/G=" .. props['ndless.gdb.port'] .."\"")
 					ns_spawner:run()
 				
 				else
 					local boot2 = getres("boot2.img.tns", "Boot2 not found.")
 					if boot2 then
-						local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/PO=" .. txx .. "\" \"/PB=" .. boot2 .. "\" " .. modelswitch)
+						local ns_spawner = spawner.new(props['SciteDefaultHome'] .. "\\nspire_emu\\bin\\nspire_emu.bat /R /N \"/1=" .. boot1 .. "\" \"/PO=" .. txx .. "\" \"/PB=" .. boot2 .. "\" " .. modelswitch)
 						ns_spawner:run()
 					end
 				 

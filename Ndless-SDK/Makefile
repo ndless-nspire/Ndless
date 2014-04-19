@@ -1,5 +1,5 @@
-SUBDIRS = luna _samples
-WIN_SUBDIRS = nspire_emu ndless_pc/lib cmd_tools/navnetcmd
+SUBDIRS = luna _samples nspire_emu/src
+WIN_SUBDIRS = ndless_pc/lib cmd_tools/navnetcmd
 
 OS ?= `uname -s`
 ifeq ($(OS),Windows_NT)

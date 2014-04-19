@@ -113,7 +113,7 @@ static void set_nonblocking(int socket, bool nonblocking) {
 	u_long mode = nonblocking;
 	ioctlsocket(socket, FIONBIO, &mode);
 #else
-	ret = fcntl(socket, F_GETFL, 0);
+	int ret = fcntl(socket, F_GETFL, 0);
 	fcntl(socket, F_SETFL, nonblocking ? ret | O_NONBLOCK : ret & ~O_NONBLOCK);
 #endif
 }
