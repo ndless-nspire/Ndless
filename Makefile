@@ -88,53 +88,54 @@ rtests:
 	(cd arm/tests && make clean all)
 
 _upload_msys:
-	svn update
-	svnrev=`svn info --xml |grep revision | uniq | sort -r | head -1 | sed 's/\(revision="\)//' | sed 's/">//' | sed 's/[[:blank:]]*//g'`; \
-	mv distsdk-msys-yagarto "ndless-v3.6-beta-r$${svnrev}-sdk-msys-yagarto"; \
+	rev=`git rev-list HEAD | wc -l`; \
+	hash=`git rev-parse --short HEAD`; \
+	mv distsdk-msys-yagarto "ndless-v3.6-beta-r$$rev.$$hash-sdk-msys-yagarto"; \
 	rm -rf ndless-sdk-msys-yagarto.zip ; \
-	7z a ndless-sdk-msys-yagarto.zip "ndless-v3.6-beta-r$${svnrev}-sdk-msys-yagarto" > /dev/null; \
-	curl --cookie upload_cookies.txt -F 'super_id=7' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$${svnrev}-msys-yagarto.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-msys-yagarto.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/7 > /dev/null; \
+	7z -r ndless-sdk-msys-yagarto.zip "ndless-v3.6-beta-r$$rev.$$hash-sdk-msys-yagarto"; \
+	rm -rf ndless-sdk-msys-yagarto.zip ; \-sdk-msys-yagarto" > /dev/null; \
+	curl --cookie upload_cookies.txt -F 'super_id=7' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$$rev.$$hash-sdk-msys-yagarto"; \
+	rm -rf ndless-sdk-msys-yagarto.zip ; \-msys-yagarto.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-msys-yagarto.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/7 > /dev/null; \
 	rm -rf ndless-sdk-msys-yagarto.zip ; \
-	rm -rf "ndless-v3.6-beta-r$${svnrev}-sdk-msys-yagarto"; \
-	echo "MSYS/YAGARTO addin r$${svnrev} available at http://www.unsads.com/projects/nsptools/downloader/download/release/7"
+	rm -rf "ndless-v3.6-beta-r$$rev.$$hash-sdk-msys-yagarto"; \
+	rm -rf ndless-sdk-msys-yagarto.zip ; \-sdk-msys-yagarto"; \
+	echo "MSYS/YAGARTO addin 3.6 r$$rev.$$hash available at http://www.unsads.com/projects/nsptools/downloader/download/release/7"
 
 _upload_sdk:
-	svn update
-	svnrev=`svn info --xml |grep revision | uniq | sort -r | head -1 | sed 's/\(revision="\)//' | sed 's/">//' | sed 's/[[:blank:]]*//g'`; \
-	mv distsdk "ndless-v3.6-beta-r$${svnrev}-sdk"; \
+	rev=`git rev-list HEAD | wc -l`; \
+	hash=`git rev-parse --short HEAD`; \
+	mv distsdk "ndless-v3.6-beta-r$$rev.$$hash-sdk"; \
 	rm -rf ndless-sdk.zip ; \
-	7z a ndless-sdk.zip "ndless-v3.6-beta-r$${svnrev}-sdk" > /dev/null; \
-	curl --cookie upload_cookies.txt -F 'super_id=5' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$${svnrev}-sdk.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-sdk.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/5 > /dev/null; \
+	7z -r ndless-sdk.zip "ndless-v3.6-beta-r$$rev.$$hash-sdk" > /dev/null; \
+	curl --cookie upload_cookies.txt -F 'super_id=5' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$$rev.$$hash-sdk.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-sdk.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/5 > /dev/null; \
 	rm -rf ndless-sdk.zip; \
-	rm -rf "ndless-v3.6-beta-r$${svnrev}-sdk"; \
-	echo "SDK r$${svnrev} available at http://www.unsads.com/projects/nsptools/downloader/download/release/5"
+	rm -rf "ndless-v3.6-beta-r$$rev.$$hash-sdk"; \
+	echo "SDK 3.6 r$$rev.$$hash available at http://www.unsads.com/projects/nsptools/downloader/download/release/5"
 
 _upload_ndless:
-	svn update
-	svnrev=`svn info --xml |grep revision | uniq | sort -r | head -1 | sed 's/\(revision="\)//' | sed 's/">//' | sed 's/[[:blank:]]*//g'`; \
-	mv dist "ndless-v3.6-beta-r$$svnrev"; \
+	rev=`git rev-list HEAD | wc -l`; \
+	hash=`git rev-parse --short HEAD`; \
+	mv dist "ndless-v3.6-beta-r$$rev-$$hash"; \
 	rm -rf ndless.zip ; \
-	7z a ndless.zip "ndless-v3.6-beta-r$$svnrev" > /dev/null; \
-	curl --cookie upload_cookies.txt -F 'super_id=1' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$$svnrev.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/1 > /dev/null; \
+	7z -r ndless.zip "ndless-v3.6-beta-r$$rev-$$hash" > /dev/null; \
+	curl --cookie upload_cookies.txt -F 'super_id=1' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$$rev-$$hash.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/1 > /dev/null; \
 	rm -rf ndless.zip; \
-	rm -rf "ndless-v3.6-beta-r$$svnrev"; \
-	echo "Ndless r$${svnrev} available at http://www.unsads.com/projects/nsptools/downloader/download/release/1"
+	rm -rf "ndless-v3.6-beta-r$$rev-$$hash"; \
+	echo "Ndless 3.6 r$$rev-$$hash available at http://www.unsads.com/projects/nsptools/downloader/download/release/1"
 
-upload_msys: check_uncommited update_version_info distmsys _upload_msys
-upload_sdk: check_uncommited update_version_info distsdk _upload_sdk
-upload_ndless: check_uncommited update_version_info dist _upload_ndless
+upload_msys: update_version_info distmsys _upload_msys revert_version_info
+upload_sdk: update_version_info distsdk _upload_sdk revert_version_info
+upload_ndless: update_version_info dist _upload_ndless revert_version_info
 
-upload: check_uncommited update_version_info dist distsdk distmsys _upload_msys _upload_sdk _upload_ndless
-upload_sdk_ndless: check_uncommited dist distsdk _upload_sdk _upload_ndless
-
-check_uncommited:
-	@[ -z "`svn status -q`" ] || (echo "Commit changes first."; false)
+upload: update_version_info dist distsdk distmsys _upload_msys _upload_sdk _upload_ndless
+upload_sdk_ndless: dist distsdk _upload_sdk _upload_ndless
 
 # Increment only if the last update was not an increment
 update_version_info:
-	@svn update
-	@(svn log --xml --limit 1 | grep "ndless_version: update revision" > /dev/null) || \
-	(svnrev=`svn info --xml |grep revision | uniq | sort -r | head -1 | sed 's/\(revision="\)//' | sed 's/">//' | sed 's/[[:blank:]]*//g'`; \
-	 echo "#define NDLESS_REVISION $$((svnrev+1))" > arm/ndless_version.h; \
-	 echo "ndless_revision=\"$$((svnrev+1))\"" > arm/ndless_version.lua; \
-	 svn commit -m "ndless_version: update revision" arm/ndless_version.h arm/ndless_version.lua)
+	rev=`git rev-list HEAD | wc -l`; \
+	echo "#define NDLESS_REVISION $$rev" > arm/ndless_version.h; \
+	echo "ndless_revision=\"$$rev\"" > arm/ndless_version.lua;
+
+revert_version_info:
+	git reset --hard
+
