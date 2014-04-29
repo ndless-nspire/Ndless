@@ -55,4 +55,4 @@ if $debug; then
 	elf2flt_args="-v"
 fi
 
-"$GCC" -Wl,-elf2flt=$elf2flt_args -fpie -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
+"$GCC" -Wl,-elf2flt=$elf2flt_args -fPIC -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"

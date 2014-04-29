@@ -3,7 +3,7 @@
 
 //isKeyPressed is defined as a macro for backwards compatibility
 #undef isKeyPressed
-BOOL isKeyPressed(t_key *key)
+BOOL isKeyPressed(const t_key *key)
 {
 	if(is_touchpad && key->tpad_arrow != TPAD_ARROW_NONE)
 		return touchpad_arrow_pressed(key->tpad_arrow);

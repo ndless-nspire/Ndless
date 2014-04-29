@@ -6,7 +6,7 @@
 # Edited by Levak to update elf2flt url
 # Edited by Fabian Vogt to use the local (patched) version of elf2flt, newlib, GDB with python
 
-# IMPORTANT NOTE: in order to compile GCC 4.8, you need the GMP (libgmp-dev), MPFR (libmpfr-dev) and MPC (libmpc-dev) development libraries.
+# IMPORTANT NOTE: in order to compile GCC, you need the GMP (libgmp-dev), MPFR (libmpfr-dev) and MPC (libmpc-dev) development libraries.
 # 	For example, if you have installed them yourself in $PREFIX, you'll have to add --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX.
 # IMPORTANT NOTE #2: GDB needs some python includes for python support. 
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
@@ -16,7 +16,7 @@ PREFIX=$PWD/install # or the directory where the toolchain should be installed i
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
 BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
-GCC=gcc-4.8.2 # http://gcc.gnu.org/
+GCC=gcc-4.9.0 # http://gcc.gnu.org/
 # newlib-2.0.1 is broken for ARM :-(
 NEWLIB=newlib-2.0.0 # http://sourceware.org/newlib/
 GDB=gdb-7.7 # http://www.gnu.org/software/gdb/

@@ -11,10 +11,9 @@ else
 	GCCFLAGS += -O0 -g
 	LDFLAGS += --debug
 endif
-CPPOBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-COBJS = $(patsubst %.c,%.o,$(wildcard *.c)) 
-ASMOBJS = $(patsubst %.S,%.o,$(wildcard *.S))
-OBJS = $(CPPOBJS) $(COBJS) $(ASMOBJS)
+OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
+OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
+OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
 EXE = @@EXENAME@@.tns
 DISTDIR = .
 vpath %.tns $(DISTDIR)
