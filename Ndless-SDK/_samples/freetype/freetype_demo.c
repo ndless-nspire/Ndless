@@ -1,4 +1,4 @@
-/* freetype_demo.c                                                      */
+/* freetype_demo.c                                                 */
 /*                                                                 */
 /* This small program shows how to print a rotated string with the */
 /* FreeType 2 library.                                             */
