@@ -2,6 +2,9 @@
  * libndls definitions
  ****************************************************************************/
 
+/* This file is in the public domain.
+ * See http://creativecommons.org/licenses/publicdomain/deed.fr */
+
 #ifndef _LIBNDLS_H_
 #define _LIBNDLS_H_
 

@@ -93,4 +93,4 @@ fi
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 # -nostartfiles: avoids newlib startup which would be added before ours
-"$GCC" -nostartfiles -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lndls
+"$GCC" -nostartfiles -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lm -lnspireio -lfreetype -lz -lndls
