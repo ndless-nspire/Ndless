@@ -2,6 +2,9 @@
  * Ndless - main header file
  ****************************************************************************/
 
+/* This file is in the public domain.
+ * See http://creativecommons.org/licenses/publicdomain/deed.fr */
+
 #ifndef _OS_H_
 #define _OS_H_
 

@@ -2,6 +2,9 @@
  * Ndless - Syscalls enumeration. Lighter version for Ndless loader.
  ****************************************************************************/
 
+/* This file is in the public domain.
+ * See http://creativecommons.org/licenses/publicdomain/deed.fr */
+
 #ifndef _SYSCALLS_H_
 #define _SYSCALLS_H_
 

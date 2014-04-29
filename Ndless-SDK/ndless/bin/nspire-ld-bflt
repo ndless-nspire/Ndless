@@ -61,7 +61,7 @@ fi
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 # -nostartfiles: avoids newlib startup which would be added before ours
-"$GCC" -Wl,-elf2flt -nostartfiles -T "$DIRNAME/../system/ldscript-bflt" -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lfdm -lnspireio -lndls
+"$GCC" -Wl,-elf2flt -nostartfiles -T "$DIRNAME/../system/ldscript-bflt" -e _nspire_start -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0sym.o" "${args[@]}" -lSDL_gfx -lSDL_image -lSDL -lm -lnspireio -lfreetype -lz -lndls
 # Emitted by elf2flt, useless
 if [ $debug = false ]; then
 	# compatibility with previous programe Makefiles. Should now be removed by the Makefile, since we don't know where the output directory is?
