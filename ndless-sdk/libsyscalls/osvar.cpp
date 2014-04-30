@@ -1,6 +1,8 @@
 #include <syscall-list.h>
 #include <syscall.h>
 
+#include <lua.h>
+
 extern "C" {
 
 unsigned char *keypad_type()
@@ -26,6 +28,11 @@ int nl_hwtype()
 int luaL_error()
 {
 	return syscall<e_luaL_error | __SYSCALLS_ISVAR, int>();
+}
+
+lua_State* nl_lua_getstate()
+{
+	return syscall<e_nl_lua_getstate | __SYSCALLS_ISEXT, lua_State*>();
 }
 
 extern int _start;

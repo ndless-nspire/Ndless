@@ -8,6 +8,8 @@
 #ifndef lua_h
 #define lua_h
 
+#include <stdlib.h>
+
 #include "luaconf.h"
 
 #define LUA_VERSION	"Lua 5.1"
