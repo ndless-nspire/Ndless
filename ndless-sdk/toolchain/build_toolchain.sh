@@ -52,6 +52,7 @@ rm test test.c
 if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (textinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
 
+mkdir -p build build-binutils download
 
 if [ ! -f .downloaded ]; then
 	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/binutils.tar.bz2 && tar xvjf download/binutils.tar.bz2 && \
@@ -60,7 +61,7 @@ if [ ! -f .downloaded ]; then
 	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/newlib.tar.gz && tar xvzf download/newlib.tar.gz && \
 	touch .downloaded
 fi
- 
+
 # Section 1: GNU Binutils.
 echo "Building Binutils..."
 [ -f .built_binutils ] || (cd build-binutils && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
