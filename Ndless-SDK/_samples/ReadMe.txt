@@ -1,4 +1,5 @@
 - colors: color screen demo. Only for TI-Nspire CX.
+- freetype: freetype font demo.
 - helloworld: nspireio-based Hello World.
 - helloworld-cpp: Hello World written in C++.
 - helloworld-sdl: nSDL-based Hello World.

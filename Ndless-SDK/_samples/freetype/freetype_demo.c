@@ -14,6 +14,7 @@
 #include "gen_font_droid.h"
 
 
+/* libndls.h stuff temporary copied here during the transition to newlib */
 #define SCREEN_WIDTH            320
 #define SCREEN_HEIGHT           240
 void clrscr(void);
