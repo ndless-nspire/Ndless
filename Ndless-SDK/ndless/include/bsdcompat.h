@@ -1,3 +1,6 @@
+/* This file is in the public domain.
+ * See http://creativecommons.org/licenses/publicdomain/deed.fr */
+
 #ifndef _BSDCOMPAT
 #define _BSDCOMPAT
 

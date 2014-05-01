@@ -2,6 +2,9 @@
  * Ndless - Common definitions
  ****************************************************************************/
 
+/* This file is in the public domain.
+ * See http://creativecommons.org/licenses/publicdomain/deed.fr */
+
 #ifndef _COMMON_H_
 #define _COMMON_H_
 

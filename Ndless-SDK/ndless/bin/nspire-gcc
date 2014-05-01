@@ -25,4 +25,4 @@ home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
 # -fno-builtin: We prefer to use syscalls. And GCC's builtins expansion (http://www.ciselant.de/projects/gcc_printf/gcc_printf.html)
 # is incompatible with the inline definition of most syscalls.
-"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -fpic -fno-builtin -D _TINSPIRE "$@"
+"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -I "$DIRNAME/../include/freetype2" -I "$DIRNAME/../include/SDL" -fpic -fno-builtin -D _TINSPIRE "$@"
