@@ -240,6 +240,10 @@ int _open(const char *path, int flags)
 
 int _close(int file)
 {
+	//NEVER close std*, that would make them unusuable!
+	if(file < 3)
+		return errno_set(EIO);
+
 	NUC_FILE *f;
 	GETFD(f);
   
