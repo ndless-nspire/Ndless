@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 int main(int argc, char **argv)
 {
@@ -34,19 +35,31 @@ int main(int argc, char **argv)
 	sig[4] = 0;
 	int read = fread(sig, 1, 4, myself);
 	printf("I read %d chars: %s\n", read, sig);
-	fclose(myself);
 	
 	puts("Seek back...");
-	if(!fseek(myself, SEEK_CUR, 0))
-	{
+	if(fseek(myself, SEEK_SET, 0) == -1)
 		printf("Couldn't seek! errno: %d\n", errno);
-		return 1;
-	}
 	
-	read = fread(sig, 1, 5, myself);
+	read = fread(sig, 1, 4, myself);
 	printf("I read %d chars: %s\n", read, sig);
 	
-	puts("Bye!");
+	fclose(myself);
+
+	puts("Now I try to open '.':");
+	DIR *dir = opendir(".");
+	struct dirent *dirent;
+	if(!dir)
+		puts("Failed to open '.'!");
+	else
+	{
+		puts("Entries in '.':");
+		while((dirent = readdir(dir)))
+			puts(dirent->d_name);
+
+		closedir(dir);
+	}
 	
+	puts("Bye!");
+
 	return 0;
 }
