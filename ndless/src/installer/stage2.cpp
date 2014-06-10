@@ -1,4 +1,4 @@
-	/****************************************************************************
+/****************************************************************************
  * Stage 1 of the installation.
  * Set a hook and hot reboot the OS to get it back to a stable state.
  *
@@ -87,7 +87,7 @@ static unsigned const disp_str_addrs[] = {0x100CC78C, 0x100CCA44, 0x100CBD48, 0x
 // Install the resident part
 HOOK_DEFINE(s1_startup_hook) {
 	struct nuc_stat res_stat;
-	char res_path[300];
+	const char *res_path = "/documents/ndless/ndless_resources_3.6.tns";
 	NUC_FILE *res_file;
 	char *core;
 	char *res_params = NULL;
