@@ -102,15 +102,19 @@ int _puts(const char *s)
 	return syscall<e_puts, int>(s);
 }
 
-extern volatile int __crt0_savedsp; // Saved in crt0.S
+void  __crt0_exit(int ret); // Declared in crt0.S
 
 void _exit(int ret)
 {
-	asm volatile(
-		"mov r0, %[ret]\n"
-		"mov sp, %[savedsp]\n" // Saved in crt0.S
-		"b __crt0_exit\n" :: [ret] "r" (ret), [savedsp] "r" (__crt0_savedsp));
+	__crt0_exit(ret);
 	
+	__builtin_unreachable();
+}
+
+void abort()
+{
+	_exit(-1);
+
 	__builtin_unreachable();
 }
 

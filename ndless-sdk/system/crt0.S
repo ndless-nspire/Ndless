@@ -16,6 +16,7 @@ _start: .global _start
 	
 __crt0exit:.global __crt0exit /* For backwards compatibility */
 __crt0_exit: .global __crt0_exit
+	ldr sp, __crt0_savedsp
 	pop {r4-r12,pc}
 
 __crt0_savedsp: .global __crt0_savedsp

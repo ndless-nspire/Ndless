@@ -4,7 +4,7 @@ _start: .global _start
 	@ signature identifying a program
 	.asciz "PRG"
 
-	stmfd sp!, {r4-r11,lr} @ and never destroy r0 and r1 which are C's argc and argv
+	stmfd sp!, {r4-r12,lr} @ and never destroy r0 and r1 which are C's argc and argv
 	@ GOT-based relocation, required for C global variables. The program must be built with the GCC option -fpic.
 relocate:
 	@ Get the absolute address of the GOT. See http://www.google.com/codesearch/p?hl=en#FiIujMxKUHU/sites/sources.redhat.com/pub/glibc/snapshots/glibc-ports-latest.tar.bz2%7CDNu48aiJSpY/glibc-ports-20090518/sysdeps/arm/dl-machine.h&q=%22.word%20_GLOBAL_OFFSET_TABLE_%22
@@ -24,7 +24,8 @@ relocate_loop:
 	bl   main
 
 __crt0_exit: .global __crt0_exit
-	ldmfd sp!, {r4-r11,pc}
+	ldr sp, __crt0_savedsp
+	ldmfd sp!, {r4-r12,pc}
 
 got_offset:
 	.word _GLOBAL_OFFSET_TABLE_ - (get_got_offset+8)

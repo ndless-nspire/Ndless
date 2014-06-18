@@ -1,0 +1,36 @@
+ENTRY(_start)
+
+SECTIONS {
+	.text 0x0 : {
+		_start = .;
+		*(.text)
+		*(.text.*)
+	}
+
+	.got : {
+		*(.got.plt*)
+		*(.got)
+		LONG(0xFFFFFFFF)
+	}
+	
+	.data : {
+		. = ALIGN(8);
+		*(.rodata*)
+		*(.data*)
+	}
+
+	.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) }
+	PROVIDE_HIDDEN (__exidx_start = .);
+	.ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+	PROVIDE_HIDDEN (__exidx_end = .);
+	
+	.eh_frame : {
+		. = ALIGN(8);
+		*(.eh_frame)
+	}
+	
+	.bss : {
+		. = ALIGN(8) ;
+		*(.bss*)
+	}
+}
