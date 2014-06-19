@@ -1,4 +1,4 @@
-/* Basic syscalls */
+// Basic syscalls
 
 #include <stdint.h>
 #include <stdio.h>
@@ -76,7 +76,7 @@ static int errno_check(int result)
 
 void *__dso_handle __attribute__((weak));
 
-/* programs linked to newlib use malloc, but newlib itself uses _malloc_r... */
+// programs linked to newlib use malloc, but newlib itself uses _malloc_r...
 void *malloc(size_t size)
 {
 	return syscall<e_malloc, void*>(size);
@@ -340,7 +340,7 @@ int _kill(pid_t pid, int sig)
 	return errno_set(ENOSYS);
 }
 
-/* The unused void* here are structs used for reentrancy */
+// The unused void* here are structs used for reentrancy
 
 void *_malloc_r(void*, size_t size)
 {
@@ -360,6 +360,15 @@ void *_realloc_r(void*, void *mem, size_t size)
 void *_calloc_r(void*, size_t nmemb, size_t size)
 {
 	return syscall<e_calloc, void*>(nmemb, size);
+}
+
+// Used for exception handling
+extern uint64_t __exidx_start, __exidx_end;
+
+void *__gnu_Unwind_Find_exidx(unsigned int pc, int *count)
+{
+	*count = (&__exidx_end - &__exidx_start);
+	return &__exidx_start;
 }
 
 }

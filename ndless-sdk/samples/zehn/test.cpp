@@ -1,6 +1,6 @@
 #include <cstdio>
 
-/*class Test
+class Test
 {
 public:
 	Test() { puts("Test();"); }
@@ -31,11 +31,5 @@ int main()
 	}
 	puts("I'm running!\n");
 
-	return 1;
-}*/
-
-int main()
-{
-	puts("Hi!");
 	return 1;
 }

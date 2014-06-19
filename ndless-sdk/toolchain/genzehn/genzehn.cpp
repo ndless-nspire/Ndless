@@ -170,7 +170,7 @@ int main(int argc, char **argv)
         }
         else if(skipped_nobits != 0)
         {
-            std::cerr << "Warning: NOBITS section (like .bss) not at the end! (" << s->get_name() << " is after it)" << std::endl;
+            std::cerr << "\tWarning: NOBITS section (like .bss) not at the end! (" << s->get_name() << " is after it)" << std::endl;
 
             exec_data.resize(exec_data.size() + skipped_nobits);
             skipped_nobits = 0; //Now there is no additional space at the end anymore
@@ -197,6 +197,8 @@ int main(int argc, char **argv)
             }
 
             reloc_table.push_back({Zehn_reloc_type::ADD_BASE_GOT, static_cast<uint32_t>(s->get_address())});
+
+            continue;
         }
 
         if(s->get_type() == SHT_RELA)

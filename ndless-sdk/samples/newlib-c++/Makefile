@@ -1,9 +1,9 @@
 DEBUG = FALSE
-GCC = nspire-gcc
+GCC = nspire-zehn-gcc
 AS = nspire-as
-GXX =nspire-g++
-LD = nspire-ld
-GCCFLAGS = -Wall -W -marm
+GXX =nspire-zehn-g++
+LD = nspire-zehn-ld
+GCCFLAGS = -Wall -W -marm -fno-exceptions -fno-rtti
 LDFLAGS =
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -16,8 +16,6 @@ COBJS = $(patsubst %.c,%.o,$(wildcard *.c))
 ASMOBJS = $(patsubst %.S,%.o,$(wildcard *.S))
 OBJS = $(CPPOBJS) $(COBJS) $(ASMOBJS)
 EXE = newlibcpp.tns
-DISTDIR = .
-vpath %.tns $(DISTDIR)
 
 all: $(EXE)
 
@@ -31,11 +29,8 @@ all: $(EXE)
 	$(AS) -c $<
 
 $(EXE): $(OBJS)
-	mkdir -p $(DISTDIR)
-	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
-ifeq ($(DEBUG),FALSE)
-	@rm -f $(DISTDIR)/*.gdb
-endif
+	$(LD) $^ -o $@.elf $(LDFLAGS)
+	genzehn --input $@.elf --output $@
 
 clean:
-	rm -f *.o *.elf $(DISTDIR)/*.gdb $(DISTDIR)/$(EXE)
+	rm -f *.o *.elf *.tns

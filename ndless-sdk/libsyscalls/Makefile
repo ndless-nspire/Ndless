@@ -1,4 +1,4 @@
-CFLAGS := -std=c++11 -nostdlib -O3 -fpie -fno-exceptions -fno-rtti -mlong-calls -Wall -Werror -I ../include/
+CFLAGS := -std=c++11 -nostdlib -O3 -fPIE -fno-exceptions -fno-rtti -mlong-calls -Wall -Werror -I ../include/
 
 AR_FILE := ../lib/libsyscalls.a
 O_FILES := stubs.o stdlib.o osvar.o
