@@ -17,7 +17,7 @@ PARALLEL="-j8" # or "-j<number of build jobs>"
  
 BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
 GCC=gcc-4.9.0 # http://gcc.gnu.org/
-# newlib-2.0.1 is broken for ARM :-(
+# newlib-2.1.0 is broken for ARM :-(
 NEWLIB=newlib-2.0.0 # http://sourceware.org/newlib/
 GDB=gdb-7.7 # http://www.gnu.org/software/gdb/
 
@@ -30,7 +30,6 @@ OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-
 OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
-OPTIONS_ELF2FLT="--target=$TARGET --prefix=$PREFIX -with-libbfd=../build-binutils/bfd/libbfd.a --with-libiberty=../build-binutils/libiberty/libiberty.a --with-bfd-include-dir=../build-binutils/bfd --with-binutils-include-dir=../$BINUTILS/include"
 
 echo "Building and installing to '$PREFIX'..."
 
@@ -48,8 +47,9 @@ if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) de
 #TODO: This test fails on openSUSE
 #if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (termcap/libtinfo-dev) dependency seems to be missing!'; fi
 if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python-devel/python2.7-dev) dependency seems to be missing!'; fi
+if ! gcc -lboost_program_options test.c -o test; then error=1; echo 'boost (boost-devel) dependency seems to be missing!'; fi
 rm test test.c
-if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (textinfo) dependency seems to be missing!'; fi
+if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (texinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
 
 mkdir -p build build-binutils download
@@ -82,9 +82,9 @@ echo "Building GCC (step 2)..."
 echo "Building GDB..."
 [ -f .built_gdb ] || (cd build && rm -rf * && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
  
-# Section 6: elf2flt.
-echo "Building elf2flt..."
-[ -f .built_elf2flt ] || (cd build && rm -rf * && "$SCRIPTPATH"/elf2flt/configure $OPTIONS_ELF2FLT && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_elf2flt) || exit 1;
+# Section 6: genzehn.
+echo "Building genzehn..."
+[ -f .built_genzehn ] || (cd genzehn && make clean && make && make install PREFIX=$PREFIX && cd .. && rm -rf build/* && touch .built_genzehn) || exit 1;
 
 echo "Done!"
-echo "Don't forget to add '$PREFIX/bin' to your \$PATH along with Ndless-SDK/ndless/bin."
+echo "Don't forget to add '$PREFIX/bin' to your \$PATH along with $SCRIPTPATH/../bin."
