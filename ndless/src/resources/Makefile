@@ -1,40 +1,46 @@
-AS := nspire-as
-GCC := nspire-gcc
-LD := "$(shell (which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null)"
-OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
+DEBUG = FALSE
 
-GCCFLAGS := -Os -Wall -W -Wno-strict-aliasing -fpic -std=gnu99
-LDFLAGS := -Tldscript -nostartfiles -L../../../ndless-sdk/lib -nostdlib
-DISTDIR := ../../calcbin
-vpath %.tns $(DISTDIR)
+GCC = nspire-gcc
+AS  = nspire-as
+GXX = nspire-g++
+LD  = nspire-ld
+GENZEHN = genzehn
 
-all: ndless_resources_3.6.tns
+GCCFLAGS = -Wall -W -Wno-missing-braces -marm -std=gnu99
+LDFLAGS =
+ZEHNFLAGS = --name "ndless_resources_3.6" --include-bss
+
+ifeq ($(DEBUG),FALSE)
+	GCCFLAGS += -Os
+else
+	GCCFLAGS += -O0 -g
+endif
+
+OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
+OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
+OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
+ZEHN = ndless_resources_3.6_zehn.tns
+EXE = ../../calcbin/ndless_resources_3.6.tns
+
+all: $(EXE)
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
 
+%.o: %.cpp
+	$(GXX) $(GCCFLAGS) -c $<
+	
 %.o: %.S
-	$(AS) $(GCCFLAGS) -c $<
+	$(AS) -c $<
 
-%.elf: %.o
-	$(LD) $(LDFLAGS) $^ -o $@
+$(EXE): $(ZEHN)
+	cat ../resources-loader/zehn_loader.tns $^ > $@
 
-RES_OBJS := install.o ploaderhook.o bflt.o ints.o syscalls.o utils.o emu.o luaext.o
+$(ZEHN).elf: $(OBJS)
+	$(LD) $^ -o $@ $(LDFLAGS)
 
-ndless_resources_3.6.tns: $(RES_OBJS) crt0.o
-	@mkdir -p $(DISTDIR)
-	$(LD) $(LDFLAGS) $(RES_OBJS) -o ndless_resources.elf
-	$(OBJCOPY) -O binary ndless_resources.elf $(DISTDIR)/$@
-
-subdirs:
-	@for i in $(SUBDIRS); do \
-	echo "make all in $$i..."; \
-  (cd $$i; make all) || exit 1; done
+$(ZEHN): $(ZEHN).elf
+	$(GENZEHN) --input $^ --output $@ $(ZEHNFLAGS)
 
 clean:
-	rm -rf ndless_resources.elf ndless_resources_3.6.tns $(RES_OBJS)
-
-cleansubdirs:
-	@for i in $(SUBDIRS); do \
-	echo "make all in $$i..."; \
-  (cd $$i; make clean) || exit 1; done
+	rm -f *.o $(ZEHN) $(ZEHN).elf $(EXE)

@@ -32,6 +32,7 @@ int main(int argc, char **argv)
     opt::options_description additional("Additional options");
     additional.add_options()
             ("help", "show this message")
+            ("include-bss", "include the contents of the NOBITS sections in the file")
             ("name", opt::value<std::string>(), "executable name")
             ("verbose", "output something, even if no error occured")
             ("author", opt::value<std::string>(), "executable author")
@@ -165,7 +166,11 @@ int main(int argc, char **argv)
             if(verbose)
                 std::cout << "\tNOBITS section at 0x" << std::hex << s->get_address() << "." << std::endl;
 
-            skipped_nobits = s->get_size();
+            if(args.count("include-bss") == 0)
+                skipped_nobits = s->get_size();
+            else
+                exec_data.resize(exec_data.size() + s->get_size());
+
             continue;
         }
         else if(skipped_nobits != 0)

@@ -1,0 +1,19 @@
+ENTRY(main);
+
+SECTIONS
+{
+	.text 0x0 : {
+		LONG(0x00475250) /*"PRG\0"*/
+		main = .;
+		*(.text);
+	}
+	/* .bss before .data, to make sure space is allocated for it in the binary file */
+	.bss : {
+		*(.bss);
+	}
+	.data : {
+		*(.data);
+	}
+	. = ALIGN(4);
+	zehn_start = .;
+}
