@@ -37,6 +37,9 @@ lua_State* nl_lua_getstate()
 
 extern int _start;
 
+//For backwards-compatibility
+int _syscallvar_savedlr;
+
 void nl_relocdata(void *ptr, int size)
 {
 	return syscall<e_nl_relocdatab | __SYSCALLS_ISEXT, void>(ptr, size, &_start);

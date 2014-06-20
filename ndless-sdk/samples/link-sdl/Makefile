@@ -1,21 +1,46 @@
-SOURCES = link.c
-TARGET = Link.tns
-OBJECTS = $(SOURCES:.c=.o)
+DEBUG = FALSE
 
-CC = nspire-gcc
-LD = nspire-ld
-OBJCOPY = arm-none-eabi-objcopy
-CFLAGS = -Wall -Wextra -Ofast
+GCC = nspire-gcc
+AS  = nspire-as
+GXX = nspire-g++
+LD  = nspire-ld
+GENZEHN = genzehn
+
+GCCFLAGS = -Wall -W -marm
 LDFLAGS =
-LIBS = -lSDL
+ZEHNFLAGS = --name "link"
 
-all: $(TARGET)
+ifeq ($(DEBUG),FALSE)
+	GCCFLAGS += -Os
+else
+	GCCFLAGS += -O0 -g
+endif
 
-$(TARGET): $(OBJECTS)
-	$(LD) $(LDFLAGS) $^ -o $@
+OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
+OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
+OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
+EXE = link.tns
+DISTDIR = .
+vpath %.tns $(DISTDIR)
+vpath %.tns.elf $(DISTDIR)
 
-.c.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(EXE)
+
+%.o: %.c
+	$(GCC) $(GCCFLAGS) -c $<
+
+%.o: %.cpp
+	$(GXX) $(GCCFLAGS) -c $<
+	
+%.o: %.S
+	$(AS) -c $<
+
+$(EXE).elf: $(OBJS)
+	mkdir -p $(DISTDIR)
+	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+
+$(EXE): $(EXE).elf
+	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
 
 clean:
-	rm -f $(OBJECTS) $(TARGET:.tns=.elf) $(TARGET)
+	rm -f *.o $(DISTDIR)/$(EXE) $(DISTDIR)/$(EXE).elf

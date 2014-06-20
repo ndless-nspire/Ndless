@@ -23,5 +23,4 @@ fi
 GCC=`(which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null`
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-#-mlong-calls: elf2flt is unable to relocate direct calls, such as "bl addr"
-"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -fPIC -mlong-calls -D _TINSPIRE "$@"
+"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -fPIE -D _TINSPIRE "$@"

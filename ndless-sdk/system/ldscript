@@ -1,36 +1,36 @@
-/* See http://sourceware.org/binutils/docs-2.20/ld/Scripts.html#Scripts */
-/* Compatible with bFLT */
-
 ENTRY(_start)
 
 SECTIONS {
-    .text 0x0 : {
-        . = ALIGN(0x4);
+	.text 0x0 : {
 		_start = .;
-        *(.text)
-        *(.text.*)
-    }
+		*(.text)
+		*(.text.*)
+	}
 
-    .data : {
-        . = ALIGN(0x4);
-        *(.got.plt*)
-        *(.got)
-        LONG(-1)
+	.got : {
+		*(.got.plt*)
+		*(.got)
+		LONG(0xFFFFFFFF)
+	}
+	
+	.data : {
+		. = ALIGN(8);
+		*(.rodata*)
+		*(.data*)
+	}
 
-        *(.rodata*)
-        *(.data*)
-        /* symbols used by asm statements in Ndless macros, optimized out by GCC, we want to emit only if used */
-        . = ALIGN(4);
-        PROVIDE(_syscallvar_savedlr = .);
-        . += 4;
-    }
-    . = ALIGN(4);
-    .ARM.extab : { *(.ARM.extab) }
-    .bss : {
-        . = ALIGN(0x4) ;
-        *(.bss*)
-    }
-    
+	.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) }
+	PROVIDE_HIDDEN (__exidx_start = .);
+	.ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+	PROVIDE_HIDDEN (__exidx_end = .);
+	
+	.eh_frame : {
+		. = ALIGN(8);
+		*(.eh_frame)
+	}
+	
+	.bss : {
+		. = ALIGN(8) ;
+		*(.bss*)
+	}
 }
-__exidx_start = .;
-__exidx_end = .;
