@@ -11,7 +11,8 @@
 #include <limits.h>
 #include <nucleus.h>
 
-// errno is a macro which calls a newlib function, which creates a circular dependency.
+// errno is a macro which calls a newlib function, which would create a circular dependency,
+// so errno needs to be addressed directly
 #include <errno.h>
 #undef errno
 extern int errno;
