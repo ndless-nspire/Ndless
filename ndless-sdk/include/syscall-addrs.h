@@ -8,6 +8,7 @@ constexpr
 #endif // __cplusplus
 unsigned int syscall_addrs[4][341] =
 {
+{
 0X103FE9D4,
 0X103FEB78,
 0X103FF000,
@@ -349,6 +350,8 @@ unsigned int syscall_addrs[4][341] =
 0X10085234,
 0X1007C650,
 0X10110E14,
+},
+{
 0X103FF414,
 0X103FF5B8,
 0X103FFA40,
@@ -690,6 +693,8 @@ unsigned int syscall_addrs[4][341] =
 0X10085190,
 0X1007C5A4,
 0X10111104,
+},
+{
 0X103FC858,
 0X103FC9FC,
 0X103FCE84,
@@ -1031,6 +1036,8 @@ unsigned int syscall_addrs[4][341] =
 0X10084864,
 0X1007BC30,
 0X10110858,
+},
+{
 0X103FD2C8,
 0X103FD46C,
 0X103FD8F4,
@@ -1372,6 +1379,7 @@ unsigned int syscall_addrs[4][341] =
 0X100847F0,
 0X1007BBB4,
 0X10110B78,
+},
 };
 
 #endif // !SYSCALL_ADDR_LIST_H

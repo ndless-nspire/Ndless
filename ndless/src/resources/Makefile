@@ -7,7 +7,7 @@ LD  = nspire-ld
 GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -Wno-missing-braces -marm -std=gnu99
-LDFLAGS =
+LDFLAGS = -Wl,-e,main
 ZEHNFLAGS = --name "ndless_resources_3.6" --include-bss
 
 ifeq ($(DEBUG),FALSE)

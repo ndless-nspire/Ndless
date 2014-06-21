@@ -94,8 +94,3 @@ unsigned sc_ext_table[] = {
 	(unsigned)ins_loaded_by_3rd_party_loader, (unsigned)sc_nl_hwsubtype, (unsigned)sc_nl_exec, (unsigned)sc_nl_osid,
 	(unsigned)sc_nl_hassyscall,
 };
-
-void sc_setup(void) {
-	sc_ext_relocdatab(sc_ext_table, __SYSCALLS_LASTEXT + 1, &__base);
-	sc_ext_relocdatab(emu_sysc_table, __SYSCALLS_LASTEMU + 1, &__base);
-}

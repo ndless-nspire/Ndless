@@ -5,7 +5,7 @@ if($argc != 3)
 //Has to be in the correct order as it's a multidimensional array!
 $idc_files = array("OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc");
 
-$syscall_nr_list = fopen(__DIR__ . "/../../../../ndless-sdk/include/syscall-list.h", "r");
+$syscall_nr_list = fopen(__DIR__ . "/../../include/syscall-list.h", "r");
 if($syscall_nr_list === FALSE)
 	die("Couldn't open syscall-list.h!\n");
 
@@ -28,8 +28,10 @@ while(true)
 {
 	if(strpos($lines[$i], "END_OF_LIST") !== FALSE)
 		break;
-		
+	
+	
 	$matches = array();
+	//Explanation in mkStubs.php
 	$found = preg_match("%#define e_(.+) (\\d+)( .*)?%", $lines[$i], $matches);
 	$i++;
 	
@@ -95,6 +97,8 @@ EOF;
 fwrite($syscall_addr_list, $header);
 
 for($nr = 0; $nr < $count_os; $nr++)
+{
+	fwrite($syscall_addr_list, "{\n");
 	for($syscall = 0; $syscall < $count_syscalls; $syscall++)
 	{
 		$syscall_name = $syscalls[$syscall];
@@ -106,6 +110,8 @@ for($nr = 0; $nr < $count_os; $nr++)
 		else
 			fwrite($syscall_addr_list, $syscall_addrs[$nr][$syscall_name] . ",\n");
 	}
+	fwrite($syscall_addr_list, "},\n");
+}
 
 $footer = <<<EOF
 };

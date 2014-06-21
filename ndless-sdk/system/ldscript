@@ -14,7 +14,6 @@ SECTIONS {
 	}
 	
 	.data : {
-		. = ALIGN(8);
 		*(.rodata*)
 		*(.data*)
 	}
@@ -25,12 +24,10 @@ SECTIONS {
 	PROVIDE_HIDDEN (__exidx_end = .);
 	
 	.eh_frame : {
-		. = ALIGN(8);
 		*(.eh_frame)
 	}
 	
 	.bss : {
-		. = ALIGN(8) ;
 		*(.bss*)
 	}
 }

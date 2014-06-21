@@ -18,7 +18,8 @@ int main(int argc, char **argv)
 			"ldr r1, =label1\n"
 			"sub %[base], %[base], r1" : [base] "=r" (base) :: "r1");
 
-	const Zehn_header *header = reinterpret_cast<const Zehn_header*>(&zehn_start + base);
+	const Zehn_header *header = reinterpret_cast<const Zehn_header*>(&zehn_start + base + 16);
+
 	if(header->signature != ZEHN_SIGNATURE || header->version != ZEHN_VERSION
 		|| header->file_size != header->alloc_size) //We can't malloc anything, no syscalls allowed here
 		return 1;
@@ -47,6 +48,6 @@ int main(int argc, char **argv)
 
 	//Everything relocated, jump to entry point!
 	Entry entry = reinterpret_cast<Entry>(exec_data + header->entry_offset);
-	
+
 	return entry(argc, argv);
 }

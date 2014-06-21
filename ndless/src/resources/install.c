@@ -65,13 +65,11 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	}
 #endif
 
-	if (!argv[0] || argv[0][0] == 'L') { // not opened from the Documents screen
+	if (!argv[0] || argv[0][0] == 'L') // not opened from the Documents screen
 		ints_setup_handlers();
-		sc_setup();
-	} else {
+	else
 		installed = TRUE;
-	}
-	
+
 	if (installed && nl_loaded_by_3rd_party_loader()) {
 		return 0; // do nothing
 	}
@@ -82,7 +80,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook);
 		lua_install_hooks();
 	}
-	
+
 	if (argv[0] && argv[0][0] == 'L') { // third-party launcher
 		loaded_by_3rd_party_loader = TRUE;
 		return 0;
@@ -93,6 +91,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			return 0;
 		ins_uninstall();
 	}
+
 	// continue OS startup
 	return 0;
 }

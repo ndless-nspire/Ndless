@@ -80,8 +80,6 @@ static unsigned const interp_shutdown_addrs[] = {0x10825B10, 0x1080A35C, 0x10807
 void lua_install_hooks(void) {
 	HOOK_INSTALL(interp_startup_addrs[ut_os_version_index], lua_interp_startup);
 	HOOK_INSTALL(interp_shutdown_addrs[ut_os_version_index], lua_interp_shutdown);
-	nl_relocdata((unsigned*)baselib, (sizeof(baselib) / sizeof(unsigned*)) - 2);
-	nl_relocdata((unsigned*)ndlesslib, (sizeof(ndlesslib) / sizeof(unsigned*)) - 2);
 }
 
 static lua_State *luastate = NULL;

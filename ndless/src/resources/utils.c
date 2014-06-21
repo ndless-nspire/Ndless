@@ -31,7 +31,7 @@ struct next_descriptor ut_next_descriptor = {
 	.ext_version = 0x00010007 // will be incremented only if new functionalities exposed to third-party tools
 };
 
-unsigned ut_os_version_index;
+unsigned int ut_os_version_index;
 
 /* Writes to ut_os_version_index a zero-based index identifying the OS version and HW model.
  * Also sets up the syscalls table.
@@ -55,7 +55,7 @@ void ut_read_os_version_index(void) {
 		default:
 			ut_calc_reboot();
 	}
-	
+
 	sc_addrs_ptr = syscall_addrs[ut_os_version_index];
 }
 void __attribute__ ((noreturn)) ut_calc_reboot(void) {

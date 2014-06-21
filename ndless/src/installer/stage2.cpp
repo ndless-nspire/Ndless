@@ -106,7 +106,7 @@ HOOK_DEFINE(s1_startup_hook) {
 	syscall_local<e_fread, int>(core, res_stat.st_size, 1, res_file);
 	syscall_local<e_fclose, int>(res_file);
 	clear_cache();
-	((void (*)(int argc, void* argv))(char*)(core + sizeof("PRG")))(1, &res_params); // Run the core installation
+	((int (*)(int argc, void* argv))(core + sizeof("PRG")))(1, &res_params); // Run the core installation
 s1_startup_hook_return:
 	HOOK_UNINSTALL(ndless_inst_resident_hook_addrs[ut_os_version_index], s1_startup_hook);
 	HOOK_RESTORE_RETURN(s1_startup_hook);
