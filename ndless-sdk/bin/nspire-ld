@@ -44,4 +44,4 @@ fi
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-"$GCC" -Wl,-emit-relocs -fPIE -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
+"$GCC" -Wl,-emit-relocs -nostdlib -nostartfiles -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"

@@ -75,6 +75,10 @@ asm(
 " ldrne	r2, sc_addrs_ptr  @ OS syscalls table \n"
 "have_address: \n"
 " ldr	r0, [r2, r0, lsl #2] @ syscall address \n"
+" cmp	r1, #" STRINGIFY(__SYSCALLS_ISVAR) "\n"
+" bne jmp_to_syscall \n"
+" str	r0, [sp] \n"
+" adr	r0, back_to_caller \n"
 
 "jmp_to_syscall: \n"
 " str	r0, [sp, #12] \n" // Overwrite the dummy register previously saved

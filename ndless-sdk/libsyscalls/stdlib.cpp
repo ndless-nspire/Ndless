@@ -1,4 +1,4 @@
-// Basic syscalls
+// Basic syscalls and some runtime functionalities
 
 #include <stdint.h>
 #include <stdio.h>
@@ -10,6 +10,7 @@
 #include <sys/times.h>
 #include <limits.h>
 #include <nucleus.h>
+#include <libndls.h>
 
 // errno is a macro which calls a newlib function, which would create a circular dependency,
 // so errno needs to be addressed directly
@@ -17,7 +18,7 @@
 #undef errno
 extern int errno;
 
-// Syscall enums
+// Syscall enum
 #include <syscall-list.h>
 #include "syscall.h"
 
@@ -75,9 +76,7 @@ static int errno_check(int result)
 	return -1;
 }
 
-void *__dso_handle __attribute__((weak));
-
-// programs linked to newlib use malloc, but newlib itself uses _malloc_r...
+// Programs linked to newlib use malloc, but newlib itself uses _malloc_r...
 void *malloc(size_t size)
 {
 	return syscall<e_malloc, void*>(size);
@@ -112,8 +111,16 @@ void _exit(int ret)
 	__builtin_unreachable();
 }
 
+static bool aborting = false;
 void abort()
 {
+	// To prevent an endless loop, _show_msgbox could abort() if e.g. malloc fails
+	if(!aborting)
+	{
+		aborting = true;
+		_show_msgbox("Ndless", "The application crashed", 0);
+	}
+
 	_exit(-1);
 
 	__builtin_unreachable();
@@ -372,4 +379,6 @@ void *__gnu_Unwind_Find_exidx(unsigned int pc, int *count)
 	return &__exidx_start;
 }
 
+// Miscellaneous
+void *__dso_handle __attribute__((weak));
 }

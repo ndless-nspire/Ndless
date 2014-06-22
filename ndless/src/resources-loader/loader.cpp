@@ -1,4 +1,8 @@
+#include <algorithm>
 #include <cstdint>
+
+#include <syscall-list.h>
+#include <syscall.h>
 
 #include <zehn.h>
 
@@ -20,9 +24,24 @@ int main(int argc, char **argv)
 
 	const Zehn_header *header = reinterpret_cast<const Zehn_header*>(&zehn_start + base + 16);
 
-	if(header->signature != ZEHN_SIGNATURE || header->version != ZEHN_VERSION
-		|| header->file_size != header->alloc_size) //We can't malloc anything, no syscalls allowed here
+	if(header->signature != ZEHN_SIGNATURE || header->version != ZEHN_VERSION || header->file_size > header->alloc_size)
 		return 1;
+
+	uint8_t *mallocd = nullptr;
+	//We mustn't use any syscalls if used for loading ndless_resources, where --include-bss is used,
+	//so this step will be skipped
+	if(header->file_size != header->alloc_size)
+	{
+		mallocd = syscall<e_malloc, uint8_t*>(header->alloc_size + 4);
+		if(!mallocd)
+			return 1;
+
+		//4-byte alignment
+		uint8_t *new_storage = reinterpret_cast<uint8_t*>(reinterpret_cast<uint32_t>(mallocd) & ~3);
+		const uint8_t *old_storage = reinterpret_cast<const uint8_t*>(header);
+		syscall<e_memcpy, void*>(new_storage, old_storage, header->file_size);
+		header = reinterpret_cast<const Zehn_header*>(new_storage);
+	}
 	
 	const Zehn_reloc *reloc_table = reinterpret_cast<const Zehn_reloc*>(reinterpret_cast<const uint8_t*>(header) + sizeof(Zehn_header));
 	//This loader doesn't parse the flag table
@@ -49,5 +68,10 @@ int main(int argc, char **argv)
 	//Everything relocated, jump to entry point!
 	Entry entry = reinterpret_cast<Entry>(exec_data + header->entry_offset);
 
-	return entry(argc, argv);
+	int ret = entry(argc, argv);
+
+	if(mallocd)
+		syscall<e_free, void>(mallocd);
+
+	return ret;
 }
