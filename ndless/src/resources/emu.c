@@ -39,7 +39,8 @@ void *emu_debug_alloc_ptr;
  * Returns a pointer to the memory block, or null in case of error. */
 static void *emu_debug_alloc(void) {
 	if (!emu_debug_alloc_ptr)
-	emu_debug_alloc_ptr = malloc(8000*1024);
+		emu_debug_alloc_ptr = malloc(emu_debug_alloc_size);
+
 	return emu_debug_alloc_ptr;
 }
 
@@ -49,7 +50,7 @@ static void emu_debug_free() {
 	emu_debug_alloc_ptr = NULL;
 }
 
-/* Emu syscalls table. Relocated by sc_setup(). */
+/* Emu syscalls table. */
 unsigned emu_sysc_table[] = {
 	(unsigned)emu_debug_alloc, (unsigned)emu_debug_free
 };

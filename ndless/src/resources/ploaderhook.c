@@ -25,8 +25,10 @@
 
 #include <os.h>
 #include <sys/stat.h>
+
 #include "ndless.h"
 #include "bflt.h"
+#include "zehn_loader.h"
 
 struct assoc_file_each_cb_ctx {
 	const char *prgm_name;
@@ -56,15 +58,28 @@ void ld_set_resident(void) {
 
 enum e_ld_bin_format ld_bin_format = LD_ERROR_BIN;
 
-static int ndless_load(char *docpath, void **base, size_t *size, int (**entry_address_ptr)(int, char*[]))
+static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int (**entry_address_ptr)(int, char*[]))
 {
-    NUC_FILE *docfile = nuc_fopen(docpath, "rb");
 	struct nuc_stat docstat;
-	if (!docfile || nuc_stat(docpath, &docstat)) {
+	if (nuc_stat(docpath, &docstat)) {
 		puts("ndless_load: can't open doc");
 		return 1;
 	}
-	void *docptr = emu_debug_alloc_ptr ? emu_debug_alloc_ptr : malloc(docstat.st_size);
+
+	void *docptr;
+	if(emu_debug_alloc_ptr)
+	{
+		if(emu_debug_alloc_size < docstat.st_size)
+		{
+			puts("ndless_load: emu_debug_alloc_size too small!");
+			docptr = malloc(docstat.st_size);	
+		}
+		else
+			docptr = emu_debug_alloc_ptr;
+	}
+	else
+		docptr = malloc(docstat.st_size);
+
 	if (!docptr) {
 		puts("ndless_load: can't malloc");
 		return 1;
@@ -75,7 +90,7 @@ static int ndless_load(char *docpath, void **base, size_t *size, int (**entry_ad
 			free(docptr);
 		return 1;
 	}
-	nuc_fclose(docfile);
+
 	if (strcmp(PRGMSIG, docptr)) { /* not a plain-old Ndless program */
 		if (!emu_debug_alloc_ptr)
 			free(docptr);
@@ -83,9 +98,9 @@ static int ndless_load(char *docpath, void **base, size_t *size, int (**entry_ad
 	}
 
 	*base = docptr;
-	*size = docstat.st_size;
 	*entry_address_ptr = (int (*)(int argc, char *argv[]))(docptr + sizeof(PRGMSIG));
-    return 0;
+
+	return 0;
 }
 
 int ld_exec(const char *path, void **resident_ptr) {
@@ -138,23 +153,54 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	}
 
 	ld_bin_format = LD_ERROR_BIN;
-    void *base;
-    size_t size;
-    int (*entry)(int argc, char *argv[]);
 
-    // try to load as plain-old Ndless binary first
-    if (ndless_load(prgm_path, &base, &size, &entry) != 0) {
-        // if failed, try to load as bflt binary
-        if (bflt_load(prgm_path, &base, &size, &entry) != 0) {
-            puts("ld_exec: unknown bin format");
-            return 0xDEAD;
-        } else {
-            ld_bin_format = LD_BFLT_BIN;
-        }
-    }else {
-        ld_bin_format = LD_NDLESS_BIN;
-    }
+	uint32_t signature;
 
+	NUC_FILE *prgm = nuc_fopen(prgm_path, "rb");
+	if(nuc_fread(&signature, sizeof(signature), 1, prgm) != 1)
+	{
+		// empty file?
+		nuc_fclose(prgm);
+		return 0xDEAD;
+	}
+
+	nuc_fseek(prgm, 0, SEEK_SET);
+
+	void *base;
+	int (*entry)(int argc, char *argv[]);
+
+	switch(signature)
+	{
+	case 0x00475250: //"PRG\0"
+		if(ndless_load(prgm_path, prgm, &base, &entry) == 0)
+		{
+			ld_bin_format = LD_PRG_BIN;
+			break;
+		}
+
+		nuc_fclose(prgm);
+		return 0xDEAD;
+	case 0x544c4662: //"bFLT"
+		if(bflt_load(prgm, &base, &entry) == 0)
+		{
+			ld_bin_format = LD_BFLT_BIN;
+			break;
+		}
+
+		nuc_fclose(prgm);
+		return 0xDEAD;
+	case 0x6e68655a: //"Zehn"
+		if(zehn_load(prgm, &base, &entry) == 0)
+		{
+			ld_bin_format = LD_ZEHN_BIN;
+			break;
+		}
+
+	default:
+		nuc_fclose(prgm);
+		return 0xDEAD;
+	}	
+	
 	int intmask = TCT_Local_Control_Interrupts(-1); /* TODO workaround: disable the interrupts to avoid the clock on the screen */
 	wait_no_key_pressed(); // let the user release the Enter key, to avoid being read by the program
 	void *savedscr = malloc(SCREEN_BYTES_SIZE);
@@ -168,6 +214,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	argc = 1 + argsn;
 	if (isassoc)
 		argc++;
+
 	argv = malloc((argc + 1) * sizeof(char*));
 	if (!argv) {
 		puts("ld_exec: can't malloc argv");
@@ -182,8 +229,8 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	}
 	if (args)
 		memcpy(argvptr, args, argsn * sizeof(char*));
+
 	argv[argc] = NULL;
-	
 	
 	if (has_colors) {
 		volatile unsigned *palette = (volatile unsigned*)0xC0000200;
@@ -195,9 +242,9 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	is_current_prgm_resident = FALSE;
 	clear_cache();
 	ret = entry(argc, argv); /* run the program */
-	if (has_colors) {
+	if (has_colors)
 		lcd_incolor(); // in case not restored by the program
-	}
+
 	if (!plh_noscrredraw)
 		memcpy((void*) SCREEN_BASE_ADDRESS, savedscr, SCREEN_BYTES_SIZE);
 	
@@ -211,10 +258,9 @@ ld_exec_with_args_quit:
 	}
 	if (is_current_prgm_resident) // required by the program itself
 		return ret;
-	if (!emu_debug_alloc_ptr) {
-	    if (ld_bin_format == LD_NDLESS_BIN) free(base);
-	    if (ld_bin_format == LD_BFLT_BIN) bflt_free(base);
-	}
+	if (!emu_debug_alloc_ptr)
+	    free(base);
+
 	free(argv);
 	return ret;
 }

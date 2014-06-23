@@ -41,10 +41,10 @@ int sc_nl_osvalue(const int *values, unsigned size) {
  * data.rel and data.rel.ro sections are created, but may contain both
  * non-relocable and relocable data, for which we have no clue.
  * This function allows to relocate an array of pointers.
- * This function is useless when the bFLT binary format is used. */
+ * This function is useless if the PRG binary format is not used. */
 void sc_ext_relocdatab(unsigned *dataptr, unsigned size, void *base) {
 	unsigned i;
-	if (ld_bin_format == LD_BFLT_BIN) return;
+	if (ld_bin_format != LD_PRG_BIN) return;
 	for (i = size; i > 0; i--) {
 		*dataptr++ += (unsigned)base;
 	}

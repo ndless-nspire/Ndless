@@ -37,7 +37,7 @@
 #define e_unlink 19
 #define e_rename 20
 #define e_TCC_Terminate_Task 21 // int TCC_Terminate_Task(NU_TASK *p1)
-#define e_puts 22
+#define e_puts 22 // int nuc_puts(const char *p1)
 #define e_NU_Get_First 23 // int NU_Get_First(struct dstat *p1, const char *p2)
 #define e_NU_Get_Next 24 // int NU_Get_Next(struct dstat *p1)
 #define e_NU_Done 25 // void NU_Done(struct dstat *p1)

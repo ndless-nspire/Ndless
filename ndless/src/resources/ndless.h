@@ -27,7 +27,7 @@
 
 #include "ndless_version.h"
 
-// Marker at the beginning of a plain-old Ndless program. Deprecated, only used for Ndless itself, bFLT is now used for programs.
+// Marker at the beginning of a plain-old Ndless program. Deprecated, only used for Ndless itself, Zehn is now used for programs.
 #define PRGMSIG "PRG"
 
 /* Debug levels for ut_debug_trace() for installation failure diagnostic. Keep in execution order. */
@@ -45,6 +45,7 @@
 
 /* emu.c */
 extern void *emu_debug_alloc_ptr;
+static const size_t emu_debug_alloc_size = 8 * 1024 * 1024; //8MB
 extern unsigned emu_sysc_table[];
 
 /* install.c */
@@ -67,8 +68,9 @@ extern BOOL plh_isstartup;
 extern BOOL plh_noscrredraw;
 enum e_ld_bin_format {
 	LD_ERROR_BIN,
-	LD_NDLESS_BIN,
-	LD_BFLT_BIN
+	LD_PRG_BIN,
+	LD_BFLT_BIN,
+	LD_ZEHN_BIN
 };
 extern enum e_ld_bin_format ld_bin_format;
 void ld_set_resident(void);
@@ -85,7 +87,7 @@ void stage1(void);
 /* N-ext is a convention for TI-Nspire extensions such as Ndless.
  * Only one N-ext-based extension can be installed at a time.
  * The N-ext descriptor is referenced before the SWI handler.
- * It gives defines the currently installed extension to programs, emulators, ...
+ * It defines the currently installed extension to programs, emulators, ...
  * and ourself for uninstallation. */
 struct next_descriptor {
 	unsigned next_version;

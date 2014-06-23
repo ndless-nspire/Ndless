@@ -160,18 +160,7 @@ static int process_got(struct flat_hdr * header, void * base) {
     return 0;
 }
 
-int bflt_load(char* filename, void **mem_ptr, size_t *mem_size, int (**entry_address_ptr)(int,char*[])) {
-    NUC_FILE* fp = nuc_fopen(filename, "rb");
-    int ret;
-    if (!fp) error_user_return("Can't open file %s", filename);
-
-    ret = bflt_fload(fp, mem_ptr, mem_size, entry_address_ptr);
-
-    nuc_fclose(fp);
-    return ret;
-}
-
-int bflt_fload(FILE* fp, void **mem_ptr, size_t *mem_size, int (**entry_address_ptr)(int,char*[])) {
+int bflt_load(FILE* fp, void **mem_ptr, int (**entry_address_ptr)(int,char*[])) {
     void * mem = NULL;
     struct flat_hdr header;
 
@@ -183,7 +172,20 @@ int bflt_fload(FILE* fp, void **mem_ptr, size_t *mem_size, int (**entry_address_
 
     size_t binary_size = header.bss_end - header.entry;
     info("Attempting to alloc %u bytes",binary_size);
-    mem = emu_debug_alloc_ptr ? emu_debug_alloc_ptr : malloc(binary_size);
+
+    if(emu_debug_alloc_ptr)
+    {
+        if(emu_debug_alloc_size < binary_size)
+        {
+            puts("bFLT: emu_debug_alloc_size too small!");
+            mem = malloc(binary_size);
+        }
+        else
+            mem = emu_debug_alloc_ptr;
+    }
+    else
+        mem = emu_debug_alloc_ptr;
+
     if (!mem) error_goto_error("Failed to alloc binary memory");
 
     if (copy_segments(fp, &header, mem, binary_size) != 0) error_goto_error("Failed to copy segments");
@@ -198,7 +200,6 @@ int bflt_fload(FILE* fp, void **mem_ptr, size_t *mem_size, int (**entry_address_
     }
 
     *mem_ptr = mem;
-    *mem_size = binary_size;
 
     if (memcmp(mem, "PRG\0", 4) == 0) {
         info("Detected as ndless program packaged in a bFLT file");
@@ -214,11 +215,5 @@ int bflt_fload(FILE* fp, void **mem_ptr, size_t *mem_size, int (**entry_address_
     if (mem) free(mem);
     *mem_ptr = NULL;
     *entry_address_ptr = NULL;
-    *mem_size = 0;
     error_return("Caught error - exiting");
-}
-
-void bflt_free(void* ptr) {
-    info("Free'd bFLT executable");
-    free(ptr);
 }

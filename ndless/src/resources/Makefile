@@ -6,7 +6,7 @@ GXX = nspire-g++
 LD  = nspire-ld
 GENZEHN = genzehn
 
-GCCFLAGS = -Wall -W -Wno-missing-braces -marm -std=gnu99
+GCCFLAGS = -Wall -Wextra -W -marm
 LDFLAGS = -Wl,-e,main
 ZEHNFLAGS = --name "ndless_resources_3.6" --include-bss
 
@@ -25,10 +25,10 @@ EXE = ../../calcbin/ndless_resources_3.6.tns
 all: $(EXE)
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -c $<
+	$(GCC) $(GCCFLAGS) -std=gnu11 -c $<
 
 %.o: %.cpp
-	$(GXX) $(GCCFLAGS) -c $<
+	$(GXX) $(GCCFLAGS) -std=c++11 -fno-exceptions -fno-rtti -c $<
 	
 %.o: %.S
 	$(AS) -c $<
