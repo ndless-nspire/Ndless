@@ -22,7 +22,7 @@ if [ "$UNAME" = "cygwin" ]; then
 	DIRNAME=`cygpath --path --windows "$DIRNAME"`
 fi
 
-stdlib="-lSDL_gfx -lSDL_image -lSDL -lnspireio -lstdc++ -lndls -Wl,--start-group -lsyscalls -lc -Wl,--end-group -lgcc"
+stdlib="-lSDL_gfx -lSDL_image -lSDL -lnspireio -lstdc++ -Wl,--start-group -lndls -lsyscalls -lc -Wl,--end-group -lgcc"
 # an array is used to change the arguments while supporting arguments with spaces
 declare -a args
 for arg in "$@"; do

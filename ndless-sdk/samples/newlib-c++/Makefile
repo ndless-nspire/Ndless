@@ -1,8 +1,8 @@
 DEBUG = FALSE
-GCC = nspire-zehn-gcc
+GCC = nspire-gcc
 AS = nspire-as
-GXX =nspire-zehn-g++
-LD = nspire-zehn-ld
+GXX =nspire-g++
+LD = nspire-ld
 GCCFLAGS = -Wall -W -marm -fno-exceptions -fno-rtti
 LDFLAGS =
 ifeq ($(DEBUG),FALSE)
