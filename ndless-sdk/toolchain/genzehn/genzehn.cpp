@@ -96,6 +96,9 @@ int main(int argc, char **argv)
     std::vector<uint8_t> extra_data;
     std::vector<uint8_t> exec_data;
 
+    //For SET_ZERO
+    std::set<Elf_Xword> undefined_symbols; uint32_t got_address = 0; std::set<uint32_t> undo_relocs;
+
     if(verbose)
         std::cout << "Generating Zehn file, version " << ZEHN_VERSION << "." << std::endl;
 
@@ -130,7 +133,7 @@ int main(int argc, char **argv)
     flag_table.push_back({Zehn_flag_type::RUNS_ON_TOUCHPAD, args["touchpad-support"].as<bool>()});
     flag_table.push_back({Zehn_flag_type::RUNS_ON_32MB, args["32MB-support"].as<bool>()});
 
-    //Now the important stuff, go through every section with LOAD attribute
+    //Now the important stuff, go through every section with ALLOC attribute and find all undefined symbols
     for(unsigned int i = 0; i < input_reader.sections.size(); ++i)
     {
         section *s = input_reader.sections[i];
@@ -138,12 +141,41 @@ int main(int argc, char **argv)
         if(verbose)
             std::cout << "Section '" << s->get_name() << "' has flags 0x" << std::hex << s->get_flags() << "." << std::endl;
 
+        if(s->get_type() == SHT_SYMTAB)
+        {
+            symbol_section_accessor ssa(input_reader, s);
+            Elf_Xword count = ssa.get_symbols_num();
+            for(Elf_Xword i = 0; i < count; ++i)
+            {
+                Elf_Half section; std::string name; unsigned char bind, type;
+                Elf64_Addr u1; Elf_Xword u2; unsigned char u3; //Unused
+                if(ssa.get_symbol(i, name, u1, u2, bind, type, section, u3) && section == SHN_UNDEF)
+                {
+                    if(bind != STB_WEAK && type != STT_NOTYPE)
+                    {
+                        std::cerr << "\tSymbol '" << name << "' isn't defined anywhere and not weak!" << std::endl;
+                        return 1;
+                    }
+
+                    undefined_symbols.insert(i);
+
+                    if(verbose)
+                        std::cout << "\tSymbol '" << name << "' is undefined, but weak." << std::endl;
+                }
+            }
+
+            continue;
+        }
+
         if((s->get_flags() & SHF_ALLOC) == 0)
         {
             if(verbose)
                 std::cout << "\tSkipping." << std::endl;
             continue;
         }
+
+        if(s->get_name() == ".got")
+            got_address = s->get_address();
 
         if(verbose)
             std::cout << "\tIt will be placed at 0x" << std::hex << s->get_address() << " (size 0x" << s->get_size() << ")." << std::endl;
@@ -243,6 +275,28 @@ int main(int argc, char **argv)
         const Elf32_Rel *entries = reinterpret_cast<const Elf32_Rel*>(s->get_data()), *entries_end = entries + entries_count;
         for(const Elf32_Rel *entry = entries; entry < entries_end; ++entry)
         {
+            if(undefined_symbols.find(ELF32_R_SYM(entry->r_info)) != undefined_symbols.end())
+            {
+                if(verbose)
+                    std::cout << "\tSkipping relocation of 0x" << std::hex << entry->r_offset << ", because it's undefined." << std::endl;
+
+                if(ELF32_R_TYPE(entry->r_info) == 26) //R_ARM_GOT_BREL -> Undo reloc, as the whole got has been relocated
+                {
+                    uint32_t got_entry_addr = *reinterpret_cast<uint32_t*>(exec_data.data() + entry->r_offset);
+
+                    //Only undo relocs that haven't already been undone
+                    if(undo_relocs.find(got_address + got_entry_addr) == undo_relocs.end())
+                    {
+                        undo_relocs.insert(got_address + got_entry_addr);
+
+                        if(verbose)
+                            std::cout << "\tUndo-reloc for 0x" << std::hex << got_address + got_entry_addr << "." << std::endl;
+                    }
+                }
+
+                continue;
+            }
+
             uint8_t type = ELF32_R_TYPE(entry->r_info);
             switch(type)
             {
@@ -257,9 +311,13 @@ int main(int argc, char **argv)
         }
     }
 
+    //Insert the undo relocs at the end
+    for(uint32_t offset : undo_relocs)
+        reloc_table.push_back({Zehn_reloc_type::SET_ZERO, offset});
+
     //Add padding for extra_data if necessary
-    if(extra_data.size() % 8 != 0)
-        extra_data.resize((extra_data.size() + 8) & ~7);
+    if(extra_data.size() % 4 != 0)
+        extra_data.resize((extra_data.size() + 4) & ~3);
 
     header.reloc_count = reloc_table.size();
     header.flag_count = flag_table.size();
@@ -275,6 +333,7 @@ int main(int argc, char **argv)
     {
         std::cout << std::endl << "Zehn creation succeeded:" << std::endl << std::dec
                      << "\t" << header.reloc_count << "\trelocations" << std::endl
+                     << "\t\t" << undo_relocs.size() << "\tundo-relocations" << std::endl
                      << "\t" << header.flag_count << "\tflags" << std::endl
                      << "\t" << header.extra_size << "\tbytes extra data" << std::endl
                      << "\t" << header.alloc_size << "\tbytes needed to load this file" << std::endl

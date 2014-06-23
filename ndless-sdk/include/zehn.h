@@ -34,7 +34,8 @@ struct Zehn_header
 enum class Zehn_reloc_type : uint8_t
 {
     ADD_BASE = 0, //Just add the address of the executable start
-    ADD_BASE_GOT //Add the start address until you hit 0xFFFFFFFF
+    ADD_BASE_GOT, //Add the start address until you hit 0xFFFFFFFF
+    SET_ZERO //Set the value to 0, e.g. to undo got relocs for undef. symbols
 };
 
 struct Zehn_reloc

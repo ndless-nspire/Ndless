@@ -370,15 +370,6 @@ void *_calloc_r(void*, size_t nmemb, size_t size)
 	return syscall<e_calloc, void*>(nmemb, size);
 }
 
-// Used for exception handling
-extern uint64_t __exidx_start, __exidx_end;
-
-void *__gnu_Unwind_Find_exidx(unsigned int pc, int *count)
-{
-	*count = (&__exidx_end - &__exidx_start);
-	return &__exidx_start;
-}
-
 // Miscellaneous
 void *__dso_handle __attribute__((weak));
 }

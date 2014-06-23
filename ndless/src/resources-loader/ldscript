@@ -6,6 +6,7 @@ SECTIONS
 		LONG(0x00475250) /*"PRG\0"*/
 		main = .;
 		*(.text);
+		*(.got.plt);
 	}
 	/* .bss before .data, to make sure space is allocated for it in the binary file */
 	.bss : {
@@ -14,6 +15,10 @@ SECTIONS
 	.data : {
 		*(.data);
 	}
+
+	/DISCARD/ : {
+		*(.got);
+	}
 	. = ALIGN(4);
-	zehn_start = .;
 }
+zehn_start = .;
