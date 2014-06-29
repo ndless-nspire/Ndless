@@ -70,9 +70,14 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	else
 		installed = TRUE;
 
-	if (installed && nl_loaded_by_3rd_party_loader()) {
+	//These initialization routines need syscalls, so execute them after ints_setup_handlers
+	extern void initialise_monitor_handles();
+	initialise_monitor_handles();
+	extern void __cpp_init();
+	__cpp_init();
+
+	if (installed && nl_loaded_by_3rd_party_loader())
 		return 0; // do nothing
-	}
 
 	if (!installed) {
 		// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
@@ -89,10 +94,10 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	if (installed) { // ndless_resources_3.6.tns run: uninstall
 		if (show_msgbox_2b("Ndless", "Do you really want to uninstall Ndless r" STRINGIFY(NDLESS_REVISION) "?\nThe device will reboot.", "Yes", "No") == 2)
 			return 0;
+
 		ins_uninstall();
 	}
 
-	// continue OS startup
 	return 0;
 }
 

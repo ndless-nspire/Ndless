@@ -70,7 +70,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 	}
 
 	// Align to 4-bytes
-	uint8_t* base = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc) + 4) & ~3);
+	uint8_t* base = ((reinterpret_cast<uint32_t>(alloc) & 3) == 0) ? alloc : reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc) + 4) & ~3);
 
 	if(nuc_fread(base, remaining_file, 1, file) != 1)
 	{
