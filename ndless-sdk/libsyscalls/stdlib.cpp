@@ -12,6 +12,10 @@
 #include <nucleus.h>
 #include <libndls.h>
 
+#include <cxxabi.h>
+using namespace abi;
+using namespace __gnu_cxx;
+
 // errno is a macro which calls a newlib function, which would create a circular dependency,
 // so errno needs to be addressed directly
 #include <errno.h>
@@ -37,10 +41,12 @@ constexpr int MAX_OPEN_FILES = 20;
 
 // Used to map newlib FILE* to our NUCFILE*
 static NUC_FILE* openfiles[MAX_OPEN_FILES];
+static unsigned int saved_screen_buffer; //In case the program changes the buffer
 
 // Called at startup (even before c++ constructors are run)
 void initialise_monitor_handles()
 {
+	saved_screen_buffer = SCREEN_BASE_ADDRESS;
 	openfiles[0] = syscall<e_stdin | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[1] = syscall<e_stdout | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[2] = syscall<e_stderr | __SYSCALLS_ISVAR, NUC_FILE*>();
@@ -114,10 +120,30 @@ void _exit(int ret)
 static bool aborting = false;
 void abort()
 {
-	// To prevent an endless loop, _show_msgbox could abort() if e.g. malloc fails
+	// To prevent an endless loop: _show_msgbox could abort() if e.g. malloc fails
 	if(!aborting)
 	{
 		aborting = true;
+
+		if(has_colors)
+			lcd_incolor();
+		else
+			lcd_ingray();
+		SCREEN_BASE_ADDRESS = saved_screen_buffer;
+
+		if(std::type_info *t = __cxa_current_exception_type())
+		{
+			int status = -1;
+			char *dem = __cxa_demangle(t->name(), 0, 0, &status);
+			if(status == 0)
+			{
+				_show_msgbox("Exception", dem, 0);
+				free(dem);
+			}
+			else
+				_show_msgbox("Exception", t->name(), 0);
+		}
+
 		_show_msgbox("Ndless", "The application crashed", 0);
 	}
 
