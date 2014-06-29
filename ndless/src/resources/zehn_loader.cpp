@@ -8,6 +8,20 @@
 
 #include "ndless.h"
 
+// Lighter alternative to std::vector (DON'T ASSIGN)
+template <typename T> class Storage
+{
+public:
+	Storage(size_t count) : count(count) { data = reinterpret_cast<T*>(malloc(sizeof(T) * count)); }
+	~Storage() { free(data); }
+
+	T* begin() { return data; }
+	T* end() { return data + count; }
+
+	T* data;
+	size_t count;
+};
+
 extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]))
 {
 	Zehn_header header;
@@ -21,18 +35,32 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		return 1;
 	}
 
+	Storage<Zehn_reloc> relocs(header.reloc_count);
+	Storage<Zehn_flag> flags(header.flag_count);
+	Storage<uint8_t> extra_data(header.extra_size);
+
+	if(nuc_fread(reinterpret_cast<void*>(relocs.data), sizeof(Zehn_reloc), header.reloc_count, file) != header.reloc_count
+		|| nuc_fread(reinterpret_cast<void*>(flags.data), sizeof(Zehn_flag), header.flag_count, file) != header.flag_count
+		|| nuc_fread(reinterpret_cast<void*>(extra_data.data), 1, header.extra_size, file) != header.extra_size)
+	{
+		puts("[Zehn] File read failed!");
+		return 1;
+	}
+
+	size_t remaining_mem = header.alloc_size - nuc_ftell(file), remaining_file = header.file_size - nuc_ftell(file);
+
 	if(emu_debug_alloc_ptr)
 	{
-		if(emu_debug_alloc_size < header.alloc_size + 4)
+		if(emu_debug_alloc_size < remaining_mem + 4)
 		{
 			puts("[Zehn] emu_debug_alloc_size too small!");
-			*mem_ptr = malloc(header.alloc_size + 4);
+			*mem_ptr = malloc(remaining_mem + 4);
 		}
 		else
 			*mem_ptr = emu_debug_alloc_ptr;
 	}
 	else
-		*mem_ptr = malloc(header.alloc_size + 4);
+		*mem_ptr = malloc(remaining_mem + 4);
 
 	uint8_t *alloc = reinterpret_cast<uint8_t*>(*mem_ptr);
 	if(!alloc)
@@ -43,35 +71,27 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 	// Align to 4-bytes
 	uint8_t* base = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc) + 4) & ~3);
-	nuc_fseek(file, 0, SEEK_SET);
-	if(nuc_fread(base, header.file_size, 1, file) != 1)
+
+	if(nuc_fread(base, remaining_file, 1, file) != 1)
 	{
 		puts("[Zehn] File read failed!");
-		free(alloc);
+		if(alloc != emu_debug_alloc_ptr)
+			free(alloc);
+
 		return 1;
 	}
 
 	nuc_fclose(file);
 
 	// Fill rest with zeros (.bss and other NOBITS sections)
-	std::fill(base + header.file_size, base + header.alloc_size, 0);
+	std::fill(base + remaining_file, base + remaining_mem, 0);
 
-	Zehn_reloc *reloc_table = reinterpret_cast<Zehn_reloc*>(base + sizeof(Zehn_header));
-	Zehn_flag *flag_table = reinterpret_cast<Zehn_flag*>(reinterpret_cast<uint8_t*>(reloc_table) + sizeof(Zehn_reloc) * header.reloc_count);
-	uint8_t *extra_data = reinterpret_cast<uint8_t*>(flag_table) + sizeof(Zehn_flag) * header.flag_count;
-	uint8_t *exec_data = extra_data + header.extra_size;
+	uint8_t *exec_data = base;
 
-	if(exec_data >= base + header.file_size)
-	{
-		puts("[Zehn] Inconsistencies in Zehn header detected!");
-		free(*mem_ptr);
-		return 1;
-	}
-	
 	// Iterate through each flag
-	for(unsigned int i = 0; i < header.flag_count; ++i, ++flag_table)
+	for(Zehn_flag &f : flags)
 	{
-		switch(flag_table->type)
+		switch(f.type)
 		{
 		case Zehn_flag_type::EXECUTABLE_NAME:
 		case Zehn_flag_type::EXECUTABLE_NOTICE:
@@ -91,17 +111,17 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 	}
 
 	// Iterate through the reloc table
-	for(unsigned int i = 0; i < header.reloc_count; ++i, ++reloc_table)
+	for(Zehn_reloc &r : relocs)
 	{
-		if(exec_data + reloc_table->offset >= base + header.alloc_size)
+		if(exec_data + r.offset >= base + remaining_mem)
 		{
 			puts("[Zehn] Wrong reloc in Zehn file!");
 			free(*mem_ptr);
 			return 1;
 		}
 
-		uint32_t *place = reinterpret_cast<uint32_t*>(exec_data + reloc_table->offset);
-		switch(reloc_table->type)
+		uint32_t *place = reinterpret_cast<uint32_t*>(exec_data + r.offset);
+		switch(r.type)
 		{
 		case Zehn_reloc_type::ADD_BASE:
 			*place += reinterpret_cast<uint32_t>(exec_data);
@@ -114,7 +134,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 			*place = 0;
 			break;
 		default:
-			printf("[Zehn] Unsupported reloc %d!\n", reloc_table->type);
+			printf("[Zehn] Unsupported reloc %d!\n", r.type);
 			free(*mem_ptr);
 			return 1;
 		}

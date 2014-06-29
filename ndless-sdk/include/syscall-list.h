@@ -104,7 +104,7 @@
 #define e_inflate 86
 #define e_inflateEnd 87
 #define e_TCC_Current_Task_Pointer 88 // NU_TASK* TCC_Current_Task_Pointer()
-#define e_ftell 89
+#define e_ftell 89 // long nuc_ftell(NUC_FILE *p1)
 #define e_NU_Open 90 // PCFD NU_Open(char *p1, uint32_t p2, uint32_t p3)
 #define e_NU_Close 91 // int NU_Close(PCFD p1)
 #define e_NU_Truncate 92 // int NU_Truncate(PCFD p1, long int p2)
