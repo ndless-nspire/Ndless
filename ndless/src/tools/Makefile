@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-SUBDIRS = EscapeInstaller MakeLuaInst MakeHotRebootPatches MakeSyscalls
+SUBDIRS = EscapeInstaller MakeLuaInst MakeHotRebootPatches MakeSyscalls MakeQnAInst XORInstaller
 
 all:
 	@for i in $(SUBDIRS); do \
