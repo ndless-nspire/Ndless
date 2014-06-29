@@ -108,20 +108,21 @@ EOF;
 			$stub = <<<EOF
 __attribute__((naked)) $rettype $matches[5]($matches[6])
 {
-	asm volatile("adr r4, savedlr_stack\\n"
-				"adr r5, savedlr_stack_nr\\n"
+	asm volatile("ldr r4, =savedlr_stack\\n"
+				"ldr r5, =savedlr_stack_nr\\n"
 				"ldr r6, [r5]\\n"
 				"add r6, r6, #1\\n"
 				"str lr, [r4, r6, lsl #2]\\n"
 				"str r6, [r5]\\n"
 				"swi %[nr]\\n"
-				"adr r4, savedlr_stack\\n"
-				"adr r5, savedlr_stack_nr\\n"
+				"ldr r4, =savedlr_stack\\n"
+				"ldr r5, =savedlr_stack_nr\\n"
 				"ldr r6, [r5]\\n"
 				"ldr lr, [r4, r6, lsl #2]\\n"
 				"sub r6, r6, #1\\n"
 				"str r6, [r5]\\n"
-				"bx lr" :: [nr] "i" ($matches[1]));
+				"bx lr\\n"
+				".ltorg" :: [nr] "i" ($matches[1]));
 }
 
 EOF;

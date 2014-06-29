@@ -111,8 +111,7 @@ typedef void ** Gc;
 
 /* from gui_gc_getGC */
 /* CAUTION: cache this value */
-Gc *gui_gc_global_GC_ptr();
-#define gui_gc_global_GC_ptr gui_gc_global_GC_ptr()
+Gc* gui_gc_global_GC_ptr();
 
 /*********************************/
 /*     Init/Dispose functions    */

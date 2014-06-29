@@ -12,9 +12,7 @@
 #include <nucleus.h>
 #include <libndls.h>
 
-#include <cxxabi.h>
-using namespace abi;
-using namespace __gnu_cxx;
+#include <typeinfo>
 
 // errno is a macro which calls a newlib function, which would create a circular dependency,
 // so errno needs to be addressed directly
@@ -117,6 +115,9 @@ void _exit(int ret)
 	__builtin_unreachable();
 }
 
+std::type_info* __cxa_current_exception_type() __attribute__((weak));
+char* __attribute((weak)) __cxa_demangle(const char *, int, int, int*);
+
 static bool aborting = false;
 void abort()
 {
@@ -131,6 +132,9 @@ void abort()
 			lcd_ingray();
 		SCREEN_BASE_ADDRESS = saved_screen_buffer;
 
+		if(&__cxa_demangle == 0)
+			goto nocpp;
+
 		if(std::type_info *t = __cxa_current_exception_type())
 		{
 			int status = -1;
@@ -144,6 +148,7 @@ void abort()
 				_show_msgbox("Exception", t->name(), 0);
 		}
 
+		nocpp:
 		_show_msgbox("Ndless", "The application crashed", 0);
 	}
 
