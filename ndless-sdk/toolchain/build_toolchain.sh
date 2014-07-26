@@ -16,7 +16,7 @@ PREFIX=$PWD/install # or the directory where the toolchain should be installed i
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
 BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
-GCC=gcc-4.9.0 # http://gcc.gnu.org/
+GCC=gcc-4.9.1 # http://gcc.gnu.org/
 # newlib-2.1.0 is broken for ARM :-(
 NEWLIB=newlib-2.0.0 # http://sourceware.org/newlib/
 GDB=gdb-7.7 # http://www.gnu.org/software/gdb/
