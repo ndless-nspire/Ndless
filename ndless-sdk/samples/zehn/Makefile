@@ -1,7 +1,7 @@
 DEBUG = FALSE
-GCC = nspire-zehn-gcc
-GXX = nspire-zehn-g++
-LD = nspire-zehn-ld
+GCC = nspire-gcc
+GXX = nspire-g++
+LD = nspire-ld
 
 GCCFLAGS = -Wall -Wextra -marm -fno-rtti
 

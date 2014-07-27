@@ -27,6 +27,8 @@ for arg in "$@"; do
 	esac
 done
 
+(cd "$DIRNAME/../system" && make -s all)
+
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
