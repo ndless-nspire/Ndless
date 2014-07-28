@@ -3,7 +3,7 @@ GCC = nspire-gcc
 AS = nspire-as
 GXX =nspire-g++
 LD = nspire-ld
-GCCFLAGS = -Wall -W -marm -fno-exceptions -fno-rtti
+GCCFLAGS = -Wall -W -marm
 LDFLAGS =
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -23,7 +23,7 @@ all: $(EXE)
 	$(GCC) $(GCCFLAGS) -c $<
 
 %.o: %.cpp
-	$(GXX) $(GCCFLAGS) -c $<
+	$(GXX) $(GCCFLAGS) -std=c++1y -c $<
 	
 %.o: %.S
 	$(AS) -c $<

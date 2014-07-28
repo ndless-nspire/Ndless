@@ -3,6 +3,8 @@
 
 #include <lua.h>
 
+typedef void** Gc;
+
 extern "C" {
 
 unsigned char *keypad_type()
@@ -28,6 +30,11 @@ int nl_hwtype()
 int luaL_error()
 {
 	return syscall<e_luaL_error | __SYSCALLS_ISVAR, int>();
+}
+
+Gc gui_gc_global_GC()
+{
+	return *syscall<e_gui_gc_global_GC_ptr | __SYSCALLS_ISVAR, Gc*>();
 }
 
 lua_State* nl_lua_getstate()

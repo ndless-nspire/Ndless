@@ -4,7 +4,7 @@
 
 int main() {
 
-    Gc gc = *gui_gc_global_GC_ptr;
+	Gc gc = gui_gc_global_GC();
 
     { /* Nice window */
 
@@ -111,7 +111,7 @@ int main() {
 
     { /* off-screen buffer */
 
-        gui_gc_begin(gc);
+	gui_gc_begin(gc);
         gui_gc_setFont(gc, Italic10);
 
         { /* Custom off-screen buffer */

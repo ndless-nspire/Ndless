@@ -21,6 +21,10 @@
 #ifndef _NGC_H_
 #define _NGC_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <libndls.h>
 #include <nucleus.h>
 
@@ -111,7 +115,7 @@ typedef void ** Gc;
 
 /* from gui_gc_getGC */
 /* CAUTION: cache this value */
-Gc* gui_gc_global_GC_ptr();
+Gc gui_gc_global_GC();
 
 /*********************************/
 /*     Init/Dispose functions    */
@@ -188,5 +192,9 @@ void gui_gc_blit_buffer(Gc gc, char *buffer, int x, int y, int w, int h);
 
 void gui_gc_blit_to_screen(Gc gc);
 void gui_gc_blit_to_screen_region(Gc gc, unsigned x, unsigned y, unsigned w, unsigned h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_NGC_H_ */

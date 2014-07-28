@@ -19,12 +19,12 @@ endif
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
 OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
 OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
-EXE = @@EXENAME@@.tns
+EXE = @@EXENAME@@
 DISTDIR = .
 vpath %.tns $(DISTDIR)
-vpath %.tns.elf $(DISTDIR)
+vpath %.elf $(DISTDIR)
 
-all: $(EXE)
+all: $(EXE).prg.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -39,8 +39,11 @@ $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
 	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
 
-$(EXE): $(EXE).elf
+$(EXE).tns: $(EXE).elf
 	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
 
+$(EXE).prg.tns: $(EXE).tns
+	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
+
 clean:
-	rm -f *.o $(DISTDIR)/$(EXE) $(DISTDIR)/$(EXE).elf
+	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns

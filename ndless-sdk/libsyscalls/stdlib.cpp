@@ -336,17 +336,6 @@ char *getwd(char *buf)
 	return buf;
 }
 
-char *getcwd(char *buf, size_t size)
-{
-	if(size < PATH_MAX)
-	{
-		errno = ERANGE;
-		return nullptr;
-	}
-	
-	return getwd(buf);
-}
-
 char *get_current_dir_name()
 {
 	char *buf = reinterpret_cast<char*>(malloc(PATH_MAX));
