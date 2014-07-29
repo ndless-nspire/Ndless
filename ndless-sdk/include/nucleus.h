@@ -8,6 +8,7 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 #include <limits.h>
+#include <lauxlib.h>
 
 #define BUFSIZ 1024
 #define OS_BASE_ADDRESS 0x10000000
@@ -99,6 +100,7 @@ int nl_ndless_rev();
 int nl_hwtype();
 int nl_hwsubtype();
 int nl_loaded_by_3rd_party_loader();
+lua_State *nl_lua_getstate();
 int luaL_error();
 
 #ifdef __cplusplus

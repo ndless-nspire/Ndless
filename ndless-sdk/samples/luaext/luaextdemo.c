@@ -1,5 +1,6 @@
 #include <os.h>
 #include <lauxlib.h>
+#include <nucleus.h>
 
 static int hello(lua_State *L) {
 	const char *param = luaL_checkstring(L, 1);

@@ -60,7 +60,6 @@ void init_map(char **data,
               int num_tiles,
               SDL_Surface *tileset,
               tile_attrib_t *tile_attrib) {
-    nl_relocdata((unsigned *)data, height);
     map.data = data;
     map.width = width;
     map.height = height;
