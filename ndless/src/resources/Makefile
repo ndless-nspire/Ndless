@@ -33,14 +33,14 @@ all: $(EXE)
 %.o: %.S
 	$(AS) -c $<
 
-$(EXE): $(ZEHN)
-	cat ../resources-loader/zehn_loader.tns $^ > $@
-
 $(ZEHN).elf: $(OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS)
 
 $(ZEHN): $(ZEHN).elf
 	$(GENZEHN) --input $^ --output $@ $(ZEHNFLAGS)
+
+$(EXE): $(ZEHN)
+	make-prg $^ $@
 
 clean:
 	rm -f *.o $(ZEHN) $(ZEHN).elf $(EXE)

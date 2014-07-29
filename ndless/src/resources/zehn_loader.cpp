@@ -1,12 +1,14 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstdint>
+#include <cstdarg>
 
 #include <libndls.h>
 #include <syscall-decls.h>
 #include <zehn.h>
 
 #include "ndless.h"
+#include "ndless_version.h"
 
 // Lighter alternative to std::vector (DON'T ASSIGN)
 template <typename T> class Storage
@@ -21,6 +23,19 @@ public:
 	T* data;
 	size_t count;
 };
+
+void msgbox(const char *title, const char *fmt, ...)
+{
+	char content[256];
+
+	va_list args;
+	va_start(args, fmt);
+	vsprintf(content, fmt, args);
+
+	_show_msgbox(title, content, 0);
+
+	va_end(args);
+}
 
 extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]))
 {
@@ -51,96 +66,151 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 	if(emu_debug_alloc_ptr)
 	{
-		if(emu_debug_alloc_size < remaining_mem + 4)
+		if(emu_debug_alloc_size < remaining_mem)
 		{
 			puts("[Zehn] emu_debug_alloc_size too small!");
-			*mem_ptr = malloc(remaining_mem + 4);
+			*mem_ptr = malloc(remaining_mem);
 		}
 		else
 			*mem_ptr = emu_debug_alloc_ptr;
 	}
 	else
-		*mem_ptr = malloc(remaining_mem + 4);
+		*mem_ptr = malloc(remaining_mem);
 
-	uint8_t *alloc = reinterpret_cast<uint8_t*>(*mem_ptr);
-	if(!alloc)
+	uint8_t *base = reinterpret_cast<uint8_t*>(*mem_ptr);
+	if(!base)
 	{
 		puts("[Zehn] Memory allocation failed!");
 		return 1;
 	}
 
-	// Align to 4-bytes
-	uint8_t* base = ((reinterpret_cast<uint32_t>(alloc) & 3) == 0) ? alloc : reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc) + 4) & ~3);
-
 	if(nuc_fread(base, remaining_file, 1, file) != 1)
 	{
 		puts("[Zehn] File read failed!");
-		if(alloc != emu_debug_alloc_ptr)
-			free(alloc);
-
 		return 1;
 	}
-
-	nuc_fclose(file);
 
 	// Fill rest with zeros (.bss and other NOBITS sections)
 	std::fill(base + remaining_file, base + remaining_mem, 0);
 
-	uint8_t *exec_data = base;
+	const char* application_name = "(unknown)";
+	unsigned int ndless_version_min = 0, ndless_version_max = UINT_MAX,
+		ndless_revision_min = 0, ndless_revision_max = UINT_MAX;
 
 	// Iterate through each flag
 	for(Zehn_flag &f : flags)
 	{
+		int i; const char *ptr;
 		switch(f.type)
 		{
 		case Zehn_flag_type::EXECUTABLE_NAME:
+			application_name = reinterpret_cast<const char*>(extra_data.begin() + f.data);
+			i = 0;
+			ptr = application_name;
+			while(*ptr)
+			{
+				if(i == 255)
+				{
+					puts("[Zehn] Invalid application name!");
+					return 1;
+				}
+				++ptr;
+			}
+			break;
 		case Zehn_flag_type::EXECUTABLE_NOTICE:
 		case Zehn_flag_type::EXECUTABLE_AUTHOR:
 		case Zehn_flag_type::EXECUTABLE_VERSION:
+			break;
 		case Zehn_flag_type::NDLESS_VERSION_MIN:
+			ndless_version_min = f.data;
+			break;
 		case Zehn_flag_type::NDLESS_REVISION_MIN:
+			ndless_revision_min = f.data;
+			break;
 		case Zehn_flag_type::NDLESS_VERSION_MAX:
+			ndless_version_max = f.data;
+			break;
 		case Zehn_flag_type::NDLESS_REVISION_MAX:
+			ndless_revision_max = f.data;
+			break;
 		case Zehn_flag_type::RUNS_ON_COLOR:
+			if(f.data == false && has_colors)
+			{
+				msgbox("Error", "The application %s doesn't support CX and CM calculators!", application_name);
+				return 2;
+			}
+			break;
 		case Zehn_flag_type::RUNS_ON_CLICKPAD:
+			if(f.data == false && !is_touchpad)
+			{
+				msgbox("Error", "The application %s doesn't support clickpads!", application_name);
+				return 2;
+			}
+			break;
 		case Zehn_flag_type::RUNS_ON_TOUCHPAD:
+			if(f.data == false && is_touchpad)
+			{
+				msgbox("Error", "The application %s doesn't support touchpads!", application_name);
+				return 2;
+			}
+			break;
 		case Zehn_flag_type::RUNS_ON_32MB:
+			if(f.data == false && (!has_colors || is_cm))
+			{
+				msgbox("Error", "The application %s required more than 32MB of RAM!", application_name);
+				return 2;
+			}
+			break;
 		default:
 			break;
 		}
 	}
 
+	if(NDLESS_VERSION < ndless_version_min || (NDLESS_VERSION == ndless_version_min && NDLESS_REVISION < ndless_revision_min))
+	{
+		msgbox("Error", "The application %s requires at least ndless %d.%d.%d!", application_name, ndless_version_min / 10, ndless_version_min % 10, ndless_revision_min);
+		return 2;
+	}
+
+	if(NDLESS_VERSION > ndless_version_max || (NDLESS_VERSION == ndless_version_max && NDLESS_REVISION > ndless_revision_max))
+	{
+		if(ndless_revision_max != UINT_MAX)
+			msgbox("Error", "The application %s requires ndless %d.%d.%d or older!", application_name, ndless_version_max / 10, ndless_version_max % 10, ndless_revision_max);
+		else
+			msgbox("Error", "The application %s requires ndless %d.%d or older!", application_name, ndless_version_max / 10, ndless_version_max % 10);
+
+		return 2;
+	}
+
 	// Iterate through the reloc table
 	for(Zehn_reloc &r : relocs)
 	{
-		if(exec_data + r.offset >= base + remaining_mem)
+		if(r.offset >= remaining_mem)
 		{
 			puts("[Zehn] Wrong reloc in Zehn file!");
-			free(*mem_ptr);
 			return 1;
 		}
 
-		uint32_t *place = reinterpret_cast<uint32_t*>(exec_data + r.offset);
+		uint32_t *place = reinterpret_cast<uint32_t*>(base + r.offset);
 		switch(r.type)
 		{
 		case Zehn_reloc_type::ADD_BASE:
-			*place += reinterpret_cast<uint32_t>(exec_data);
+			*place += reinterpret_cast<uint32_t>(base);
 			break;
 		case Zehn_reloc_type::ADD_BASE_GOT:
 			while(*place != 0xFFFFFFFF)
-				*place++ += reinterpret_cast<uint32_t>(exec_data);			
+				*place++ += reinterpret_cast<uint32_t>(base);
 			break;
 		case Zehn_reloc_type::SET_ZERO:
 			*place = 0;
 			break;
 		default:
 			printf("[Zehn] Unsupported reloc %d!\n", r.type);
-			free(*mem_ptr);
 			return 1;
 		}
 	}
 
-	*entry = reinterpret_cast<int (*)(int,char*[])>(exec_data + header.entry_offset);
+	*entry = reinterpret_cast<int (*)(int,char*[])>(base + header.entry_offset);
 
 	return 0;
 }

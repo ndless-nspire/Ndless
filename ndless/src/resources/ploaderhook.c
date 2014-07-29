@@ -107,7 +107,7 @@ int ld_exec(const char *path, void **resident_ptr) {
 	return ld_exec_with_args(path, 0, NULL, resident_ptr);
 }
 
-// Run a program. Returns 0xDEAD if can't run it. Else returns the program return code.
+// Run a program. Returns 0xDEAD if can't run it or 0xBEEF if the error dialog should be skipped. Else returns the program return code.
 // If resident_ptr isn't NULL, the program's memory block isn't freed and is stored in resident_ptr. It may be freed later with ld_free(). 
 // Resident program shouldn't use argv after returning.
 // argsn/args don't include the program path. args doesn't need to be NULL terminated. Can be 0/NULL.
@@ -166,7 +166,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 
 	nuc_fseek(prgm, 0, SEEK_SET);
 
-	void *base;
+	void *base = 0;
 	int (*entry)(int argc, char *argv[]);
 
 	switch(signature)
@@ -174,6 +174,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	case 0x00475250: //"PRG\0"
 		if(ndless_load(prgm_path, prgm, &base, &entry) == 0)
 		{
+			nuc_fclose(prgm);
 			ld_bin_format = LD_PRG_BIN;
 			break;
 		}
@@ -183,6 +184,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	case 0x544c4662: //"bFLT"
 		if(bflt_load(prgm, &base, &entry) == 0)
 		{
+			nuc_fclose(prgm);
 			ld_bin_format = LD_BFLT_BIN;
 			break;
 		}
@@ -190,12 +192,17 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		nuc_fclose(prgm);
 		return 0xDEAD;
 	case 0x6e68655a: //"Zehn"
-		if(zehn_load(prgm, &base, &entry) == 0)
+		if((ret = zehn_load(prgm, &base, &entry)) == 0)
 		{
+			nuc_fclose(prgm);
 			ld_bin_format = LD_ZEHN_BIN;
 			break;
 		}
+		if(base && base != emu_debug_alloc_ptr)
+			free(base);
 
+		nuc_fclose(prgm);
+		return ret == 1 ? 0xDEAD : 0xBEEF;
 	default:
 		nuc_fclose(prgm);
 		return 0xDEAD;
