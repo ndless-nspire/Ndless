@@ -33,6 +33,8 @@ extern "C" {
 #include <stdint.h>
 #include <sys/types.h>
 #include <usbdi.h>
+#include <os.h>
+#include <nucleus.h>
 
 // Directory where Ndless files are stored
 #define NDLESS_DIR "/documents/ndless"
@@ -58,8 +60,6 @@ typedef struct {
 #define CPU_SPEED_150MHZ 0x00000002
 #define CPU_SPEED_120MHZ 0x000A1002
 #define CPU_SPEED_90MHZ  0x00141002
-
-typedef enum { FALSE=0, TRUE } BOOL;
 
 void assert_ndless_rev(unsigned required_rev);
 BOOL any_key_pressed(void);
