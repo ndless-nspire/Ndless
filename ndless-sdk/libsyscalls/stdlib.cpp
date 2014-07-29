@@ -320,7 +320,7 @@ int mkdir(const char *path, mode_t mode)
 	return errno_check(syscall<e_mkdir, int>(path, mode));
 }
 
-int rmdir(const char *path, mode_t mode)
+int rmdir(const char *path)
 {
 	return errno_check(syscall<e_rmdir, int>(path));
 }
@@ -368,24 +368,22 @@ int _kill(pid_t pid, int sig)
 	return errno_set(ENOSYS);
 }
 
-// The unused void* here are structs used for reentrancy
-
-void *_malloc_r(void*, size_t size)
+void *_malloc_r(struct _reent *, size_t size)
 {
 	return syscall<e_malloc, void*>(size);
 }
 
-void _free_r(void*, void *mem)
+void _free_r(struct _reent *, void *mem)
 {
 	return syscall<e_free, void>(mem);
 }
 
-void *_realloc_r(void*, void *mem, size_t size)
+void *_realloc_r(struct _reent *, void *mem, size_t size)
 {
 	return syscall<e_realloc, void*>(mem, size);
 }
 
-void *_calloc_r(void*, size_t nmemb, size_t size)
+void *_calloc_r(struct _reent *, size_t nmemb, size_t size)
 {
 	return syscall<e_calloc, void*>(nmemb, size);
 }

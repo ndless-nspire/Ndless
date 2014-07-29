@@ -47,9 +47,17 @@ extern int _start;
 //For backwards-compatibility
 int _syscallvar_savedlr;
 
+/* This is only needed for old PRG programs which can't be built anymore with this SDK.
+   As the old os.h had an inline function for this, it's not required anymore.
+
 void nl_relocdata(void *ptr, int size)
 {
 	return syscall<e_nl_relocdatab | __SYSCALLS_ISEXT, void>(ptr, size, &_start);
+}*/
+
+int nl_hwsubtype()
+{
+	return syscall<e_nl_hwsubtype | __SYSCALLS_ISEXT, int>();
 }
 
 int nl_loaded_by_3rd_party_loader()
