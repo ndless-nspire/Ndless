@@ -22,8 +22,6 @@ SECTIONS
 		*(.data);
 		/* symbols used by asm statements in Ndless macros, optimized out by GCC, we want to emit only if used */
 		. = ALIGN(4);
-		PROVIDE(_syscallvar_savedlr = .);
-		. += 4;
 	}
 }
 __got_size = SIZEOF(.got) / 4;

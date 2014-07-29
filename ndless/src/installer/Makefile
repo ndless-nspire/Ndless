@@ -4,7 +4,7 @@ AS := nspire-as
 LD := "$(shell (which arm-elf-ld arm-none-eabi-ld arm-linux-gnueabi-ld | head -1) 2>/dev/null)"
 OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 
-GCCFLAGS := -Os -Wall -W -Wno-strict-aliasing -nostdlib -DSTAGE1
+GCCFLAGS := -Os -Wall -W -Wno-strict-aliasing -nostdlib -DSTAGE1 -fPIE
 GPPFLAGS := $(GCCFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 LDFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin

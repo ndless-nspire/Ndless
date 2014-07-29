@@ -1,5 +1,5 @@
 /****************************************************************************
- * Stage 1 of the installation.
+ * Stage 2 of the installation.
  * Set a hook and hot reboot the OS to get it back to a stable state.
  *
  * The contents of this file are subject to the Mozilla Public
