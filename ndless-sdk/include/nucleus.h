@@ -8,10 +8,12 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 #include <limits.h>
-#include <lauxlib.h>
 
 #define BUFSIZ 1024
 #define OS_BASE_ADDRESS 0x10000000
+
+//lua.h requires BUFSIZ
+#include <lauxlib.h>
 
 typedef enum { FALSE=0, TRUE } BOOL;
 
