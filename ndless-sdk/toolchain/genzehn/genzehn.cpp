@@ -122,11 +122,11 @@ int main(int argc, char **argv)
     if(args.count("ndless-min"))
         flag_table.push_back({Zehn_flag_type::NDLESS_VERSION_MIN, args["ndless-min"].as<uint32_t>()});
     if(args.count("ndless-rev-min"))
-        flag_table.push_back({Zehn_flag_type::NDLESS_VERSION_MIN, args["ndless-rev-min"].as<uint32_t>()});
+        flag_table.push_back({Zehn_flag_type::NDLESS_REVISION_MIN, args["ndless-rev-min"].as<uint32_t>()});
     if(args.count("ndless-max"))
-        flag_table.push_back({Zehn_flag_type::NDLESS_VERSION_MIN, args["ndless-max"].as<uint32_t>()});
+        flag_table.push_back({Zehn_flag_type::NDLESS_VERSION_MAX, args["ndless-max"].as<uint32_t>()});
     if(args.count("ndless-rev-max"))
-        flag_table.push_back({Zehn_flag_type::NDLESS_VERSION_MIN, args["ndless-rev-max"].as<uint32_t>()});
+        flag_table.push_back({Zehn_flag_type::NDLESS_REVISION_MAX, args["ndless-rev-max"].as<uint32_t>()});
 
     flag_table.push_back({Zehn_flag_type::RUNS_ON_COLOR, args["color-support"].as<bool>()});
     flag_table.push_back({Zehn_flag_type::RUNS_ON_CLICKPAD, args["clickpad-support"].as<bool>()});
