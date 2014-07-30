@@ -2,7 +2,7 @@
 if($argc != 3)
 	die("Usage: " . $argv[0] . " /path/to/idc/files /path/to/output/file\n");
 
-//Has to be in the correct order as it's a multidimensional array!
+//Has to be in the correct order as it's a multidimensional array! (OS-specific)
 $idc_files = array("OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc");
 
 $syscall_nr_list = fopen(__DIR__ . "/../../include/syscall-list.h", "r");

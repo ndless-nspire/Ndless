@@ -1,0 +1,2 @@
+These files are necessary for building ndless compatible programs. They provide startup code run before main,
+running newlib's initialization sequences, libsyscalls' initialize_monitor_handles and handles (de-)initialization of global C++ objects.

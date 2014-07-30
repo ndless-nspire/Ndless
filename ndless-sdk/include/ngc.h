@@ -25,9 +25,6 @@
 extern "C" {
 #endif
 
-#include <libndls.h>
-#include <nucleus.h>
-
 typedef enum {
     GC_CRO_RESET = 0,
     GC_CRO_SET = 1,
@@ -110,8 +107,11 @@ typedef enum {
     SerifBold24  =  0b10100011000, SerifRegular7     =  0b10000000111,
 } gui_gc_Font;
 
-
 typedef void ** Gc;
+
+/* syscall-decls.h requires Gc */
+#include <libndls.h>
+#include <nucleus.h>
 
 /* from gui_gc_getGC */
 /* CAUTION: cache this value */
