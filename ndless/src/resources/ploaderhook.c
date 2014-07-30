@@ -99,12 +99,15 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		{
 			nuc_fseek(docfile, (uint8_t*)(ptr32) - (uint8_t*)(docptr), SEEK_SET);
 			int ret = zehn_load(docfile, base, entry_address_ptr);
-			if(ret != 1) // If the Zehn is invalid, continue searching or executing as PRG
+			switch(ret)
 			{
+			case 0: // Execute as Zehn
+			case 2: // Valid Zehn, but don't execute
 				if(!emu_debug_alloc_ptr)
 					free(docptr);
-
 				return ret;
+			case 1: // Invalid Zehn
+				break;
 			}
 		}
 		ptr32++;

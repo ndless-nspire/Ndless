@@ -58,6 +58,9 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 {
 	Zehn_header header;
 
+	// The Zehn file may not begin at the file start
+	size_t file_start = nuc_ftell(file);
+
 	if(nuc_fread(&header, sizeof(header), 1, file) != 1)
 		return 1;
 
@@ -79,7 +82,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		return 1;
 	}
 
-	size_t remaining_mem = header.alloc_size - nuc_ftell(file), remaining_file = header.file_size - nuc_ftell(file);
+	size_t remaining_mem = header.alloc_size - nuc_ftell(file) + file_start, remaining_file = header.file_size - nuc_ftell(file) + file_start;
 
 	if(emu_debug_alloc_ptr)
 	{
