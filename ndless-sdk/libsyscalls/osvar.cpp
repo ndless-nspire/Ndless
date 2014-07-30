@@ -27,11 +27,6 @@ int nl_hwtype()
 	return syscall<e_nl_hwtype | __SYSCALLS_ISEXT, int>();
 }
 
-int luaL_error()
-{
-	return syscall<e_luaL_error | __SYSCALLS_ISVAR, int>();
-}
-
 Gc gui_gc_global_GC()
 {
 	return *syscall<e_gui_gc_global_GC_ptr | __SYSCALLS_ISVAR, Gc*>();
@@ -60,9 +55,39 @@ int nl_hwsubtype()
 	return syscall<e_nl_hwsubtype | __SYSCALLS_ISEXT, int>();
 }
 
+int nl_isstartup()
+{
+	return syscall<e_nl_isstartup | __SYSCALLS_ISEXT, int>();
+}
+
 int nl_loaded_by_3rd_party_loader()
 {
-	return syscall<e_nl_loaded_by_3rd_party_loader, int>();
+	return syscall<e_nl_loaded_by_3rd_party_loader | __SYSCALLS_ISEXT, int>();
+}
+
+void nl_set_resident()
+{
+	return syscall<e_nl_set_resident | __SYSCALLS_ISEXT, void>();
+}
+
+int nl_osid()
+{
+	return syscall<e_nl_osid | __SYSCALLS_ISEXT, int>();
+}
+
+int nl_osvalue()
+{
+	return syscall<e_nl_osvalue | __SYSCALLS_ISEXT, int>();
+}
+
+int _nl_hassyscall(int nr)
+{
+	return syscall<e__nl_hassyscall | __SYSCALLS_ISEXT, int>(nr);
+}
+
+int nl_exec(const char* prg, int argc, char** argv)
+{
+	return syscall<e_nl_exec, int>(prg, argc, argv);
 }
 
 }

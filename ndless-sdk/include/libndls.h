@@ -35,6 +35,7 @@ extern "C" {
 #include <usbdi.h>
 #include <os.h>
 #include <nucleus.h>
+#include <syscall-list.h>
 
 // Directory where Ndless files are stored
 #define NDLESS_DIR "/documents/ndless"
@@ -96,6 +97,7 @@ void cfg_close(void);
 char *cfg_get(const char *key);
 void cfg_register_fileext(const char *ext, const char *prgm);
 void cfg_register_fileext_file(const char *fielpath, const char *ext, const char *prgm);
+#define nl_hassyscall(x) _nl_hassyscall(e_##x)
 
 BOOL _is_touchpad(void);
 #define is_touchpad _is_touchpad()
@@ -123,7 +125,7 @@ unsigned hwtype(void);
 #define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])
 #define IO_LCD_CONTROL IO(0xC000001C, 0xC0000018)
 
-#define SCREEN_BASE_ADDRESS     (*(volatile unsigned*)0xC0000010)
+#define SCREEN_BASE_ADDRESS     (*(void**)0xC0000010)
 #define SCREEN_BYTES_SIZE       ((int)({_scrsize();}))
 #define SCREEN_BYTES_SIZE       ((int)({_scrsize();}))
 

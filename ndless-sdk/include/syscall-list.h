@@ -115,104 +115,104 @@
 #define e_closedir 97 // int nuc_closedir(NUC_DIR *p1)
 #define e_luaL_register 98 // void luaL_register(lua_State *p1, const char *p2, const luaL_Reg *p3)
 #define e_luaL_checklstring 99 // (const char*) luaL_checklstring(lua_State *p1, int p2, size_t *p3)
-#define e_luaL_error 100
+#define e_luaL_error 100 // int luaL_error(lua_State *p1, const char *fmt, ...)
 #define e_luaI_openlib 101
-#define e_luaL_getmetafield 102
-#define e_luaL_callmeta 103
-#define e_luaL_typerror 104
-#define e_luaL_argerror 105
-#define e_luaL_optlstring 106
-#define e_luaL_checknumber 107
-#define e_luaL_optnumber 108
-#define e_luaL_checkinteger 109
-#define e_luaL_optinteger 110
-#define e_luaL_checkstack 111
-#define e_luaL_checktype 112
-#define e_luaL_checkany 113
-#define e_luaL_newmetatable 114
-#define e_luaL_checkudata 115
-#define e_luaL_where 116
-#define e_luaL_checkoption 117
-#define e_luaL_ref 118
-#define e_luaL_unref 119
-#define e_luaL_loadfile 120
-#define e_luaL_loadbuffer 121
-#define e_luaL_loadstring 122
-#define e_luaL_newstate 123
-#define e_luaL_gsub 124
-#define e_luaL_findtable 125
-#define e_luaL_buffinit 126
-#define e_luaL_prepbuffer 127
-#define e_luaL_addlstring 128
-#define e_luaL_addstring 129
-#define e_luaL_addvalue 130
-#define e_luaL_pushresult 131
-#define e_lua_newstate 132
-#define e_lua_close 133
-#define e_lua_newthread 134
-#define e_lua_atpanic 135
-#define e_lua_gettop 136
-#define e_lua_settop 137
-#define e_lua_pushvalue 138
-#define e_lua_remove 139
-#define e_lua_insert 140
-#define e_lua_replace 141
-#define e_lua_checkstack 142
-#define e_lua_xmove 143
-#define e_lua_isnumber 144
-#define e_lua_isstring 145
-#define e_lua_iscfunction 146
-#define e_lua_isuserdata 147
-#define e_lua_type 148
-#define e_lua_typename 149
-#define e_lua_equal 150
-#define e_lua_rawequal 151
-#define e_lua_lessthan 152
-#define e_lua_tonumber 153
-#define e_lua_tointeger 154
-#define e_lua_toboolean 155
-#define e_lua_tolstring 156
-#define e_lua_objlen 157
-#define e_lua_tocfunction 158
-#define e_lua_touserdata 159
-#define e_lua_tothread 160
-#define e_lua_topointer 161
-#define e_lua_pushnil 162
-#define e_lua_pushnumber 163
-#define e_lua_pushinteger 164
-#define e_lua_pushlstring 165
-#define e_lua_pushstring 166
-#define e_lua_pushvfstring 167
-#define e_lua_pushfstring 168
-#define e_lua_pushcclosure 169
-#define e_lua_pushboolean 170
-#define e_lua_gettable 171
-#define e_lua_getfield 172
-#define e_lua_rawget 173
-#define e_lua_rawgeti 174
-#define e_lua_createtable 175
-#define e_lua_newuserdata 176
-#define e_lua_getmetatable 177
-#define e_lua_getfenv 178
-#define e_lua_settable 179
-#define e_lua_setfield 180
-#define e_lua_rawset 181
-#define e_lua_rawseti 182
-#define e_lua_setmetatable 183
-#define e_lua_setfenv 184
-#define e_lua_call 185
-#define e_lua_pcall 186
-#define e_lua_cpcall 187
-#define e_lua_load 188
-#define e_lua_dump 189
-#define e_lua_yield 190
-#define e_lua_resume 191
-#define e_lua_status 192
-#define e_lua_gc 193
-#define e_lua_error 194
-#define e_lua_next 195
-#define e_lua_concat 196
-#define e_lua_getstack 197
+#define e_luaL_getmetafield 102 // int luaL_getmetafield(lua_State *p1, int p2, const char *p3)
+#define e_luaL_callmeta 103 // int luaL_callmeta(lua_State *p1, int p2, const char *p3)
+#define e_luaL_typerror 104 // int luaL_typerror(lua_State *p1, int p2, const char *p3)
+#define e_luaL_argerror 105 // int luaL_argerror(lua_State *p1, int p2, const char *p3)
+#define e_luaL_optlstring 106 // (const char*) luaL_optlstring(lua_State *p1, int p2, const char *p3, size_t *p4)
+#define e_luaL_checknumber 107 // lua_Number luaL_checknumber(lua_State *p1, int p2)
+#define e_luaL_optnumber 108 // lua_Number luaL_optnumber(lua_State *p1, int p2, lua_Number p3)
+#define e_luaL_checkinteger 109 // lua_Integer luaL_checkinteger(lua_State *p1, int p2)
+#define e_luaL_optinteger 110 // lua_Integer luaL_optinteger(lua_State *p1, int p2, lua_Integer p3)
+#define e_luaL_checkstack 111 // void luaL_checkstack(lua_State *p1, int p2, const char *p3)
+#define e_luaL_checktype 112 // void luaL_checktype(lua_State *p1, int p2, int p3)
+#define e_luaL_checkany 113 // void luaL_checkany(lua_State *p1, int p2)
+#define e_luaL_newmetatable 114 // int luaL_newmetatable(lua_State *p1, const char *p2)
+#define e_luaL_checkudata 115 // void* luaL_checkudata(lua_State *p1, int p2, const char *p3)
+#define e_luaL_where 116 // void luaL_where(lua_State *p1, int p2)
+#define e_luaL_checkoption 117 // int luaL_checkoption (lua_State *p1, int p2, const char *p3, const char *const p4[])
+#define e_luaL_ref 118 // int luaL_ref(lua_State *p1, int p2)
+#define e_luaL_unref 119 // void luaL_unref(lua_State *p1, int p2, int p3)
+#define e_luaL_loadfile 120 // int luaL_loadfile(lua_State *p1, const char *p2)
+#define e_luaL_loadbuffer 121 // int luaL_loadbuffer(lua_State *p1, const char *p2, size_t p3, const char *p4)
+#define e_luaL_loadstring 122 // int luaL_loadstring(lua_State *p1, const char *p2)
+#define e_luaL_newstate 123 // lua_State* luaL_newstate()
+#define e_luaL_gsub 124 // (const char*) luaL_gsub (lua_State *p1, const char *p2, const char *p3, const char *p4)
+#define e_luaL_findtable 125 // (const char*) luaL_findtable(lua_State *p1, int p2, const char *p3, int p4)
+#define e_luaL_buffinit 126 // void luaL_buffinit(lua_State *p1, luaL_Buffer *p2)
+#define e_luaL_prepbuffer 127 // char* luaL_prepbuffer(luaL_Buffer *p1)
+#define e_luaL_addlstring 128 // void luaL_addlstring(luaL_Buffer *p1, const char *p2, size_t p3)
+#define e_luaL_addstring 129 // void luaL_addstring(luaL_Buffer *p1, const char *p2)
+#define e_luaL_addvalue 130 // void luaL_addvalue(luaL_Buffer *p1)
+#define e_luaL_pushresult 131 // void luaL_pushresult(luaL_Buffer *p1)
+#define e_lua_newstate 132 // lua_State* lua_newstate(lua_Alloc p1, void *p2)
+#define e_lua_close 133 // void lua_close(lua_State *p1)
+#define e_lua_newthread 134 // lua_State* lua_newthread(lua_State *p1)
+#define e_lua_atpanic 135 // lua_CFunction lua_atpanic(lua_State *p1, lua_CFunction p2)
+#define e_lua_gettop 136 // int lua_gettop(lua_State *p1)
+#define e_lua_settop 137 // void lua_settop(lua_State *p1, int p2)
+#define e_lua_pushvalue 138 // void lua_pushvalue(lua_State *p1, int p2)
+#define e_lua_remove 139 // void lua_remove(lua_State *p1, int p2)
+#define e_lua_insert 140 // void lua_insert (lua_State *p1, int p2)
+#define e_lua_replace 141 // void lua_replace(lua_State *p1, int p2)
+#define e_lua_checkstack 142 // int lua_checkstack(lua_State *p1, int p2)
+#define e_lua_xmove 143 // void lua_xmove(lua_State *p1, lua_State *p2, int p3)
+#define e_lua_isnumber 144 // int lua_isnumber(lua_State *p1, int p2)
+#define e_lua_isstring 145 // int lua_isstring(lua_State *p1, int p2)
+#define e_lua_iscfunction 146 // int lua_iscfunction(lua_State *p1, int p2)
+#define e_lua_isuserdata 147 // int lua_isuserdata(lua_State *p1, int p2)
+#define e_lua_type 148 // int lua_type(lua_State *p1, int p2)
+#define e_lua_typename 149 // (const char*) lua_typename(lua_State *p1, int p2)
+#define e_lua_equal 150 // int lua_equal(lua_State *p1, int p2, int p3)
+#define e_lua_rawequal 151 // int lua_rawequal(lua_State *p1, int p2, int p3)
+#define e_lua_lessthan 152 // int lua_lessthan(lua_State *p1, int p2, int p3)
+#define e_lua_tonumber 153 // lua_Number lua_tonumber(lua_State *p1, int p2)
+#define e_lua_tointeger 154 // lua_Integer lua_tointeger(lua_State *p1, int p2)
+#define e_lua_toboolean 155 // int lua_toboolean(lua_State *p1, int p2)
+#define e_lua_tolstring 156 // (const char*) lua_tolstring(lua_State *p1, int p2, size_t *p3)
+#define e_lua_objlen 157 // size_t lua_objlen(lua_State *p1, int p2)
+#define e_lua_tocfunction 158 // lua_CFunction lua_tocfunction(lua_State *p1, int p2)
+#define e_lua_touserdata 159 // void* lua_touserdata(lua_State *p1, int p2)
+#define e_lua_tothread 160 // lua_State* lua_tothread(lua_State *p1, int p2)
+#define e_lua_topointer 161 // (const void*) lua_topointer(lua_State *p1, int p2)
+#define e_lua_pushnil 162 // void lua_pushnil(lua_State *p1)
+#define e_lua_pushnumber 163 // void lua_pushnumber(lua_State *p1, lua_Number p2)
+#define e_lua_pushinteger 164 // void lua_pushinteger(lua_State *p1, lua_Integer p2)
+#define e_lua_pushlstring 165 // void lua_pushlstring(lua_State *p1, const char *p2, size_t p3)
+#define e_lua_pushstring 166 // void lua_pushstring(lua_State *p1, const char *p2)
+#define e_lua_pushvfstring 167 /* Omitted, as va_list likely not binary-compatible */
+#define e_lua_pushfstring 168 // (const char*) lua_pushfstring(lua_State *p1, const char *p2, ...)
+#define e_lua_pushcclosure 169 // void lua_pushcclosure(lua_State *p1, lua_CFunction p2, int p3)
+#define e_lua_pushboolean 170 // void lua_pushboolean(lua_State *p1, int p2)
+#define e_lua_gettable 171 // void lua_gettable(lua_State *p1, int p2)
+#define e_lua_getfield 172 // void lua_getfield(lua_State *p1, int p2, const char *p3)
+#define e_lua_rawget 173 // void lua_rawget(lua_State *p1, int p2)
+#define e_lua_rawgeti 174 // void lua_rawgeti(lua_State *p1, int p2, int p3)
+#define e_lua_createtable 175 // void lua_createtable(lua_State *p1, int p2, int p3)
+#define e_lua_newuserdata 176 // void* lua_newuserdata(lua_State *p1, size_t p2)
+#define e_lua_getmetatable 177 // int lua_getmetatable(lua_State *p1, int p2)
+#define e_lua_getfenv 178 // void lua_getfenv(lua_State *p1, int p2)
+#define e_lua_settable 179 // void lua_settable (lua_State *p1, int p2)
+#define e_lua_setfield 180 // void lua_setfield(lua_State *p1, int p2, const char *p3)
+#define e_lua_rawset 181 // void lua_rawset(lua_State *p1, int p2)
+#define e_lua_rawseti 182 // void lua_rawseti(lua_State *p1, int p2, int p3) 
+#define e_lua_setmetatable 183 // int lua_setmetatable(lua_State *p1, int p2)
+#define e_lua_setfenv 184 // int lua_setfenv(lua_State *p1, int p2)
+#define e_lua_call 185 // void lua_call(lua_State *p1, int p2, int p3)
+#define e_lua_pcall 186 // int lua_pcall(lua_State *p1, int p2, int p3, int p4)
+#define e_lua_cpcall 187 // int lua_cpcall(lua_State *p1, lua_CFunction p2, void *p3)
+#define e_lua_load 188 // int lua_load(lua_State *p1, lua_Reader p2, void *p3, const char *p4)
+#define e_lua_dump 189 // int lua_dump(lua_State *p1, lua_Writer p2, void *p3)
+#define e_lua_yield 190 // int lua_yield(lua_State *p1, int p2)
+#define e_lua_resume 191 // int lua_resume(lua_State *p1, int p2)
+#define e_lua_status 192 // int lua_status(lua_State *p1)
+#define e_lua_gc 193 // int lua_gc(lua_State *p1, int p2, int p3)
+#define e_lua_error 194 // int lua_error(lua_State *p1)
+#define e_lua_next 195 // int lua_next (lua_State *p1, int p2)
+#define e_lua_concat 196 // void lua_concat(lua_State *p1, int p2)
+#define e_lua_getstack 197 // int lua_getstack(lua_State *p1, int p2, lua_Debug *p3)
 #define e_refresh_homescr 198 // void refresh_homescr()
 #define e_refresh_docbrowser 199 // void refresh_docbrowser(int p1)
 #define e_strtok 200
@@ -242,40 +242,40 @@
 #define e_string_insert_replace_utf16 224 // int string_insert_replace_utf16(String p1, const char *p2, int p3, int p4)
 #define e_string_insert_utf16 225 // int string_insert_utf16(String p1, const char *p2, int p3)
 #define e_string_sprintf_utf16 226 // int string_sprintf_utf16(String p1, const char *fmt, ...)
-#define e_usbd_open_pipe 227
-#define e_usbd_close_pipe 228
-#define e_usbd_transfer 229
-#define e_usbd_alloc_xfer 230
-#define e_usbd_free_xfer 231
-#define e_usbd_setup_xfer 232
-#define e_usbd_setup_isoc_xfer 233
-#define e_usbd_get_xfer_status 234
-#define e_usbd_interface2endpoint_descriptor 235
-#define e_usbd_abort_pipe 236
-#define e_usbd_clear_endpoint_stall 237
-#define e_usbd_endpoint_count 238
-#define e_usbd_interface_count 239
-#define e_usbd_interface2device_handle 240
-#define e_usbd_device2interface_handle 241
-#define e_usbd_pipe2device_handle 242
-#define e_usbd_sync_transfer 243
-#define e_usbd_open_pipe_intr 244
-#define e_usbd_do_request 245
-#define e_usbd_do_request_flags 246
-#define e_usbd_do_request_flags_pipe 247
-#define e_usbd_get_interface_descriptor 248
-#define e_usbd_get_config_descriptor 249
-#define e_usbd_get_device_descriptor 250
-#define e_usbd_set_interface 251
-#define e_usbd_get_interface 252
-#define e_usbd_find_idesc 253
-#define e_usbd_errstr 254
-#define e_usbd_devinfo 255
-#define e_usbd_get_quirks 256
-#define e_usbd_get_endpoint_descriptor 257
-#define e_usb_register_driver 258
-#define e_device_get_softc 259
-#define e_device_get_ivars 260
+#define e_usbd_open_pipe 227 // usbd_status usbd_open_pipe(usbd_interface_handle p1, uint8_t p2, uint8_t p3, usbd_pipe_handle *p4)
+#define e_usbd_close_pipe 228 // usbd_status usbd_close_pipe(usbd_pipe_handle p1)
+#define e_usbd_transfer 229 // usbd_status usbd_transfer(usbd_xfer_handle p1)
+#define e_usbd_alloc_xfer 230 // usbd_xfer_handle usbd_alloc_xfer(usbd_device_handle p1)
+#define e_usbd_free_xfer 231 // usbd_status usbd_free_xfer(usbd_xfer_handle p1)
+#define e_usbd_setup_xfer 232 // void usbd_setup_xfer(usbd_xfer_handle p1, usbd_pipe_handle p2, usbd_private_handle p3, void *p4, uint32_t p5, uint16_t p6, uint32_t p7, usbd_callback p8)
+#define e_usbd_setup_isoc_xfer 233 // void usbd_setup_isoc_xfer(usbd_xfer_handle p1, usbd_pipe_handle p2, usbd_private_handle p3, uint16_t *p4, uint32_t p5, uint16_t p6, usbd_callback p7)
+#define e_usbd_get_xfer_status 234 // void usbd_get_xfer_status(usbd_xfer_handle p1, usbd_private_handle *p2, void **p3, uint32_t *p4, usbd_status *p5)
+#define e_usbd_interface2endpoint_descriptor 235 // usb_endpoint_descriptor_t* usbd_interface2endpoint_descriptor(usbd_interface_handle p1, uint8_t p2)
+#define e_usbd_abort_pipe 236 // usbd_status usbd_abort_pipe(usbd_pipe_handle p1)
+#define e_usbd_clear_endpoint_stall 237 // usbd_status usbd_clear_endpoint_stall(usbd_pipe_handle p1)
+#define e_usbd_endpoint_count 238 // usbd_status usbd_endpoint_count(usbd_interface_handle p1, uint8_t *p2)
+#define e_usbd_interface_count 239 // usbd_status usbd_interface_count(usbd_device_handle p1, uint8_t *p2)
+#define e_usbd_interface2device_handle 240 // usbd_status usbd_interface2device_handle(usbd_interface_handle p1, usbd_device_handle *p2)
+#define e_usbd_device2interface_handle 241 // usbd_status usbd_device2interface_handle(usbd_device_handle p1, uint8_t p2, usbd_interface_handle *p3)
+#define e_usbd_pipe2device_handle 242 // usbd_status usbd_pipe2device_handle(usbd_pipe_handle p1)
+#define e_usbd_sync_transfer 243 // usbd_status usbd_sync_transfer(usbd_xfer_handle p1)
+#define e_usbd_open_pipe_intr 244 // usbd_status usbd_open_pipe_intr(usbd_interface_handle p1, uint8_t p2, uint8_t p3, usbd_pipe_handle *p4, usbd_private_handle p5, void *p6, uint32_t *p8, usbd_callback p9, int p10)
+#define e_usbd_do_request 245 // usbd_status usbd_do_request(usbd_device_handle p1, usb_device_request_t *p2, void *p3)
+#define e_usbd_do_request_flags 246 // usbd_status usbd_do_request_flags(usbd_device_handle p1, usb_device_request_t *p2, void *p3, uint16_t p4, int *p5)
+#define e_usbd_do_request_flags_pipe 247 // usbd_status usbd_do_request_flags_pipe(usbd_device_handle p1, usbd_pipe_handle p2, usb_device_request_t *p3, void *p4, uint16_t p5, int *p6)
+#define e_usbd_get_interface_descriptor 248 // usb_interface_descriptor_t* usbd_get_interface_descriptor(usbd_interface_handle p1)
+#define e_usbd_get_config_descriptor 249 // usb_config_descriptor_t* usbd_get_config_descriptor(usbd_device_handle p1)
+#define e_usbd_get_device_descriptor 250 //usb_device_descriptor_t* usbd_get_device_descriptor(usbd_device_handle p2)
+#define e_usbd_set_interface 251 // usbd_status usbd_set_interface(usbd_interface_handle p1, int p2)
+#define e_usbd_get_interface 252 // usbd_status usbd_get_interface(usbd_interface_handle p1, uint8_t *p2)
+#define e_usbd_find_idesc 253 // usb_interface_descriptor_t* usbd_find_idesc(usb_config_descriptor_t *p1, int p2, int p3)
+#define e_usbd_errstr 254 // (const char*) usbd_errstr(usbd_status p1)
+#define e_usbd_devinfo 255 // void usbd_devinfo(usbd_device_handle p1, int p2, char *p3)
+#define e_usbd_get_quirks 256 // (const struct usbd_quirks*) usbd_get_quirks(usbd_device_handle p19
+#define e_usbd_get_endpoint_descriptor 257 // usb_endpoint_descriptor_t* usbd_get_endpoint_descriptor(usbd_interface_handle p1, uint8_t p2)
+#define e_usb_register_driver 258 // int usb_register_driver(int p1, int(*p2[])(device_t), const char* p3, int p4, unsigned int p5)
+#define e_device_get_softc 259 // void* device_get_ivars(device_t p1)
+#define e_device_get_ivars 260 // void* device_get_softc(device_t p1)
 #define e_get_event 261 // int get_event(struct s_ns_event* p1)
 #define e_send_key_event 262 // void send_key_event(struct s_ns_event* p1, unsigned short p2, BOOL p3, BOOL p4)
 #define e_send_click_event 263 // void send_click_event(struct s_ns_event* p1, unsigned short p2, BOOL p3, BOOL p4)
@@ -284,22 +284,22 @@
 #define e_sscanf 266
 #define e_TI_NN_SendKeyPress 267
 #define e_TI_NN_IsNodeResponsive 268
-#define e_TI_NN_NodeEnumDone 269
-#define e_TI_NN_NodeEnumNext 270
-#define e_TI_NN_GetConnMaxPktSize 271
-#define e_TI_NN_Read 272
-#define e_TI_NN_Write 273
-#define e_TI_NN_StartService 274
-#define e_TI_NN_StopService 275
-#define e_TI_NN_Connect 276
-#define e_TI_NN_Disconnect 277
-#define e_TI_NN_NodeEnumInit 278
-#define e_TI_NN_UnregisterNotifyCallback 279
+#define e_TI_NN_NodeEnumDone 269 // int16_t TI_NN_NodeEnumDone(nn_oh_t p1)
+#define e_TI_NN_NodeEnumNext 270 // int16_t TI_NN_NodeEnumNext(nn_oh_t p1, nn_nh_t *p2)
+#define e_TI_NN_GetConnMaxPktSize 271 // uint32_t TI_NN_GetConnMaxPktSize(nn_ch_t p1)
+#define e_TI_NN_Read 272 // uint16_t TI_NN_Read(nn_ch_t p1, uint32_t p2, void *p3, uint32_t p4, uint32_t p5)
+#define e_TI_NN_Write 273 // int16_t TI_NN_Write(nn_ch_t p1, void *p2, uint32_t p3)
+#define e_TI_NN_StartService 274 // int16_t TI_NN_StartService(uint32_t p1, void *p2, void(*p3)(nn_ch_t,void*))
+#define e_TI_NN_StopService 275 // int16_t TI_NN_StopService(uint32_t p1)
+#define e_TI_NN_Connect 276 // int16_t TI_NN_Connect(nn_nh_t p1, uint32_t p2, nn_ch_t *p3)
+#define e_TI_NN_Disconnect 277 // int16_t TI_NN_Disconnect(nn_ch_t p1)
+#define e_TI_NN_NodeEnumInit 278 // int16_t TI_NN_NodeEnumInit(nn_ch_t p1)
+#define e_TI_NN_UnregisterNotifyCallback 279 
 #define e_TI_NN_RegisterNotifyCallback 280
 #define e_TI_NN_InstallOS 281
 #define e_TI_NN_GetNodeInfo 282
-#define e_TI_NN_DestroyOperationHandle 283
-#define e_TI_NN_CreateOperationHandle 284
+#define e_TI_NN_DestroyOperationHandle 283 // int16_t TI_NN_DestroyOperationHandle(nn_oh_t p1)
+#define e_TI_NN_CreateOperationHandle 284 // nn_oh_t TI_NN_CreateOperationHandle()
 #define e_TI_NN_GetNodeScreen 285
 #define e_TI_NN_CopyFile 286
 #define e_TI_NN_Rename 287

@@ -39,7 +39,7 @@ constexpr int MAX_OPEN_FILES = 20;
 
 // Used to map newlib FILE* to our NUCFILE*
 static NUC_FILE* openfiles[MAX_OPEN_FILES];
-static unsigned int saved_screen_buffer; //In case the program changes the buffer
+static void* saved_screen_buffer; //In case the program changes the buffer
 
 // Called at startup (even before c++ constructors are run)
 void initialise_monitor_handles()

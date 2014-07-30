@@ -37,6 +37,8 @@ extern "C" {
 #include <nucleus.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include <bsdcompat.h>
+#include <usb.h>
 
 <?php
 $header = <<<EOF

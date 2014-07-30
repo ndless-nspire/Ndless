@@ -95,15 +95,25 @@ struct nuc_dirent {
         char d_name[0];
 };
 
+//NavNet declarations
+typedef void *nn_ch_t;
+typedef void *nn_nh_t;
+typedef void *nn_oh_t;
+
 //Provided by ndless
 unsigned char* keypad_type();
 #define keypad_type keypad_type()
 int nl_ndless_rev();
 int nl_hwtype();
 int nl_hwsubtype();
-int nl_loaded_by_3rd_party_loader();
+BOOL nl_loaded_by_3rd_party_loader();
+BOOL nl_isstartup();
+BOOL _nl_hassyscall(int nr);
+void nl_set_resident();
+int nl_osid();
+int nl_osvalue();
+int nl_exec(const char* prg, int argc, char** argv);
 lua_State *nl_lua_getstate();
-int luaL_error();
 
 #ifdef __cplusplus
 }
