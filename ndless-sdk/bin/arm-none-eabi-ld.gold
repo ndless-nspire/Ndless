@@ -1,6 +1,6 @@
 #!/bin/bash
 # New ld which produces ELF binaries for use with genzehn
-# It is invoked instead of "arm-none-eabi-ld" to replace the default crt* with ndless compatible ones and also adds some more libs
+# It is invoked instead of "arm-none-eabi-ld" (or the default linker of the ARM toolchain) to replace the default crt* with ndless compatible ones and also adds some more libs
 
 UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
 DIRNAME=`dirname "$0"`
@@ -32,4 +32,4 @@ done
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-arm-none-eabi-ld -emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
+`basename $0 | cut -f1 -d'.'` -emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
