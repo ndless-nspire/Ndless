@@ -91,10 +91,23 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		return 1;
 	}
 
-	if (strcmp(PRGMSIG, docptr)) { /* not a plain-old Ndless program */
-		if (!emu_debug_alloc_ptr)
-			free(docptr);
-		return 1;
+	uint32_t *ptr32 = docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 512 ? (docstat.st_size / 4) : 512);
+	while(ptr32 < ptr32_end)
+	{
+		// Found an embedded Zehn file
+		if(*ptr32 == 0x6e68655a && *(ptr32 + 1) == 1)
+		{
+			nuc_fseek(docfile, (uint8_t*)(ptr32) - (uint8_t*)(docptr), SEEK_SET);
+			int ret = zehn_load(docfile, base, entry_address_ptr);
+			if(ret != 1) // If the Zehn is invalid, continue searching or executing as PRG
+			{
+				if(!emu_debug_alloc_ptr)
+					free(docptr);
+
+				return ret;
+			}
+		}
+		ptr32++;
 	}
 
 	*base = docptr;
@@ -172,7 +185,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	switch(signature)
 	{
 	case 0x00475250: //"PRG\0"
-		if(ndless_load(prgm_path, prgm, &base, &entry) == 0)
+		if((ret = ndless_load(prgm_path, prgm, &base, &entry)) == 0)
 		{
 			nuc_fclose(prgm);
 			ld_bin_format = LD_PRG_BIN;
@@ -180,7 +193,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		}
 
 		nuc_fclose(prgm);
-		return 0xDEAD;
+		return ret == 1 ? 0xDEAD : 0xBEEF;
 	case 0x544c4662: //"bFLT"
 		if(bflt_load(prgm, &base, &entry) == 0)
 		{

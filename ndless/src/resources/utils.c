@@ -1,5 +1,5 @@
 /****************************************************************************
- * Common functions
+ * Common functions (both used by resources and installer: symlinked)
  *
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #include "ndless.h"
+#ifndef STAGE1
 #include <syscall-addrs.h>
 
 struct next_descriptor ut_next_descriptor = {
@@ -30,6 +31,7 @@ struct next_descriptor ut_next_descriptor = {
 	.ext_name = "NDLS",
 	.ext_version = 0x00010007 // will be incremented only if new functionalities exposed to third-party tools
 };
+#endif
 
 unsigned int ut_os_version_index;
 
@@ -56,7 +58,9 @@ void ut_read_os_version_index(void) {
 			ut_calc_reboot();
 	}
 
+#ifndef STAGE1
 	sc_addrs_ptr = syscall_addrs[ut_os_version_index];
+#endif
 }
 void __attribute__ ((noreturn)) ut_calc_reboot(void) {
 	*(unsigned*)0x900A0008 = 2; //CPU reset

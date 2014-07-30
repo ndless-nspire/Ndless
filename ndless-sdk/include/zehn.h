@@ -57,7 +57,7 @@ enum class Zehn_flag_type : uint8_t
     RUNS_ON_32MB, //Whether the executable also runs on less than 64MB of SDRAM
     EXECUTABLE_NAME, //Data contains offset into extra data which points to a 0-terminated string
     EXECUTABLE_AUTHOR, //Also as string
-    EXECUTABLE_VERSION,
+    EXECUTABLE_VERSION, //Integer for easier comparision
     EXECUTABLE_NOTICE //May contain anything as string
 };
 

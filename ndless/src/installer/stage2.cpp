@@ -170,7 +170,7 @@ int main() {
 	while ( ((*((volatile uint32_t *)(0xB0000140)))&0x2) != 0x0 )
 			;
 	PATCH_SETW(0xB00001A4, 0x003C1120);
-	
+
 	if (ut_os_version_index > 1) {
 		// Reset touchpad
 		write_touchpad(0x0004, 0x01);
@@ -202,7 +202,7 @@ int main() {
 				#include "hrpatches-os-cascx-3.6.0.h"
 		break;
 	}
-	
+
 	// disable the OS monitor thread that would throw a discrepancy error and wipe out the OS
 	// this thread use signature data passed by the boot2 and copied to the first OS variable at the beginning of the BSS
 	// this signature data may have been overwritten (and is always on classic TI-Nspire after opening the Lua installer)
@@ -211,7 +211,7 @@ int main() {
 		static unsigned const os_monitor_thread_addrs[] = {0x10135DF4, 0x10136418};
 		PATCH_SETW(os_monitor_thread_addrs[ut_os_version_index], 0xE12FFF1E); // "bx lr" at the beginning of the thread
 	}
-		
+
 	// post hot-reboot hook
 	HOOK_INSTALL(ndless_inst_resident_hook_addrs[ut_os_version_index], s1_startup_hook);
 	

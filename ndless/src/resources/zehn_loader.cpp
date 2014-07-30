@@ -26,15 +26,32 @@ public:
 
 void msgbox(const char *title, const char *fmt, ...)
 {
-	char content[256];
+	char content[512];
 
 	va_list args;
 	va_start(args, fmt);
 	vsprintf(content, fmt, args);
 
-	_show_msgbox(title, content, 0);
+	show_msgbox(title, content);
 
 	va_end(args);
+}
+
+// Validates the string a Zehn_flag points to
+bool zehn_check_string(const uint8_t *extra_data, const Zehn_flag flag, unsigned int max_length, const char **string)
+{
+	*string = reinterpret_cast<const char*>(extra_data) + flag.data;
+	const char *ptr = *string;
+        while(*ptr)
+        {
+                if(max_length == 0)
+                	return false;
+
+        	++ptr;
+		--max_length;
+	}
+
+	return true;
 }
 
 extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]))
@@ -93,33 +110,36 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 	// Fill rest with zeros (.bss and other NOBITS sections)
 	std::fill(base + remaining_file, base + remaining_mem, 0);
 
-	const char* application_name = "(unknown)";
-	unsigned int ndless_version_min = 0, ndless_version_max = UINT_MAX,
+	const char *application_name = "(unknown)", *application_author = "(unknown)", *application_notice = "(no notice)";
+	unsigned int application_version = 1, ndless_version_min = 0, ndless_version_max = UINT_MAX,
 		ndless_revision_min = 0, ndless_revision_max = UINT_MAX;
 
 	// Iterate through each flag
 	for(Zehn_flag &f : flags)
 	{
-		int i; const char *ptr;
+		const char *ptr;
 		switch(f.type)
 		{
 		case Zehn_flag_type::EXECUTABLE_NAME:
-			application_name = reinterpret_cast<const char*>(extra_data.begin() + f.data);
-			i = 0;
-			ptr = application_name;
-			while(*ptr)
+			if(!zehn_check_string(extra_data.begin(), f, 255, &application_name))
 			{
-				if(i == 255)
-				{
-					puts("[Zehn] Invalid application name!");
-					return 1;
-				}
-				++ptr;
+				puts("[Zehn] Invalid application name!");
+				return 1;
 			}
+
 			break;
 		case Zehn_flag_type::EXECUTABLE_NOTICE:
+			if(zehn_check_string(extra_data.begin(), f, 1024, &ptr))
+				application_notice = ptr;
+
+			break;
 		case Zehn_flag_type::EXECUTABLE_AUTHOR:
+			if(zehn_check_string(extra_data.begin(), f, 128, &ptr))
+				application_author = ptr;
+
+			break;
 		case Zehn_flag_type::EXECUTABLE_VERSION:
+			application_version = f.data;
 			break;
 		case Zehn_flag_type::NDLESS_VERSION_MIN:
 			ndless_version_min = f.data;
@@ -164,6 +184,16 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		default:
 			break;
 		}
+	}
+
+	// Show some information about the executable
+	if(isKeyPressed(KEY_NSPIRE_CAT))
+	{
+		char info[1536];
+		sprintf(info, "Name: %s Version: %u\nAuthor: %s\nNotice: %s", application_name, application_version, application_author, application_notice);
+		show_msgbox("Information about the executable", info);
+
+		return 2;
 	}
 
 	if(NDLESS_VERSION < ndless_version_min || (NDLESS_VERSION == ndless_version_min && NDLESS_REVISION < ndless_revision_min))
