@@ -41,15 +41,17 @@ cd "$PREFIX"
 mkdir -p download build-binutils build
 
 # Section 0: prerequisites
-echo 'int main() {return 0;}' > test.c
 error=0
+if ! which gcc > /dev/null; then error=1; echo 'gcc is required!'; fi
+[ $error -eq 1 ] && exit 1
+echo 'int main() {return 0;}' > test.c
 if ! gcc -lgmp test.c -o test; then error=1; echo 'GMP (libgmp-dev) dependency seems to be missing!'; fi
 if ! gcc -lmpfr test.c -o test; then error=1; echo 'MPFR (libmpfr-dev) dependency seems to be missing!'; fi
 if ! gcc -lmpc test.c -o test; then error=1; echo 'MPC (libmpc-dev) dependency seems to be missing!'; fi
 if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib1g-dev) dependency seems to be missing!'; fi
 if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (libtinfo-dev) dependency seems to be missing!'; fi
 if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python2.7-dev) dependency seems to be missing!'; fi
-rm test test.c
+rm -f test test.c
 if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (textinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
 
