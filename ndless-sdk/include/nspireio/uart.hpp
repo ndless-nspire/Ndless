@@ -1,7 +1,7 @@
 /**
- * @file nspire.h
- * @author Julian Mackeben aka compu <compujuckel@googlemail.com>
- * @version 3.0
+ * @file uart.hpp
+ * @author  Julian Mackeben aka compu <compujuckel@googlemail.com>
+ * @version 3.1
  *
  * @section LICENSE
  *
@@ -22,30 +22,37 @@
  *
  * @section DESCRIPTION
  *
- * Header for Nspire platform
+ * C++ specific UART header
  */
- 
-#ifndef NSPIRE_H
-#define NSPIRE_H
 
-// Put headers required for our platform here
-#include <os.h>
+extern "C" {
+	#include <os.h>
+	#include <nspireio/nspireio.h>
+}
 
-// wait_key_pressed() - blocks until a key is pressed
-// wait_no_key_pressed() - blocks until all keys are released
-// any_key_pressed() - non-blocking, TRUE if any key pressed
+#include <nspireio/ios_base.ipp>
 
+#ifndef UART_HPP
+#define UART_HPP
 
-// color utility functions. By totorigolo.
-
-#define getR(c) ((((c) & 0xF800) >> 11) * 8)
-#define getG(c) ((((c) & 0x7E0) >> 5) * 4)
-#define getB(c) (((c) & 0x1F) * 2)
-#define getBW(c) ((((getR(c)) / 16) + ((getG(c)) / 16) + ((getB(c)) / 16)) / 3)
-
-// Fullscreen definitions
-
-#define NIO_MAX_ROWS 30
-#define NIO_MAX_COLS 53
+namespace nio
+{
+	class uart : public ios_base<uart>
+	{
+	public:
+		uart();
+		bool ready();
+		
+		virtual void put(char ch);
+		virtual void write(const char* s, streamsize n);
+		virtual void flush();
+		
+		virtual int gcount() const;
+		virtual int get();
+		virtual void get(int& c);
+		virtual void get(char* s, streamsize n);
+		virtual void getline(char* s, streamsize n);
+	};
+}
 
 #endif

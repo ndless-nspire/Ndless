@@ -1,7 +1,7 @@
 /**
  * @file platform.h
  * @author Julian Mackeben aka compu <compujuckel@googlemail.com>
- * @version 3.0
+ * @version 3.1
  *
  * @section LICENSE
  *
@@ -33,21 +33,14 @@
 #define NIO_CHAR_WIDTH 6
 #define NIO_CHAR_HEIGHT 8
 
-#ifdef BUILDLIB
-	#ifdef _TINSPIRE
-		#include "nspire.h"
-	#endif
-	#ifdef PRIZM
-		#include "prizm.h"
-	#endif
-#else
-	#ifdef _TINSPIRE
-		#include <nspire.h>
-	#endif
-	#ifdef PRIZM
-		#include <prizm.h>
-	#endif
+
+#ifdef _TINSPIRE
+	#include <nspireio/platform-nspire.h>
 #endif
+#ifdef PRIZM
+	#include <nspireio/platform-prizm.h>
+#endif
+
 
 // These functions are the same on all platforms...
 
@@ -70,7 +63,11 @@ char uart_getchar(void);
 /** See [gets](http://www.cplusplus.com/reference/clibrary/cstdio/gets/)
 	@return Destination
 */
-char* uart_gets(char* str);
+char* uart_gets(char* str) __attribute__((deprecated));
+
+/** Like [gets](http://www.cplusplus.com/reference/clibrary/cstdio/gets/), but with a maximum length parameter
+*/
+char* uart_getsn(char* str, int num);
 
 /** See [putchar](http://www.cplusplus.com/reference/clibrary/cstdio/putchar/)
 */

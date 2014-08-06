@@ -1,7 +1,7 @@
 /**
- * @file nspireio2.h
+ * @file queue.h
  * @author  Julian Mackeben aka compu <compujuckel@googlemail.com>
- * @version 3.0
+ * @version 3.1
  *
  * @section LICENSE
  *
@@ -22,10 +22,52 @@
  *
  * @section DESCRIPTION
  *
- * Programs that include nspireio2.h will automatically be compiled in compatibility mode
+ * Queue header
  */
 
-#ifndef NIO_KEEP_COMPATIBILITY
-#define NIO_KEEP_COMPATIBILITY
-#include <nspireio.h>
+#ifndef QUEUE_H
+#define QUEUE_H
+
+#include <os.h>
+
+#define QUEUE_SIZE 500
+
+/** queue structure */
+typedef struct
+{
+	char data[QUEUE_SIZE + 1];
+	int start;
+	int end;
+	int count;
+} queue;
+
+/** Initialize queue.
+	@param q Queue to initialize
+*/
+void queue_init(queue* q);
+
+/** Push value to the end of the queue.
+	@param q Queue
+	@param val Value to push
+*/
+void queue_put(queue* q, char val);
+
+/** Get value from the end of the queue.
+	@param q Queue
+	@return the value
+*/
+char queue_get_top(queue* q);
+
+/** Get value from the beginning of the queue.
+	@param q Queue
+	@return the value
+*/
+char queue_get(queue* q);
+
+/** Check if the queue is empty.
+	@param q Queue
+	@return TRUE if empty
+*/
+BOOL queue_empty(queue* q);
+
 #endif
