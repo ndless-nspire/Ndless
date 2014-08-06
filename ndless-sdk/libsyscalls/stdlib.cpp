@@ -41,6 +41,28 @@ constexpr int MAX_OPEN_FILES = 20;
 static NUC_FILE* openfiles[MAX_OPEN_FILES];
 static void* saved_screen_buffer; //In case the program changes the buffer
 
+#ifdef USE_NSPIREIO
+	#include <nspireio/nspireio.h>
+
+	static nio_console csl;
+
+	struct Nspireio_initialization {
+		public:
+			Nspireio_initialization()
+			{
+				nio_init(&csl,NIO_MAX_COLS,NIO_MAX_ROWS,0,0,NIO_COLOR_BLACK,NIO_COLOR_WHITE,TRUE);
+			        nio_set_default(&csl);
+			        nio_fflush(&csl);
+			}
+			~Nspireio_initialization()
+			{
+				nio_free(&csl);
+			}
+	};
+
+	static Nspireio_initialization nspireio_initialization;
+#endif
+
 // Called at startup (even before c++ constructors are run)
 void initialise_monitor_handles()
 {
@@ -103,7 +125,11 @@ void *calloc(size_t nmemb, size_t size)
   
 int _puts(const char *s)
 {
+#ifdef USE_NSPIREIO
+	return nio_puts(s);
+#else
 	return syscall<e_puts, int>(s);
+#endif
 }
 
 void  __crt0_exit(int ret); // Declared in crt0.S
@@ -186,6 +212,18 @@ int _fstat(int file, struct stat *st)
 
 int _read(int file, char *ptr, int len)
 {
+#ifdef USE_NSPIREIO
+	if(file == 0)
+	{
+		if(nio_fgets(ptr, len - 1, &csl))
+		{
+			strcat(ptr, "\n");
+			return strlen(ptr);
+		}
+		else
+			return 0;
+	}
+#endif
 	NUC_FILE *f;
 	GETFD(f);
 
@@ -206,6 +244,17 @@ int _read(int file, char *ptr, int len)
 
 int _write(int file, char *ptr, int len)
 {
+#ifdef USE_NSPIREIO
+	if(file == 1 || file == 2)
+	{
+		int len2 = len;
+		while(len2--)
+			nio_putchar(*ptr++);
+
+		return len;
+	}
+#endif
+
 	NUC_FILE *f;
 	GETFD(f);
 

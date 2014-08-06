@@ -16,20 +16,28 @@ if [ "$UNAME" = "cygwin" ]; then
 	DIRNAME=`cygpath --path --windows "$DIRNAME"`
 fi
 
-stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL -lnspireio -lstdc++ --start-group -lndls -lsyscalls -lc --end-group -lgcc"
+NOSTDLIB=0
+VERBOSE=0
+NSPIREIO=""
+
 # an array is used to change the arguments while supporting arguments with spaces
 declare -a args
 for arg in "$@"; do
 	case $arg in
-		-nostdlib) stdlib="";;
+		-nostdlib) NOSTDLIB=1;;
+		--nspireio) NSPIREIO="_nspireio";;
+		--verbose) VERBOSE=1;;
 		*crt0*|*crti*|*crtn*|*crtbegin*|-lgcc|-lc|*crtend*) ;;
 		*) args=("${args[@]}" $arg);;
 	esac
 done
+
+stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc"
+if [ $NOSTDLIB -eq 1 ]; then stdlib=""; fi
 
 (cd "$DIRNAME/../system" && make -s all)
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-`basename $0 | cut -f1 -d'.'` -emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
+`basename $0 | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"

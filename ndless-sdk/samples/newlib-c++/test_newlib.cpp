@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <libndls.h>
+
 using namespace std;
 
 int main(int, char **)
@@ -20,6 +22,13 @@ int main(int, char **)
 		cout << line << endl;
 
 	themes.close();
+
+	cout << "Input your name: ";
+	string name;
+	getline(cin, name);
+	cout << "Hi, " << name << "!" << endl;
+
+	wait_key_pressed();
 
 	return 0;
 }

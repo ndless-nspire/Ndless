@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <libndls.h>
 
 int main(int argc, char **argv)
 {
@@ -60,6 +61,8 @@ int main(int argc, char **argv)
 	}
 	
 	puts("Bye!");
+
+	wait_key_pressed();
 
 	return 0;
 }

@@ -7,7 +7,7 @@ LD  = nspire-ld
 GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -marm
-LDFLAGS =
+LDFLAGS = -Wl,--nspireio
 ZEHNFLAGS = --name "newlib"
 
 ifeq ($(DEBUG),FALSE)
