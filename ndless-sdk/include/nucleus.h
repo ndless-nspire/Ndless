@@ -17,6 +17,12 @@ extern "C" {
 
 typedef enum { FALSE=0, TRUE } BOOL;
 
+/* Custom syscalls: these are syscalls currently not implemented by Ndless you want to define yourself.
+ * The syntax is:
+ * static const unsigned puts_addrs[] = {<3.1.0-address>, <3.1.0-CAS-address>, ...}; // see nl_osvalue for the order of the addresses
+ * #define puts SYSCALL_CUSTOM(puts_addrs, int, const char *) */
+#define SYSCALL_CUSTOM(addresses, rettype, ...) ((rettype(*)(__VA_ARGS__))nl_osvalue((int*)addresses, sizeof(addresses)/sizeof(addresses[0])))
+
 typedef struct {
   char * str;
   int len;
