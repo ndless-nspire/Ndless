@@ -17,7 +17,6 @@ if [ "$UNAME" = "cygwin" ]; then
 fi
 
 NOSTDLIB=0
-VERBOSE=0
 NSPIREIO=""
 
 # an array is used to change the arguments while supporting arguments with spaces
@@ -26,7 +25,6 @@ for arg in "$@"; do
 	case $arg in
 		-nostdlib) NOSTDLIB=1;;
 		--nspireio) NSPIREIO="_nspireio";;
-		--verbose) VERBOSE=1;;
 		*crt0*|*crti*|*crtn*|*crtbegin*|-lgcc|-lc|*crtend*) ;;
 		*) args=("${args[@]}" $arg);;
 	esac
