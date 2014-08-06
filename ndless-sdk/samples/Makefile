@@ -1,4 +1,4 @@
-SUBDIRS = colors helloworld-nio helloworld-sdl helloworld-cpp link-sdl luaext particles ngc newlib
+SUBDIRS = colors helloworld-sdl helloworld-cpp link-sdl luaext particles ngc newlib
 
 all:
 	@for i in $(SUBDIRS); do \
