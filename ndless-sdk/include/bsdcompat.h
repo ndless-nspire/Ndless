@@ -22,9 +22,13 @@ struct clist {
         char    *c_cl;          /* Pointer to the last cblock. */
 };
 
+#ifndef __packed
 #define __packed __attribute__((packed))
+#endif
 
 // sys/errno.h
+#ifndef ENXIO
 #define ENXIO 6 /* Device not configured */
+#endif
 
 #endif
