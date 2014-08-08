@@ -109,15 +109,15 @@ typedef void *nn_oh_t;
 //Provided by ndless
 unsigned char* keypad_type();
 #define keypad_type keypad_type()
-int nl_ndless_rev();
-int nl_hwtype();
-int nl_hwsubtype();
+unsigned int nl_ndless_rev();
+unsigned int nl_hwtype();
+unsigned int nl_hwsubtype();
 BOOL nl_loaded_by_3rd_party_loader();
 BOOL nl_isstartup();
 BOOL _nl_hassyscall(int nr);
 void nl_set_resident();
-int nl_osid();
-int nl_osvalue();
+unsigned int nl_osid();
+unsigned int nl_osvalue();
 int nl_exec(const char* prg, int argc, char** argv);
 lua_State *nl_lua_getstate();
 

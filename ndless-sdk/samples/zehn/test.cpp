@@ -1,12 +1,16 @@
-#include <cstdio>
+#include <iostream>
+
+#include <libndls.h>
+
+using namespace std;
 
 class Test
 {
 public:
-	Test() { puts("Test();"); }
-	~Test() { puts("~Test();"); }
+	Test() { cout << "Test();" << endl; }
+	~Test() { cout << "~Test();" << endl; }
 
-	void doSomething() { puts("Did something!"); }
+	void doSomething() { cout << "Doing something!" << endl; }
 };
 
 //Test global variables + initialization
@@ -17,19 +21,20 @@ int main()
 	test.doSomething();
 
 	try {
-		throw "Hi!";
+		throw "This is an exception!";
 	}
 	catch(const char* c)
 	{
-		printf("Caught '%s'!\n", c);
-		return 0;
+		cout << "Caught '" << c << "'!" << endl;
 	}
 	catch(...)
 	{
-		puts("Caught something weird :-(");
+		cerr << "Caught something weird :-(" << endl;
 		return 1;
 	}
-	puts("I'm running!\n");
+
+	cout << "Successfull! Now press any key to exit." << endl;
+	wait_key_pressed();
 
 	return 1;
 }

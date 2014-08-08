@@ -1,17 +1,30 @@
 DEBUG = FALSE
+
 GCC = nspire-gcc
+AS  = nspire-as
 GXX = nspire-g++
-LD = nspire-ld
+LD  = nspire-ld
+GENZEHN = genzehn
 
-GCCFLAGS = -Wall -Wextra -marm -fno-rtti
+GCCFLAGS = -Wall -W -marm
+LDFLAGS = -Wl,--nspireio
+ZEHNFLAGS = --name "Zehn Test" --author "Author" --notice "This is an arbitrarily long text" --ndless-min 36
 
-CPPOBJS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-COBJS = $(patsubst %.c,%.o,$(wildcard *.c)) 
-OBJS = $(CPPOBJS) $(COBJS)
+ifeq ($(DEBUG),FALSE)
+	GCCFLAGS += -Os
+else
+	GCCFLAGS += -O0 -g
+endif
 
-EXE = zehn.tns
+OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
+OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
+OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
+EXE = zehn
+DISTDIR = .
+vpath %.tns $(DISTDIR)
+vpath %.elf $(DISTDIR)
 
-all: $(EXE)
+all: $(EXE).prg.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -19,9 +32,18 @@ all: $(EXE)
 %.o: %.cpp
 	$(GXX) $(GCCFLAGS) -c $<
 	
-$(EXE): $(OBJS)
-	$(LD) $^ -o $(EXE).elf
-	genzehn --input $(EXE).elf --output $(EXE) --name "Test" --author "Author" --notice "This is an arbitrarily long text" --ndless-max 31
+%.o: %.S
+	$(AS) -c $<
+
+$(EXE).elf: $(OBJS)
+	mkdir -p $(DISTDIR)
+	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+
+$(EXE).tns: $(EXE).elf
+	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
+
+$(EXE).prg.tns: $(EXE).tns
+	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
 
 clean:
-	rm -f *.o $(EXE) $(EXE).elf
+	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns

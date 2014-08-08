@@ -3,7 +3,7 @@ GCC = nspire-gcc
 LD = nspire-ld
 AR := "$(shell (which arm-elf-ar arm-none-eabi-ar arm-linux-gnueabi-ar | head -1) 2>/dev/null)"
 
-GCCFLAGS = -Os -nostdlib -fpic -Wall
+GCCFLAGS = -Os -nostdlib -Wall -Werror -Wextra
 LDFLAGS = -nostdlib
 LIB = libndls.a
 DISTDIR = ../lib

@@ -17,12 +17,12 @@ void *calc_cmd()
 	return syscall<e_calc_cmd | __SYSCALLS_ISVAR, void*>();
 }
 
-int nl_ndless_rev()
+unsigned int nl_ndless_rev()
 {
 	return syscall<e_nl_ndless_rev | __SYSCALLS_ISEXT, int>();
 }
 
-int nl_hwtype()
+unsigned int nl_hwtype()
 {
 	return syscall<e_nl_hwtype | __SYSCALLS_ISEXT, int>();
 }
@@ -50,7 +50,7 @@ void nl_relocdata(void *ptr, int size)
 	return syscall<e_nl_relocdatab | __SYSCALLS_ISEXT, void>(ptr, size, &_start);
 }*/
 
-int nl_hwsubtype()
+unsigned int nl_hwsubtype()
 {
 	return syscall<e_nl_hwsubtype | __SYSCALLS_ISEXT, int>();
 }
@@ -70,12 +70,12 @@ void nl_set_resident()
 	return syscall<e_nl_set_resident | __SYSCALLS_ISEXT, void>();
 }
 
-int nl_osid()
+unsigned int nl_osid()
 {
 	return syscall<e_nl_osid | __SYSCALLS_ISEXT, int>();
 }
 
-int nl_osvalue()
+unsigned int nl_osvalue()
 {
 	return syscall<e_nl_osvalue | __SYSCALLS_ISEXT, int>();
 }

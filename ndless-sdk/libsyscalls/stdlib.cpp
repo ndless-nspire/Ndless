@@ -46,21 +46,10 @@ static void* saved_screen_buffer; //In case the program changes the buffer
 
 	static nio_console csl;
 
-	struct Nspireio_initialization {
-		public:
-			Nspireio_initialization()
-			{
-				nio_init(&csl,NIO_MAX_COLS,NIO_MAX_ROWS,0,0,NIO_COLOR_BLACK,NIO_COLOR_WHITE,TRUE);
-			        nio_set_default(&csl);
-			        nio_fflush(&csl);
-			}
-			~Nspireio_initialization()
-			{
-				nio_free(&csl);
-			}
-	};
-
-	static Nspireio_initialization nspireio_initialization;
+	// Deinitialization as late as possible - but even this may not be late enough
+	struct Nspireio_deinitialization {
+		public:	~Nspireio_deinitialization() { nio_free(&csl); }
+	} nspireio_deinitialization;
 #endif
 
 // Called at startup (even before c++ constructors are run)
@@ -70,6 +59,13 @@ void initialise_monitor_handles()
 	openfiles[0] = syscall<e_stdin | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[1] = syscall<e_stdout | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[2] = syscall<e_stderr | __SYSCALLS_ISVAR, NUC_FILE*>();
+
+	// Initialization as early as possible, in case c++ constructors output something
+	#ifdef USE_NSPIREIO
+	        nio_init(&csl,NIO_MAX_COLS,NIO_MAX_ROWS,0,0,NIO_COLOR_BLACK,NIO_COLOR_WHITE,TRUE);
+	        nio_set_default(&csl);
+		nio_fflush(&csl);
+	#endif
 }
 
 static int newslot()

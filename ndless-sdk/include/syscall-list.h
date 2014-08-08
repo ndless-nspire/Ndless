@@ -45,7 +45,7 @@
 #define e_strcpy 27
 #define e_strncat 28
 #define e_strlen 29
-#define e_show_dialog_box2_ 30 // void show_dialog_box2_(int p1, const char *p2, const char *p3, char *p4) 
+#define e_show_dialog_box2_ 30 // void show_dialog_box2_(int p1, const char *p2, const char *p3, const char **p4)
 #define e_strrchr 31
 #define e__vsprintf 32
 #define e_fseek 33 // int nuc_fseek(NUC_FILE *p1, long p2, int p3);
@@ -108,8 +108,8 @@
 #define e_NU_Open 90 // PCFD NU_Open(char *p1, uint32_t p2, uint32_t p3)
 #define e_NU_Close 91 // int NU_Close(PCFD p1)
 #define e_NU_Truncate 92 // int NU_Truncate(PCFD p1, long int p2)
-#define e__show_msgbox_2b 93 // int _show_msgbox_2b(int p1, const char *p2, const char *p3, const char *p4, int p5, const char *p6, int p7, char p8[8])
-#define e__show_msgbox_3b 94 // int _show_msgbox_3b(int p1, const char *p2, const char *p3, const char *p4, int p5, const char *p6, int p7, const char *p8, int p9, char p10[8])
+#define e__show_msgbox_2b 93 // int _show_msgbox_2b(int p1, const char *p2, const char *p3, const char *p4, int p5, const char *p6, int p7, const char **p8)
+#define e__show_msgbox_3b 94 // int _show_msgbox_3b(int p1, const char *p2, const char *p3, const char *p4, int p5, const char *p6, int p7, const char *p8, int p9, const char **p10)
 #define e_opendir 95 // NUC_DIR* nuc_opendir(const char *p1)
 #define e_readdir 96 // (struct nuc_dirent*) nuc_readdir(NUC_DIR *p1)
 #define e_closedir 97 // int nuc_closedir(NUC_DIR *p1)

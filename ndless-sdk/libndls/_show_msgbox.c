@@ -25,14 +25,12 @@ unsigned _show_msgbox(const char *title, const char *msg, unsigned button_num, .
 	__builtin_va_list ap;
 	char title16[(strlen(title) + 1) * 2];
 	char msg16[(strlen(msg) + 1) * 2];
-	char undef_buf[8];
+	const char *dlg = "DLG";
 	unsigned button_pressed = 0;
-	memset(undef_buf, 0, sizeof(undef_buf));
 	__builtin_va_start(ap, button_num);
 	
 	ascii2utf16(title16, title, sizeof(title16));
 	ascii2utf16(msg16, msg, sizeof(msg16));
-	*(char**)undef_buf = "DLG";
 	BOOL incolor = lcd_isincolor();
 	void *saved_screen = NULL;
 	if (has_colors && !incolor) {
@@ -53,15 +51,15 @@ unsigned _show_msgbox(const char *title, const char *msg, unsigned button_num, .
 		ascii2utf16(button1_16, button1, sizeof(button1_16));
 		ascii2utf16(button2_16, button2, sizeof(button2_16));
 		if (button_num == 2) {
-			button_pressed = _show_msgbox_2b(0, title16, msg16, button1_16, 1, button2_16, 2, undef_buf);
+			button_pressed = _show_msgbox_2b(0, title16, msg16, button1_16, 1, button2_16, 2, &dlg);
 		} else {
 			char *button3 = __builtin_va_arg(ap, char*);
 			char button3_16[(strlen(button3) + 1) * 2];
 			ascii2utf16(button3_16, button3, sizeof(button3_16));
-			button_pressed = _show_msgbox_3b(0, title16, msg16, button1_16, 1, button2_16, 2, button3_16, 3, undef_buf);
+			button_pressed = _show_msgbox_3b(0, title16, msg16, button1_16, 1, button2_16, 2, button3_16, 3, &dlg);
 		}
 	} else {
-		show_dialog_box2_(0, title16, msg16, undef_buf);
+		show_dialog_box2_(0, title16, msg16, &dlg);
 	}
 	TCT_Local_Control_Interrupts(orig_mask);
 	if (has_colors && !incolor) {
