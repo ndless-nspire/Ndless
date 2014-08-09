@@ -55,7 +55,8 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << all << std::endl;
+	std::cout << "genzehn 1.0 by Fabian Vogt" << std::endl
+                  << all << std::endl;
         return 0;
     }
 
@@ -187,7 +188,9 @@ int main(int argc, char **argv)
         }
         else if(s->get_address() > exec_data.size())
         {
-            std::cerr << "\tWarning: Section '" << s->get_name() << "' not directly following! (is at 0x" << std::hex << s->get_address() << " but I'm currently at 0x" << exec_data.size() << ")" << std::endl;
+            //This is likely to happen for alignment reasons
+            if(verbose)
+                std::cerr << "\tWarning: Section '" << s->get_name() << "' not directly following! (is at 0x" << std::hex << s->get_address() << " but I'm currently at 0x" << exec_data.size() << ")" << std::endl;
 
             exec_data.resize(s->get_address());
         }
