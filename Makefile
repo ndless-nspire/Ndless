@@ -106,10 +106,10 @@ _upload_sdk:
 	hash=`git rev-parse --short HEAD`; \
 	mv distsdk "ndless-v3.6-beta-r$$rev.$$hash-sdk"; \
 	rm -rf ndless-sdk.zip ; \
-	7z -r ndless-sdk.zip "ndless-v3.6-beta-r$$rev.$$hash-sdk" > /dev/null; \
-	curl --cookie upload_cookies.txt -F 'super_id=5' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-v3.6-beta-r$$rev.$$hash-sdk.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-sdk.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/5 > /dev/null; \
+	7z -r ndless-sdk.zip "ndless-sdk-v3.6-beta-r$$rev.$$hash" > /dev/null; \
+	curl --cookie upload_cookies.txt -F 'super_id=5' -F 'form_type=file' -F '__FORM_TOKEN=ffa21de629e1d6de857923e4' -F "name=ndless-sdk-v3.6-beta-r$$rev.$$hash.zip" -F 'submit=Submit' -F 'file_to_upload=@ndless-sdk.zip' -F 'sort=' -F 'architecture=' -F 'notes=' http://www.unsads.com/projects/nsptools/admin/general/downloader/files/release/5 > /dev/null; \
 	rm -rf ndless-sdk.zip; \
-	rm -rf "ndless-v3.6-beta-r$$rev.$$hash-sdk"; \
+	rm -rf "ndless-sdk-v3.6-beta-r$$rev.$$hash"; \
 	echo "SDK 3.6 r$$rev.$$hash available at http://www.unsads.com/projects/nsptools/downloader/download/release/5"
 
 _upload_ndless:
