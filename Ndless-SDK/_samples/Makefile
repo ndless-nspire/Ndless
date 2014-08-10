@@ -1,4 +1,11 @@
-SUBDIRS = colors helloworld helloworld-sdl helloworld-cpp helloworld-asm link-sdl luaext particles ngc newlib freetype
+SUBDIRS = colors helloworld helloworld-sdl helloworld-cpp helloworld-asm link-sdl luaext particles ngc newlib 
+# freetype depends on the xxd command
+LINUX_SUBDIRS = freetype
+
+OS ?= `uname -s`
+ifneq ($(OS),Windows_NT)
+	SUBDIRS += $(LINUX_SUBDIRS)
+endif
 
 all:
 	@for i in $(SUBDIRS); do \
