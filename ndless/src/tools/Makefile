@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-SUBDIRS = EscapeInstaller MakeLuaInst MakeHotRebootPatches
+SUBDIRS = EscapeInstaller MakeLuaInst MakeHotRebootPatches MakeSyscalls
 
 all:
 ifneq ($(findstring CYGWIN,$(UNAME)),)

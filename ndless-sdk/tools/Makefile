@@ -1,4 +1,4 @@
-SUBDIRS = MakeSyscalls luna
+SUBDIRS = luna
 
 all:
 	@for i in $(SUBDIRS); do \
