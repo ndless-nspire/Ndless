@@ -1,4 +1,4 @@
-SUBDIRS = ndless-sdk ndless
+SUBDIRS = tools resources-loader resources installer
 
 all:
 	@for i in $(SUBDIRS); do \

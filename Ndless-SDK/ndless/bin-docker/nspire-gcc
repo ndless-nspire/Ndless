@@ -1,8 +1,0 @@
-#!/bin/sh
-# same script for all Docker-based nspire-* commands
-script_path=`readlink -f "$0"`
-script=`basename $script_path`
-script_dir=`dirname $script_path`
-. "$script_dir/nspire-docker"
-$DOCKER_CMD_PREFIX $script "$@"
-
