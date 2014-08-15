@@ -15,6 +15,6 @@ if [ "$UNAME" = "cygwin" ]; then
 	DIRNAME=`cygpath --path --windows "$DIRNAME"`
 fi
 
-(cd "$DIRNAME/../../ndless/src/resources-loader" && make -s all)
+(cd "$DIRNAME/../tools/zehn_loader" && make -s all)
 
-cat $DIRNAME/../../ndless/src/resources-loader/zehn_loader.tns $1 > $2
+cat $DIRNAME/../tools/zehn_loader/zehn_loader.tns $1 > $2

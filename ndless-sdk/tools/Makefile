@@ -1,4 +1,4 @@
-SUBDIRS = luna
+SUBDIRS = luna zehn_loader
 
 all:
 	@for i in $(SUBDIRS); do \
