@@ -1,0 +1,8 @@
+# Ndless SDK
+
+FROM ndless/arm-gcc
+
+ADD . /ndless-sdk
+
+ENV PATH /ndless-sdk/bin:$PATH
+

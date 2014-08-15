@@ -1,4 +1,0 @@
-#!/bin/sh
-# source this
-DOCKER_CMD_PREFIX="sudo docker run -v /:/hroot -v $HOME/.ndless:/home/ndless/.ndless -w /hroot$(pwd) -u ndless -i -e HOME=/home/ndless oliviera/ndless-sdk"
-

@@ -1,0 +1,41 @@
+#!/bin/bash
+# New ld which produces ELF binaries for use with genzehn
+# It is invoked instead of "arm-none-eabi-ld" (or the default linker of the ARM toolchain) to replace the default crt* with ndless compatible ones and also adds some more libs
+
+UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
+DIRNAME=`dirname "$0"`
+
+# DIRNAME may not be in the toolchain directory if this script was symlinked.
+# try to find the symlink target
+which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
+	DIRNAME=$(dirname $(readlink $0))
+}
+
+# Cygwin owns a dedicated command to find the symlink target
+if [ "$UNAME" = "cygwin" ]; then
+	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+fi
+
+NOSTDLIB=0
+NSPIREIO=""
+
+# an array is used to change the arguments while supporting arguments with spaces
+declare -a args
+for arg in "$@"; do
+	case $arg in
+		-nostdlib) NOSTDLIB=1;;
+		--nspireio) NSPIREIO="_nspireio";;
+		*crt0*|*crti*|*crtn*|*crtbegin*|-lgcc|-lc|*crtend*) ;;
+		*) args=("${args[@]}" $arg);;
+	esac
+done
+
+stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc"
+if [ $NOSTDLIB -eq 1 ]; then stdlib=""; fi
+
+(cd "$DIRNAME/../system" && make -s all)
+
+home="${USERPROFILE:-$HOME}"
+mkdir -p "$home/.ndless/lib"
+
+`basename $0 | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"

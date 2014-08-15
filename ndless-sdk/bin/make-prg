@@ -1,0 +1,20 @@
+#!/bin/bash
+# Adds the resources-loader at the top of the given binary for backwards-compatibility
+
+UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
+DIRNAME=`dirname "$0"`
+
+# DIRNAME may not be in the toolchain directory if this script was symlinked.
+# try to find the symlink target
+which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
+	DIRNAME=$(dirname $(readlink $0))
+}
+
+# Cygwin owns a dedicated command to find the symlink target
+if [ "$UNAME" = "cygwin" ]; then
+	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+fi
+
+(cd "$DIRNAME/../../ndless/src/resources-loader" && make -s all)
+
+cat $DIRNAME/../../ndless/src/resources-loader/zehn_loader.tns $1 > $2

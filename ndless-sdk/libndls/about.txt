@@ -1,0 +1,1 @@
+libndls provides utility functions which are not necessary for basic programs and libraries, but useful in many cases.

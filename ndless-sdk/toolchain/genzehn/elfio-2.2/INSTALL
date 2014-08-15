@@ -1,0 +1,15 @@
+ELFIO is a header-only C++ library - installation does not require any
+(pre)compilation step. Just copy 'elfio' folder into standard include directory.
+
+For example:
+    cp -R elfio /usr/include
+    
+Alternatively, it is possible to modify compiler's include search path -
+'-I<dir>' option in GCC; '/I<dir>' in MSVC.
+
+Makefile(s) that come with the distribution package are provided for
+example files compilation only.
+
+To compile the examples, use the commands below:
+    ./configure
+    make

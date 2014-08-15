@@ -1,4 +1,4 @@
-SUBDIRS = ndless-sdk ndless
+SUBDIRS = luna
 
 all:
 	@for i in $(SUBDIRS); do \
@@ -9,4 +9,3 @@ clean:
 	@for i in $(SUBDIRS); do \
 	echo "Clearing in $$i..."; \
 	(cd $$i; make clean) || exit 1; done
-	

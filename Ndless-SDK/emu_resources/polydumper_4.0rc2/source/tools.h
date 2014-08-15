@@ -1,1 +1,0 @@
-void wait(int timesec);
