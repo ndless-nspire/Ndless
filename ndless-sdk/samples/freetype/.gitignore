@@ -1,1 +1,5 @@
+*.tns
+*.o
+*.elf
 gen_font_droid.h
+
