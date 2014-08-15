@@ -1,0 +1,8 @@
+toolchain/binutils-*
+toolchain/build
+toolchain/build-binutils
+toolchain/download
+toolchain/gcc-*
+toolchain/gdb-*
+toolchain/install
+toolchain/newlib-*
