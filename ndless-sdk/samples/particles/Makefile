@@ -1,24 +1,49 @@
+DEBUG = FALSE
+
 GCC = nspire-gcc
-LD = nspire-ld
-GCCFLAGS = -Os -Wall -W -marm
-LDFLAGS = 
-EXE = particles.tns
-OBJS = $(patsubst %.c,%.o,$(wildcard *.c))
+AS  = nspire-as
+GXX = nspire-g++
+LD  = nspire-ld
+GENZEHN = genzehn
+
+GCCFLAGS = -Wall -W -marm
+LDFLAGS =
+ZEHNFLAGS = --name "particles"
+
+ifeq ($(DEBUG),FALSE)
+	GCCFLAGS += -Os
+else
+	GCCFLAGS += -O0 -g
+endif
+
+OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
+OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
+OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
+EXE = particles
 DISTDIR = .
 vpath %.tns $(DISTDIR)
+vpath %.elf $(DISTDIR)
 
-all: $(EXE)
+all: $(EXE).prg.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
 
+%.o: %.cpp
+	$(GXX) $(GCCFLAGS) -c $<
+	
 %.o: %.S
-	$(GCC) $(GCCFLAGS) -c $<
+	$(AS) -c $<
 
-$(EXE): $(OBJS)
+$(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
-	$(LD) $(LDFLAGS) $^ -o $(DISTDIR)/$@
+	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+
+$(EXE).tns: $(EXE).elf
+	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
+
+$(EXE).prg.tns: $(EXE).tns
+	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
 
 clean:
-	rm -f *.o *.elf
-	rm -f $(DISTDIR)/particles.tns
+	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns

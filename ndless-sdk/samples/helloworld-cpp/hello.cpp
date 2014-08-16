@@ -25,5 +25,7 @@ class test_class2 : test_class {
 int main(void) {
 	test_class2 *obj = new test_class2();
 	obj->class_method();
+
+	wait_key_pressed();
 	return 0;
 }

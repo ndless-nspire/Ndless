@@ -33,7 +33,7 @@ int main()
 		return 1;
 	}
 
-	cout << "Successfull! Now press any key to exit." << endl;
+	cout << "Successful! Now press any key to exit." << endl;
 	wait_key_pressed();
 
 	return 1;
