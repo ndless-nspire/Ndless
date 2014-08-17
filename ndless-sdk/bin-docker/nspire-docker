@@ -1,5 +1,11 @@
 #!/bin/sh
 # forward the command to the Docker container
 script=`basename $0`
-sudo docker run -v /:/hroot -v $HOME/.ndless:/home/ndless/.ndless -w /hroot$(pwd) -u ndless -i -e HOME=/home/ndless ndless/ndless-sdk $script "$@"
+sudo_prefix=
+if ! groups | tr ' ' '\n' | grep docker >/dev/null; then
+	echo "Warning: You should add your user to the 'docker' group to avoid sudo password prompt"
+	echo "see https://docs.docker.com/installation/ubuntulinux/#giving-non-root-access"
+	sudo_prefix='sudo'
+fi
+$sudo_prefix docker run -v /:/hroot -v $HOME/.ndless:/home/ndless/.ndless -w /hroot$(pwd) -u ndless -i -e HOME=/home/ndless ndless/ndless-sdk $script "$@"
 

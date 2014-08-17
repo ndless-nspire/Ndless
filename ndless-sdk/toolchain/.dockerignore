@@ -1,9 +1,0 @@
-binutils-*
-build
-build-binutils
-download
-gcc-*
-gdb-*
-install
-newlib-*
-.dockerignore

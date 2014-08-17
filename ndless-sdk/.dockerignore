@@ -6,3 +6,5 @@ toolchain/gcc-*
 toolchain/gdb-*
 toolchain/install
 toolchain/newlib-*
+toolchain/.built_*
+toolchain/.downloaded
