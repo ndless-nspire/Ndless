@@ -4,7 +4,7 @@ AS := nspire-as
 LD := "$(shell (which arm-elf-ld arm-none-eabi-ld arm-linux-gnueabi-ld | head -1) 2>/dev/null)"
 OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 
-GCCFLAGS := -Os -Wall -Wextra -nostdlib -fPIE
+GCCFLAGS := -Os -Wall -Wextra -nostdlib -fPIE -DSTAGE1 -DNDLESS_39
 GPPFLAGS := $(GCCFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 LDFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin
@@ -24,8 +24,8 @@ all: ndless_installer_3.9.tns
 %.elf: %.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
-ndless_installer.elf: stage1.o stage2.o
-	$(LD) $(LDFLAGS) stage2.o -o $@
+ndless_installer.elf: stage1.o stage2.o utils.o
+	$(LD) $(LDFLAGS) stage2.o utils.o -o $@
 
 ndless_installer.bin: ndless_installer.elf
 	$(OBJCOPY) -O binary $< $@

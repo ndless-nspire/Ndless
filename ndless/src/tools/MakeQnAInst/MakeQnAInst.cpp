@@ -20,7 +20,7 @@ static uint32_t overflow_addr[4] = { 0x10EBB612, 0x10E8F60A, 0x1110D752, 0x1116D
 // Address of a pointer to the struct we want to replace
 static const uint32_t struct_ptr[4] = { 0x10F7B5B4, 0x10F4F5AC, 0x111CD6F4, 0x1122D6F4 };
 // Where the binary (argv[1]) will be put in the buffer (chosen manually, because of unsafe locations)
-static const uint32_t loc_code[4] = { 0x10F7B004, 0x10F4F004, 0x111CD004, 0x1122D004 };
+static const uint32_t loc_code[4] = { 0x10F7A084, 0x10F4EF04, 0x111CCF84, 0x1122CF84 };
 // The struct itself
 static uint32_t orig_struct[][32] = {
 {
@@ -212,7 +212,7 @@ std::string luaForOS(OS os, std::string installer_filename)
 		auto j = std::adjacent_find(i, buffer_content.end(), std::not_equal_to<uint8_t>());
 		int count = std::distance(i, j) + (j == buffer_content.end() ? 0 : 1);
 
-		if(count < 199999)
+		if(count < 20000)
 			count = 1;
 
 		if(count == 1)
@@ -249,7 +249,6 @@ int main(int argc, char **argv)
 	lua 	<< "on = {}" << std::endl
 		<< "local _, caserr = math.eval(\"solve()\")" << std::endl
 		<< "cas = caserr == 930" << std::endl
-		<< "cas = not (math.eval(\"solve()\") == 930)" << std::endl
 		<< "function on.restore()" << std::endl
 		<< "s = \"\"" << std::endl
 		<< "local cx = platform.isColorDisplay()" << std::endl

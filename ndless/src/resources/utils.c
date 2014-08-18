@@ -22,8 +22,8 @@
  *                 Geoffrey ANNEHEIM <geoffrey.anneheim@gmail.com>
  ****************************************************************************/
 
-#include "ndless.h"
 #ifndef STAGE1
+#include "ndless.h"
 #include <syscall-addrs.h>
 
 struct next_descriptor ut_next_descriptor = {
@@ -35,12 +35,18 @@ struct next_descriptor ut_next_descriptor = {
 
 unsigned int ut_os_version_index;
 
+void __attribute__ ((noreturn)) ut_calc_reboot(void) {
+	*(unsigned*)0x900A0008 = 2; //CPU reset
+	__builtin_unreachable();
+}
+
 /* Writes to ut_os_version_index a zero-based index identifying the OS version and HW model.
  * Also sets up the syscalls table.
  * Should be called only once.
  * May be used for OS-specific arrays of constants (marked with "// OS-specific"). */
 void ut_read_os_version_index(void) {
-	switch (*(unsigned*)(OS_BASE_ADDRESS + 0x20)) {
+	switch (*(unsigned*)(0x10000020)) {
+#ifndef NDLESS_39
 		// OS-specific
 #ifndef NDLESS_36
 		case 0x102F0FA0:  // 3.1.0 non-CAS
@@ -74,6 +80,19 @@ void ut_read_os_version_index(void) {
 		case 0x10376090:  // 3.6.0 CAS CX
 			ut_os_version_index = 9;
 			break;
+#endif
+		case 0x1037CDE0:  // 3.9.0 non-CAS
+			ut_os_version_index = 4;
+			break;
+		case 0x1037D320:  // 3.9.0 CAS
+			ut_os_version_index = 5;
+			break;
+		case 0x1037C760:  // 3.9.0 non-CAS CX
+			ut_os_version_index = 6;
+			break;
+		case 0x1037CCC0:  // 3.9.0 CAS CX
+			ut_os_version_index = 7;
+			break;
 		default:
 			ut_calc_reboot();
 	}
@@ -81,10 +100,6 @@ void ut_read_os_version_index(void) {
 #ifndef STAGE1
 	sc_addrs_ptr = syscall_addrs[ut_os_version_index];
 #endif
-}
-void __attribute__ ((noreturn)) ut_calc_reboot(void) {
-	*(unsigned*)0x900A0008 = 2; //CPU reset
-	__builtin_unreachable();
 }
 
 void ut_disable_watchdog(void) {

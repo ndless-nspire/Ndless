@@ -4,7 +4,8 @@ if($argc != 3)
 
 //Has to be in the correct order as it's a multidimensional array! (OS-specific) (used in resources/utils.c)
 $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc", "OS_cascx-3.1.0.idc", "OS_cmc-3.1.0.idc", "OS_cascmc-3.1.0.idc",
-		"OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc");
+		"OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc",
+		"OS_ncas-3.9.0.idc", "OS_cas-3.9.0.idc", "OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc");
 
 $syscall_nr_list = fopen(__DIR__ . "/../../../../ndless-sdk/include/syscall-list.h", "r");
 if($syscall_nr_list === FALSE)

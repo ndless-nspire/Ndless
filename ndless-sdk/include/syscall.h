@@ -107,10 +107,16 @@ extern "C" int ut_os_version_index;
 
 template <int nr> int syscall_addr()
 {
-	return ut_os_version_index == 6 ? syscall_addrs[6][nr] :
-		ut_os_version_index == 7 ? syscall_addrs[7][nr] :
-		ut_os_version_index == 8 ? syscall_addrs[8][nr] :
-		syscall_addrs[9][nr];
+#ifndef NDLESS_39
+		ut_os_version_index == 0 ? syscall_addrs[0][nr] :
+		ut_os_version_index == 1 ? syscall_addrs[1][nr] :
+		ut_os_version_index == 2 ? syscall_addrs[2][nr] :
+		ut_os_version_index == 3 ? syscall_addrs[3][nr] :
+#endif
+		ut_os_version_index == 4 ? syscall_addrs[4][nr] :
+		ut_os_version_index == 5 ? syscall_addrs[5][nr] :
+		ut_os_version_index == 6 ? syscall_addrs[6][nr] :
+		syscall_addrs[7][nr];
 }
 
 template <int nr, typename RETTYPE> inline RETTYPE syscall_local()
