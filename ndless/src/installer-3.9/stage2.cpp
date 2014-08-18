@@ -15,8 +15,9 @@ int main()
 
         if (!res_fp)
 	{
-		syscall_local<e_puts, int>("ndless_resources not found.");
-		return 1;
+		const int x = 0;
+		syscall_local<e_disp_str, void>("ndless_resources not found.", &x, 0);
+		return 0;
 	}
 
 	struct nuc_stat res_stat;
