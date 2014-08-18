@@ -28,8 +28,7 @@ while(true)
 {
 	if(strpos($lines[$i], "END_OF_LIST") !== FALSE)
 		break;
-	
-	
+
 	$matches = array();
 	//Explanation in mkStubs.php
 	$found = preg_match("%#define e_(.+) (\\d+)( .*)?%", $lines[$i], $matches);
@@ -59,16 +58,16 @@ $syscall_addrs = array();
 foreach($idc_files as $nr => $idc_file)
 {
 	$filename = $argv[1] . "/" . $idc_file;
-	$idc_fp = fopen($filename, "r");
+	$idc_fp = @fopen($filename, "r");
 	if($idc_fp === FALSE)
-		die("Couldn't open '" . $idc_fp . "'!\n");
+		die("Couldn't open '" . $filename . "'!\n");
 	
 	while(($line = fgets($idc_fp)) !== FALSE)
 	{
 		$matches = array();
 		$found = preg_match("%\s*MakeName\s*\\((.+),\s+\"(.+)\"\);%", $line, $matches);
-		
-		if($found === 0)
+
+		if($found === 0 || $matches[1] == "0xFFFFFFFF")
 			continue;
 			
 		$syscall_addrs[$nr][$matches[2]] = $matches[1];

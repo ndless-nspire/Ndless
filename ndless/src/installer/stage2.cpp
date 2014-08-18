@@ -81,9 +81,6 @@ static void write_touchpad(uint16_t port, uint8_t value) {
 // OS-specific
 static unsigned const ndless_inst_resident_hook_addrs[] = {0x10012598, 0x1001251C, 0x100123BC, 0x10012370};
 
-// OS-specific
-static unsigned const disp_str_addrs[] = {0x100CC78C, 0x100CCA44, 0x100CBD48, 0x100CC030};
-
 // Install the resident part
 HOOK_DEFINE(s1_startup_hook) {
 	struct nuc_stat res_stat;
@@ -93,9 +90,8 @@ HOOK_DEFINE(s1_startup_hook) {
 	char *res_params = NULL;
 
 	if (!(res_file = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb"))) {
-		typedef int (*disp_str_t) (const char*, int*, int);
 		int x = 0;
-		((disp_str_t)disp_str_addrs[ut_os_version_index])("Oops, you've forgotten to transfer                   'ndless_resources_3.6'! Ndless won't be installed.", &x, 10);
+		syscall_local<e_disp_str, void>("Oops, you've forgotten to transfer                   'ndless_resources_3.6'! Ndless won't be installed.", &x, 10);
 		volatile int i;
 		for (i = 0; i < 100000000; i++) // libndls's sleep() requires is_classic, not available here
 			;

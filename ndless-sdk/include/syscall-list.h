@@ -356,6 +356,7 @@
 #define e_nand_erase_range 338 // int nand_erase_range(int p1, int p2)
 #define e_calc_cmd 339 
 #define e_get_res_string 340 // char* get_res_string(int p1, int p2)
+#define e_disp_str 341 // void disp_str(const char *p1, int *p2, int p3)
 
 // END_OF_LIST (always keep this line after the last constant, used by mksyscalls.sh)
 
