@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 # binarysearch.py
 # Utility to migrate IDC files on OS upgrades
 # Original author: bsl
@@ -10,7 +11,6 @@ import sys
 import string
 import binascii
 import re
-
 
 phoenix = open(sys.argv[1],"rb")     # NONCAS1.7.raw or phoenix.raw
 phoenixNEW = open(sys.argv[2],"rb")  # CAS1.7.raw or phoenixCAS.raw
@@ -73,4 +73,3 @@ idcfile.close()
 idcfilenew.close()
 phoenix.close()
 phoenixNEW.close()
-
