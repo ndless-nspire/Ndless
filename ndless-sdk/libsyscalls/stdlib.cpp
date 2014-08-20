@@ -211,13 +211,11 @@ int _read(int file, char *ptr, int len)
 #ifdef USE_NSPIREIO
 	if(file == 0)
 	{
-		if(nio_fgets(ptr, len - 1, &csl))
-		{
-			strcat(ptr, "\n");
-			return strlen(ptr);
-		}
-		else
-			return 0;
+		if(!nio_fgets(ptr, len - 1, &csl))
+			*ptr = 0;
+
+		strcat(ptr, "\n");
+		return strlen(ptr);
 	}
 #endif
 	NUC_FILE *f;
