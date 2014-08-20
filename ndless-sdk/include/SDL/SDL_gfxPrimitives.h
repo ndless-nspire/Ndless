@@ -30,8 +30,7 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #ifndef _SDL_gfxPrimitives_h
 #define _SDL_gfxPrimitives_h
 
-#include "SDL.h"
-#include <fdlibm.h>
+#include <SDL/SDL.h>
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus

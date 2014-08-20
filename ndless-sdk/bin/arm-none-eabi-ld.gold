@@ -30,7 +30,7 @@ for arg in "$@"; do
 	esac
 done
 
-stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc"
+stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL -lm --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc"
 if [ $NOSTDLIB -eq 1 ]; then stdlib=""; fi
 
 (cd "$DIRNAME/../system" && make -s all)
