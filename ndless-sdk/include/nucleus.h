@@ -21,7 +21,7 @@ typedef enum { FALSE=0, TRUE } BOOL;
  * The syntax is:
  * static const unsigned puts_addrs[] = {<3.1.0-address>, <3.1.0-CAS-address>, ...}; // see nl_osvalue for the order of the addresses
  * #define puts SYSCALL_CUSTOM(puts_addrs, int, const char *) */
-#define SYSCALL_CUSTOM(addresses, rettype, ...) ((rettype(*)(__VA_ARGS__))nl_osvalue((int*)addresses, sizeof(addresses)/sizeof(addresses[0])))
+#define SYSCALL_CUSTOM(addresses, rettype, ...) ((rettype(*)(__VA_ARGS__))nl_osvalue(addresses, sizeof(addresses)/sizeof(addresses[0])))
 
 typedef struct {
   char * str;
@@ -116,8 +116,7 @@ BOOL nl_loaded_by_3rd_party_loader();
 BOOL nl_isstartup();
 BOOL _nl_hassyscall(int nr);
 void nl_set_resident();
-unsigned int nl_osid();
-unsigned int nl_osvalue();
+unsigned int nl_osvalue(const unsigned int *values, unsigned size);
 int nl_exec(const char* prg, int argc, char** argv);
 lua_State *nl_lua_getstate();
 

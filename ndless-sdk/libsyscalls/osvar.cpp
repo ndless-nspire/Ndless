@@ -75,9 +75,9 @@ unsigned int nl_osid()
 	return syscall<e_nl_osid | __SYSCALLS_ISEXT, int>();
 }
 
-unsigned int nl_osvalue()
+unsigned int nl_osvalue(unsigned int *values, unsigned int size)
 {
-	return syscall<e_nl_osvalue | __SYSCALLS_ISEXT, int>();
+	return syscall<e_nl_osvalue | __SYSCALLS_ISEXT, unsigned int>(values, size);
 }
 
 int _nl_hassyscall(int nr)
