@@ -47,3 +47,12 @@ $(EXE).prg.tns: $(EXE).tns
 
 clean:
 	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
+
+## Header dependencies ##
+main.o : gravity_particles.h
+gravity_particles.o : gravity_particles.h particle_system.h particle.h utils.h
+particle.o : particle.h utils.h vector.h
+particle_system.o : particle_system.h particle.h utils.h
+utils.o : utils.h
+vector.o : vector.h utils.h
+

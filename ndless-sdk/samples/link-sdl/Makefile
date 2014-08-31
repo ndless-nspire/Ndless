@@ -47,3 +47,6 @@ $(EXE).prg.tns: $(EXE).tns
 
 clean:
 	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
+
+## Header dependencies ##
+link.o : link.h map1.h
