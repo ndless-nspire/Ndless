@@ -22,5 +22,5 @@
 #include <os.h>
 
 BOOL lcd_isincolor(void) {
-	return (*IO_LCD_CONTROL & 0b1110) == 0b1100; // R5G6B5
+	return (*IO_LCD_CONTROL & 0b1010) == 0b1000; // R5G6B5
 }
