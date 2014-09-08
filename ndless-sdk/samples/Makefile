@@ -1,4 +1,4 @@
-SUBDIRS = colors helloworld-sdl helloworld-cpp link-sdl luaext particles ngc newlib zehn
+SUBDIRS = colors helloworld-sdl helloworld-cpp link-sdl luaext particles ngc newlib newlib-c++ zehn
 # freetype depends on the xxd command
 LINUX_SUBDIRS = freetype
 OS ?= `uname -s`
