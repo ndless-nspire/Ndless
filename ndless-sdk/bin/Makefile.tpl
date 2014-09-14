@@ -37,13 +37,13 @@ all: $(EXE).prg.tns
 
 $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
-	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+	$(LD) $^ -o $@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
+	$(GENZEHN) --input $^ --output $@ $(ZEHNFLAGS)
 
 $(EXE).prg.tns: $(EXE).tns
-	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
+	make-prg $^ $@
 
 clean:
 	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
