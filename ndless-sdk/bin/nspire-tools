@@ -60,6 +60,9 @@ case "$1" in
 		fi
 		cp "$DIRNAME/main.c.tpl" main.c
 		;;
+	path)
+		echo $(dirname $DIRNAME)/
+		;;
 	*)
 		usage
 		exit 1
