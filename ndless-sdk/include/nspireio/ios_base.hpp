@@ -26,7 +26,7 @@
  */
 
 extern "C" {
-	#include <os.h>
+	#include "platform.h"
 }
 
 #ifndef IOS_BASE_HPP

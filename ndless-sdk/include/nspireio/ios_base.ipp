@@ -25,7 +25,7 @@
  * Template functions for ios_base class
  */
 
-#include <nspireio/ios_base.hpp>
+#include "ios_base.hpp"
 
 #ifndef IOS_BASE_IPP
 #define IOS_BASE_IPP

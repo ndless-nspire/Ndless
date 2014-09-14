@@ -28,7 +28,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <os.h>
+#include "platform.h"
 
 #define QUEUE_SIZE 500
 

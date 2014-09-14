@@ -28,8 +28,8 @@
 #ifndef NSPIREIO_H
 #define NSPIREIO_H
 
-#include <nspireio/platform.h>
-#include <nspireio/queue.h>
+#include "platform.h"
+#include "queue.h"
 
 /** Color defines */
 enum
@@ -361,20 +361,6 @@ int nio_getche(nio_console* c);
 */
 int nio__getche(void);
 
-/** Stores binary data in a file.
-	@param dataptr Pointer to the data to be stored
-	@param size Length in bytes
-	@param regpath Path to file
-	@return 0 on success, -1 on failure
-*/
-int reg_store(void* dataptr, size_t size, char* regpath);
-
-/** Reads binary data from a file.
-	@param regpath Path to file
-	@return Pointer to the data, NULL on failure
-*/
-void* reg_get(char* regpath);
-
 /** Checks if there is data available at the serial port.
 	@return TRUE if new data is available.
 */
@@ -404,7 +390,7 @@ void uart_printf(char *format, ...);
 /** Returns the current time.
 	@return Current RTC time
 */
-unsigned nio_time_get();
+inline unsigned nio_time_get();
 
 /** Draws the cursor of the console, if enabled.
 	@param c Console

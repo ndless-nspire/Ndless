@@ -35,10 +35,10 @@
 
 
 #ifdef _TINSPIRE
-	#include <nspireio/platform-nspire.h>
+	#include "platform-nspire.h"
 #endif
 #ifdef PRIZM
-	#include <nspireio/platform-prizm.h>
+	#include "platform-prizm.h"
 #endif
 
 

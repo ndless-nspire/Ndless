@@ -26,11 +26,10 @@
  */
 
 extern "C" {
-	#include <os.h>
-	#include <nspireio/nspireio.h>
+	#include "nspireio.h"
 }
 
-#include <nspireio/ios_base.ipp>
+#include "ios_base.ipp"
 
 #ifndef CONSOLE_HPP
 #define CONSOLE_HPP

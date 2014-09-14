@@ -29,7 +29,7 @@
 #define NSPIRE_H
 
 // Put headers required for our platform here
-#include <os.h>
+#include <libndls.h>
 
 // wait_key_pressed() - blocks until a key is pressed
 // wait_no_key_pressed() - blocks until all keys are released

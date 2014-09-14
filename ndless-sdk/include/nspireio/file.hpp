@@ -25,8 +25,8 @@
  * C++ specific file header
  */
 
-#include <os.h>
-#include <nspireio/ios_base.ipp>
+#include "platform.h"
+#include "ios_base.ipp"
 
 #ifndef FILE_HPP
 #define FILE_HPP
