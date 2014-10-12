@@ -7,5 +7,13 @@ if ! groups | tr ' ' '\n' | grep docker >/dev/null; then
 	echo "see https://docs.docker.com/installation/ubuntulinux/#giving-non-root-access"
 	sudo_prefix='sudo'
 fi
-$sudo_prefix docker run -v /:/hroot -v $HOME/.ndless:/home/ndless/.ndless -w /hroot$(pwd) -u ndless -i -e HOME=/home/ndless ndless/ndless-sdk $script "$@"
+uid=`id -u`
+gid=`id -g`
+# as created by Dockerfile.arm-gcc
+ndless_uid=1000
+args="$@"
+# works around https://github.com/docker/docker/issues/7198 :
+# creates and uses the user 'ndcmduser' with the same uid/gid as the current, for proper file permissions of volume
+# uses the default user 'ndless' if it has the same uid
+$sudo_prefix docker run -v /:/hroot -v $HOME/.ndless:/home/ndcmduser/.ndless -w /hroot$(pwd) -i ndless/ndless-sdk bash -c "usertouse=ndless; [ $uid -ne $ndless_uid ] && usertouse=ndcmduser && groupadd --gid $gid ndcmdgrp && useradd --uid $uid --gid $gid ndcmduser; su \$usertouse -c \"env PATH=\$PATH $script $args\""
 
