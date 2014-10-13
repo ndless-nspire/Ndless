@@ -4,12 +4,33 @@
 #include <syscall.h>
 
 extern "C" void ut_read_os_version_index();
+extern "C" int ut_os_version_index;
 
 int main()
 {
 	ut_read_os_version_index();
 
-	const char *res_path = "/documents/ndless/ndless_resources.tns";
+	// Click/TouchPad models (no NAND partition table)
+	int nand_page_size=0x200;
+	int offset=0x0A80; // Boot Data NAND offset
+	int endoffset=0x0AFF; // Diags NAND offset
+	char* manufflashdata[0x838+4]; // buffer to store the manuf data up to the NAND partition table
+	syscall_local<e_read_nand, void>(manufflashdata,0x838+4,0,0,0,NULL);
+	
+	// other models with a NAND partition table (both CX and CM)
+	if(!memcmp(manufflashdata+0x818,"\x91\x5F\x9E\x4C",4)) // NAND partition table ID
+	{	nand_page_size=0x800;
+		offset=*((long int*)(manufflashdata+0x834));
+		endoffset=*((long int*)(manufflashdata+0x82c));
+	}
+	syscall_local<e_nand_erase_range, void>(offset, endoffset);
+
+	const int x = 0;
+	syscall_local<e_disp_str, void>("NAND successfully erased.", &x, 0);
+	return 0;
+
+/*	const char *res_path = "/documents/ndless/ndless_resources.tns";
+
 	NUC_FILE *res_fp = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb");
 	char *res_argv = nullptr;
 
@@ -32,5 +53,5 @@ int main()
 			" mcr p15, 0, r0, c7, c7, 0 @ invalidate ICache and DCache \n" ::: "r0");
 
         ((int (*)(int argc, void* argv))(core + sizeof("PRG")))(1, &res_argv);
-	return 0;
+	return 0;*/
 }
