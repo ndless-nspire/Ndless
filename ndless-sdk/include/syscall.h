@@ -144,6 +144,16 @@ template <int nr, typename RETTYPE, typename PARAM1, typename PARAM2, typename P
 	return ((RETTYPE (*)(PARAM1, PARAM2, PARAM3, PARAM4)) syscall_addr<nr>())(p1, p2, p3, p4);
 }
 
+template <int nr, typename RETTYPE, typename PARAM1, typename PARAM2, typename PARAM3, typename PARAM4, typename PARAM5> inline RETTYPE syscall_local(PARAM1 p1, PARAM2 p2, PARAM3 p3, PARAM4 p4, PARAM5 p5)
+{
+	return ((RETTYPE (*)(PARAM1, PARAM2, PARAM3, PARAM4, PARAM5)) syscall_addr<nr>())(p1, p2, p3, p4, p5);
+}
+
+template <int nr, typename RETTYPE, typename PARAM1, typename PARAM2, typename PARAM3, typename PARAM4, typename PARAM5, typename PARAM6> inline RETTYPE syscall_local(PARAM1 p1, PARAM2 p2, PARAM3 p3, PARAM4 p4, PARAM5 p5, PARAM6 p6)
+{
+	return ((RETTYPE (*)(PARAM1, PARAM2, PARAM3, PARAM4, PARAM5, PARAM6)) syscall_addr<nr>())(p1, p2, p3, p4, p5, p6);
+}
+
 #endif
 
 #endif

@@ -11,15 +11,16 @@ int main()
 	ut_read_os_version_index();
 
 	// Click/TouchPad models (no NAND partition table)
-	int nand_page_size=0x200;
-	int offset=0x0A80; // Boot Data NAND offset
-	int endoffset=0x0AFF; // Diags NAND offset
-	char* manufflashdata[0x838+4]; // buffer to store the manuf data up to the NAND partition table
-	syscall_local<e_read_nand, void>(manufflashdata,0x838+4,0,0,0,NULL);
+	int nand_page_size = 0x200;
+	int offset = 0x0A80 * nand_page_size; // Boot Data NAND offset
+	int endoffset= 0x0AFF * nand_page_size; // Diags NAND offset
+	char* manufflashdata[0x838 + 4]; // buffer to store the manuf data up to the NAND partition table
+	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr);
 	
 	// other models with a NAND partition table (both CX and CM)
-	if(!memcmp(manufflashdata+0x818,"\x91\x5F\x9E\x4C",4)) // NAND partition table ID
-	{	nand_page_size=0x800;
+	if(!syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4)) // NAND partition table ID
+	{
+		nand_page_size=0x800;
 		offset=*((long int*)(manufflashdata+0x834));
 		endoffset=*((long int*)(manufflashdata+0x82c));
 	}
@@ -29,7 +30,7 @@ int main()
 	syscall_local<e_disp_str, void>("NAND successfully erased.", &x, 0);
 	return 0;
 
-/*	const char *res_path = "/documents/ndless/ndless_resources.tns";
+/*	const char *res_path = "/documents/ndless/ndless_resources_3.9.tns";
 
 	NUC_FILE *res_fp = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb");
 	char *res_argv = nullptr;

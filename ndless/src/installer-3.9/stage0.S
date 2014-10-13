@@ -22,12 +22,13 @@ xor_loop:
 	strb r5, [r4], #1
 	subs r1, r1, #1
 	bne xor_loop
+
 	mov r1, #1
 	sub r1, r1, #1
-
-	mcr p15, 0, r1, c7, c5, 0
-0:	mrc p15, 0, pc, c7, c10, 3
-	bne 0b
+clear_cache_loop:
+	mrc p15, 0, r15, c7, c10, 3 @ test and clean DCache
+	bne clear_cache_loop
+	mcr p15, 0, r3, c7, c7, 0 @ invalidate ICache and DCache
 
 	blx r6
 	pop {r0-r12,pc}
