@@ -47,7 +47,7 @@ int main(int argc, char **argv)
             ("touchpad-support", opt::value<bool>()->default_value(true), "Whether touchpads (classic) are supported")
             ("32MB-support", opt::value<bool>()->default_value(true), "Whether 32MB SDRAM is supported");
 
-    opt::options_description all;
+    opt::options_description all("All options");
     all.add(required).add(additional);
 
     opt::variables_map args;
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-	std::cout << "genzehn 1.0 by Fabian Vogt" << std::endl
+	std::cout << "genzehn 1.1 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
