@@ -1,4 +1,3 @@
-#include <nucleus.h>
 #include <syscall-list.h>
 #include <syscall-addrs.h>
 #include <syscall.h>
@@ -10,24 +9,39 @@ int main()
 {
 	ut_read_os_version_index();
 
-	// Click/TouchPad models (no NAND partition table)
-	int nand_page_size = 0x200;
-	int offset = 0x0A80 * nand_page_size; // Boot Data NAND offset
-	int endoffset = 0x0B00 * nand_page_size; // Diags NAND offset
-	char manufflashdata[0x838 + 4]; // buffer to store the manuf data up to the NAND partition table
-	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr);
+	char manufflashdata[0x838 + 4];
+	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr); // Read manuf data
 	
-	// other models with a NAND partition table (both CX and CM)
-	if(!syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4)) // NAND partition table ID
+	if(syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4) == 1) // Not a partition table?
 	{
-		nand_page_size = 0x800;
-		offset = *((long int*)(manufflashdata + 0x834));
-		endoffset = *((long int*)(manufflashdata + 0x82c));
+		const int x = 0;
+		syscall_local<e_disp_str, void>("Partition table not found!", &x, 0);
+		return 0;
 	}
-	syscall_local<e_nand_erase_range, void>(offset, endoffset - 1);
+
+	const unsigned int nand_page_size = 0x800;
+	unsigned int bootdata_start = *((long int*)(manufflashdata + 0x834));
+	unsigned int bootdata_end = *((long int*)(manufflashdata + 0x82c));
+	bool found = false;
+
+	for(unsigned int bootdata_current = bootdata_start; bootdata_current < bootdata_end; bootdata_current += nand_page_size)
+	{
+		char bootdata[nand_page_size];
+		syscall_local<e_read_nand, void>(bootdata, nand_page_size, bootdata_start, 0, 0, nullptr);
+
+		if(bootdata[0] == 0xAA && bootdata[1] == 0xC6 && bootdata[2] == 0x8C && bootdata[3] == 0x92) // Found signature
+		{
+			// Set minimum OS version to 0.0.0.0
+			bootdata[4] = bootdata[5] = bootdata[6] = bootdata[7] = 0;
+
+			syscall_local<e_write_nand, void>(bootdata, nand_page_size, bootdata_current);
+
+			found = true;
+		}
+	}
 
 	const int x = 0;
-	syscall_local<e_disp_str, void>("NAND successfully erased.", &x, 0);
+	syscall_local<e_disp_str, void>(found ? "Downgrade protection disabled." : "Bootdata not found!", &x, 0);
 	return 0;
 
 /*	const char *res_path = "/documents/ndless/ndless_resources_3.9.tns";

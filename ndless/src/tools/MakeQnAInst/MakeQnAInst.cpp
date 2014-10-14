@@ -184,7 +184,7 @@ std::string luaForOS(OS os, std::string installer_filename)
 
 	if(ptr_pos < buffer_content.size())
 	{
-		std::cerr << "Binary too large (Binary ends at 0x" << std::hex << buffer_content.size() + overflow_addr[os] << ", but the struct ptr is at 0x" << std::hex << struct_ptr[os]  << "!" << std::endl;
+		std::cerr << "Binary too large (Binary ends at 0x" << std::hex << buffer_content.size() + overflow_addr[os] << ", but the struct ptr is at 0x" << std::hex << struct_ptr[os]  << ")!" << std::endl;
 		return "";
 	}
 
