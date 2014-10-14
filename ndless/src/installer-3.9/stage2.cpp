@@ -13,18 +13,18 @@ int main()
 	// Click/TouchPad models (no NAND partition table)
 	int nand_page_size = 0x200;
 	int offset = 0x0A80 * nand_page_size; // Boot Data NAND offset
-	int endoffset= 0x0AFF * nand_page_size; // Diags NAND offset
-	char* manufflashdata[0x838 + 4]; // buffer to store the manuf data up to the NAND partition table
+	int endoffset = 0x0B00 * nand_page_size; // Diags NAND offset
+	char manufflashdata[0x838 + 4]; // buffer to store the manuf data up to the NAND partition table
 	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr);
 	
 	// other models with a NAND partition table (both CX and CM)
 	if(!syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4)) // NAND partition table ID
 	{
-		nand_page_size=0x800;
-		offset=*((long int*)(manufflashdata+0x834));
-		endoffset=*((long int*)(manufflashdata+0x82c));
+		nand_page_size = 0x800;
+		offset = *((long int*)(manufflashdata + 0x834));
+		endoffset = *((long int*)(manufflashdata + 0x82c));
 	}
-	syscall_local<e_nand_erase_range, void>(offset, endoffset);
+	syscall_local<e_nand_erase_range, void>(offset, endoffset - 1);
 
 	const int x = 0;
 	syscall_local<e_disp_str, void>("NAND successfully erased.", &x, 0);
