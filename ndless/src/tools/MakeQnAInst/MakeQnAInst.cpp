@@ -20,7 +20,7 @@ static uint32_t overflow_addr[4] = { 0x10EBB612, 0x10E8F60A, 0x1110D752, 0x1116D
 // Address of a pointer to the struct we want to replace
 static const uint32_t struct_ptr[4] = { 0x10F7B5B4, 0x10F4F5AC, 0x111CD6F4, 0x1122D6F4 };
 // Where the binary (argv[1]) will be put in the buffer (chosen manually, because of unsafe locations)
-static const uint32_t loc_code[4] = { 0x10F7A084, 0x10F4EF04, 0x111CCF84, 0x1122CD84 };
+static const uint32_t loc_code[4] = { 0x10F7A084, 0x10F4EF04, 0x111CCD84, 0x1122CD84 };
 // The struct itself
 static uint32_t orig_struct[][32] = {
 {
