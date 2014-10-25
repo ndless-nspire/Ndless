@@ -12,7 +12,7 @@ int main()
 	char manufflashdata[0x838 + 4];
 	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr); // Read manuf data
 	
-	if(syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4) == 1) // Not a partition table?
+	if(syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4) != 0) // Not a partition table?
 	{
 		const int x = 0;
 		syscall_local<e_disp_str, void>("Partition table not found!", &x, 0);
