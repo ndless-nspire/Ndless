@@ -4,6 +4,9 @@ SECTIONS {
 	.text 0x0 : {
 		_start = .;
 		*(.text)
+		KEEP(*(.text.crtn))
+		KEEP(*(.init_array))
+		KEEP(*(.fini_array))
 		*(.text.*)
 	}
 
@@ -18,13 +21,13 @@ SECTIONS {
 		*(.data*)
 	}
 
-	.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) }
+	.ARM.extab   : { KEEP(*(.ARM.extab* .gnu.linkonce.armextab.*)) }
 	PROVIDE_HIDDEN (__exidx_start = .);
-	.ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+	.ARM.exidx   : { KEEP(*(.ARM.exidx* .gnu.linkonce.armexidx.*)) }
 	PROVIDE_HIDDEN (__exidx_end = .);
 	
 	.eh_frame : {
-		*(.eh_frame)
+		KEEP(*(.eh_frame))
 	}
 	
 	.bss : {

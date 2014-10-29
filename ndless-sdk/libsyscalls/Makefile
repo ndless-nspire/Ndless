@@ -1,4 +1,4 @@
-CFLAGS := -mcpu=arm926ej-s -std=c++11 -nostdlib -O3 -fPIE -fno-exceptions -fno-rtti -mlong-calls -Wall -Werror -I ../include/ -D_TINSPIRE
+CFLAGS := -mcpu=arm926ej-s -std=c++11 -nostdlib -O3 -fPIE -fno-exceptions -fno-rtti -mlong-calls -Wall -Werror -I ../include/ -D_TINSPIRE -ffunction-sections -fdata-sections
 
 AR_FILE := ../lib/libsyscalls.a
 AR_FILE_NSPIREIO := ../lib/libsyscalls_nspireio.a
