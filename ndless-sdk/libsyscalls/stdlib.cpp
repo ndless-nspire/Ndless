@@ -99,24 +99,78 @@ static int errno_check(int result)
 }
 
 // Programs linked to newlib use malloc, but newlib itself uses _malloc_r...
+
+// Workaround: The malloc syscall doesn't always return a correctly aligned (8 bytes) pointer!
 void *malloc(size_t size)
 {
-	return syscall<e_malloc, void*>(size);
+	// Yes, this is valid. malloc may return nullptr if size is null.
+	if(!size)
+		return nullptr;
+
+	// Add 8 bytes for alignment
+	uint8_t *alloc_ptr = reinterpret_cast<uint8_t*>(syscall<e_malloc, void*>(size + 8));
+
+	if(!alloc_ptr)
+	{
+		errno = ENOMEM;
+		return nullptr;
+	}
+
+	/* Memory layout:
+	   [padding|sz_of_padding|.........]
+            ^                    ^
+            alloc_ptr            aligned_ptr */
+
+	uint8_t *aligned_ptr = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc_ptr) + 8) & ~7);
+
+	*(aligned_ptr - 1) = reinterpret_cast<uint32_t>(aligned_ptr) - reinterpret_cast<uint32_t>(alloc_ptr);
+
+	return reinterpret_cast<void*>(aligned_ptr);
 }
 
 void free(void *mem)
 {
-	return syscall<e_free, void>(mem);
+	if(mem)
+		return syscall<e_free, void>(reinterpret_cast<void*>(reinterpret_cast<uint32_t>(mem) - *(reinterpret_cast<uint8_t*>(mem) - 1)));
 }
 
 void *realloc(void *mem, size_t size)
 {
-	return syscall<e_realloc, void*>(mem, size);
+	if(!mem)
+		return malloc(size);
+
+	if(!size)
+	{
+		free(mem);
+		return nullptr;
+	}
+
+	uint8_t *alloc_ptr = reinterpret_cast<uint8_t*>(reinterpret_cast<uint32_t>(mem) - *(reinterpret_cast<uint8_t*>(mem) - 1));
+	alloc_ptr = reinterpret_cast<uint8_t*>(syscall<e_realloc, void*>(alloc_ptr, size + 8));
+
+	uint8_t *aligned_ptr = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc_ptr) + 8) & ~7);
+
+	*(aligned_ptr - 1) = reinterpret_cast<uint32_t>(aligned_ptr) - reinterpret_cast<uint32_t>(alloc_ptr);
+
+	return reinterpret_cast<void*>(aligned_ptr);
 }
 
 void *calloc(size_t nmemb, size_t size)
 {
-	return syscall<e_calloc, void*>(nmemb, size);
+	if(nmemb == 0 || size == 0)
+		return nullptr;
+
+	// Check for overflow!
+	uint64_t of_size = nmemb * size; 
+	uint32_t of_size32 = static_cast<uint32_t>(of_size);
+	if(of_size != of_size32)
+		return nullptr;
+
+	void *ptr = malloc(of_size32);
+	if(!ptr)
+		return nullptr; // malloc sets ENOMEM for us
+
+	return syscall<e_memset, void*>(ptr, 0, of_size32);
 }
   
 int _puts(const char *s)
@@ -413,22 +467,22 @@ int _kill(pid_t pid, int sig)
 
 void *_malloc_r(struct _reent *, size_t size)
 {
-	return syscall<e_malloc, void*>(size);
+	return malloc(size);
 }
 
 void _free_r(struct _reent *, void *mem)
 {
-	return syscall<e_free, void>(mem);
+	return free(mem);
 }
 
 void *_realloc_r(struct _reent *, void *mem, size_t size)
 {
-	return syscall<e_realloc, void*>(mem, size);
+	return realloc(mem, size);
 }
 
 void *_calloc_r(struct _reent *, size_t nmemb, size_t size)
 {
-	return syscall<e_calloc, void*>(nmemb, size);
+	return calloc(nmemb, size);
 }
 
 // Miscellaneous
