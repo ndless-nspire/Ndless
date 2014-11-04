@@ -1,19 +1,11 @@
 CC:=gcc
-CFLAGS:=-W -Wall
-LDFLAGS:= -lssl -lz
+CFLAGS:=-W -Wall -DUSE_FILE32API
+LDFLAGS:= -lssl -lz -lcrypto
 VPATH := minizip-1.1
 ifeq ($(USER),root)
 	PREFIX ?= /usr/bin
 else
 	PREFIX ?= ~/bin
-endif
-
-OS ?= `uname -s`
-ifeq ($(OS),Windows_NT)
-  EXEEXT = .exe
-else
-	CFLAGS := $(CFLAGS) -DUSE_FILE32API
-	LDFLAGS:= $(LDFLAGS) -lcrypto
 endif
 
 BIN := luna$(EXEEXT)
