@@ -98,6 +98,39 @@ void *escape_unicode(char *in_buf, size_t header_size, size_t footer_size, size_
 	return out_buf2;
 }
 
+/* sub-routine of xml_compress() to escape the Lua script string. Returns the new in_buf or NULL */
+void *escape_special_xml_chars(char *in_buf, size_t header_size, size_t in_size, size_t *obuf_size) {
+	char *p;
+	unsigned extend_with = 0;
+	for (p = in_buf + header_size; p < in_buf + header_size + in_size; p++) {
+		if (*p == '&') extend_with += 4; // amp;
+		else if (*p == '<') extend_with += 3; // lt;
+	}
+	if (extend_with) {
+		*obuf_size += extend_with;
+		void *tmp_in_buf;
+		if (!(tmp_in_buf = realloc(in_buf, *obuf_size))) {
+			puts("can't realloc in_buf for special characters");
+			free(in_buf);
+			return NULL;
+		}
+		in_buf = tmp_in_buf;
+		unsigned new_written = 0;
+		for (p = in_buf + header_size; p < in_buf + header_size + in_size + new_written; p++) {
+			if (*p == '&') {
+				memmove(p + 5, p + 1, in_buf + header_size + in_size + new_written - p - 1);
+				memcpy(p, "&amp;", 5);
+				new_written += 4;
+			} else if (*p == '<') {
+				memmove(p + 4, p + 1, in_buf + header_size + in_size + new_written - p - 1);
+				memcpy(p, "&lt;", 4);
+				new_written += 3;
+			}
+		}
+	}
+	return in_buf;
+}
+
 /* sub-routine of read_file_and_xml_compress() in case of an XML problem as input. Returns the new in_buf or NULL */
 void *reformat_xml_doc(char *in_buf, size_t header_size, size_t in_size, size_t *obuf_size) {
 	char *out_buf = malloc(header_size + in_size);
@@ -268,6 +301,8 @@ void *read_file_and_xml_compress(const char *inf_path, size_t *obuf_size) {
 	if (infile_is_xml) {
 		return reformat_xml_doc(in_buf, header_size, in_size, obuf_size);
 	} else {
+		if (!(in_buf = escape_special_xml_chars(in_buf, header_size, in_size, obuf_size)))
+			return NULL;
 		in_size = *obuf_size - header_size - footer_size;
 		memcpy(in_buf + header_size + in_size, lua_footer, sizeof(lua_footer) - 1);
 		return in_buf;
