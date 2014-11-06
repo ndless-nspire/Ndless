@@ -5,25 +5,59 @@
 extern "C" void ut_read_os_version_index();
 extern "C" int ut_os_version_index;
 
+#define DEREF(x) *reinterpret_cast<unsigned int*>(x)
+
 int main()
 {
 	ut_read_os_version_index();
 
-	char manufflashdata[0x838 + 4];
-	syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr); // Read manuf data
-	
-	if(syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4) != 0) // Not a partition table?
+	//Unregister exploit
+	switch(ut_os_version_index)
 	{
-		const int x = 0;
-		syscall_local<e_disp_str, void>("Partition table not found!", &x, 0);
+	case 4: //nothing
+		DEREF(0x10F7B5B4) = 0x1147a86c;
+		break;
+	case 5: //CAS
+		DEREF(0x10F4F5AC) = 0x114424b4;
+		break;
+	case 6: //CX
+		DEREF(0x111CD6F4) = 0x11707e48;
+		break;
+	case 7: //CXCAS
+		DEREF(0x1122D6F4) = 0x11767e48;
+		break;
+	default: //WTF
 		return 0;
 	}
 
-	const unsigned int nand_page_size = 0x800;
-	unsigned int bootdata_start = *((long int*)(manufflashdata + 0x834));
-	unsigned int bootdata_end = *((long int*)(manufflashdata + 0x82c));
-	bool found = false;
+	unsigned int nand_page_size;
+	unsigned int bootdata_start;
+	unsigned int bootdata_end;
 
+	if(ut_os_version_index > 5) //CX => Has partition table
+	{
+		char manufflashdata[0x838 + 4];
+		syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr); // Read manuf data
+
+		if(syscall_local<e_memcmp, int>(manufflashdata + 0x818, "\x91\x5F\x9E\x4C", 4) != 0) // Not a partition table?
+		{
+			const int x = 0;
+			syscall_local<e_disp_str, void>("Partition table not found!", &x, 0);
+			return 0;
+		}
+
+		nand_page_size = 0x800;
+		bootdata_start = *((long int*)(manufflashdata + 0x834));
+		bootdata_end = *((long int*)(manufflashdata + 0x82c));
+	}
+	else
+	{
+		nand_page_size = 0x200;
+		bootdata_start = 0x0A80 * nand_page_size;
+		bootdata_end = 0x0AFF * nand_page_size;
+	}
+
+	bool found = false;
 	for(unsigned int bootdata_current = bootdata_start; bootdata_current < bootdata_end; bootdata_current += nand_page_size)
 	{
 		char bootdata[nand_page_size];
