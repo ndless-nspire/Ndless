@@ -125,12 +125,15 @@ unsigned hwtype(void);
 #define is_classic (hwtype() < 1)
 #define is_cm (nl_hwsubtype() == 1)
 #define has_colors (!is_classic)
-#define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])
 #define IO_LCD_CONTROL IO(0xC000001C, 0xC0000018)
+#define SCREEN_BYTES_SIZE       ((int)(_scrsize()))
+#define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])
 
+#ifndef __cplusplus
 #define SCREEN_BASE_ADDRESS     (*(void**)0xC0000010)
-#define SCREEN_BYTES_SIZE       ((int)({_scrsize();}))
-#define SCREEN_BYTES_SIZE       ((int)({_scrsize();}))
+#else
+#define SCREEN_BASE_ADDRESS     (*reinterpret_cast<void**>(0xC0000010))
+#endif
 
 #ifdef __cplusplus
 }
