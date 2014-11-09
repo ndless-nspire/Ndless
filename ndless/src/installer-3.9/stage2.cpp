@@ -15,16 +15,18 @@ int main()
 	switch(ut_os_version_index)
 	{
 	case 4: //nothing
-		DEREF(0x10F7B5B4) = 0x1147a86c;
+		DEREF(0x10F7B5B4) = 0x1147A86C;
+		DEREF(0x10EBBD14) = 0x112C1590;
 		break;
 	case 5: //CAS
-		DEREF(0x10F4F5AC) = 0x114424b4;
+		DEREF(0x10F4F5AC) = 0x114424B4;
+		DEREF(0x10E8FD0C) = 0x112891D8;
 		break;
 	case 6: //CX
-		DEREF(0x111CD6F4) = 0x11707e48;
+		DEREF(0x111CD6F4) = 0x11707E48;
 		break;
 	case 7: //CXCAS
-		DEREF(0x1122D6F4) = 0x11767e48;
+		DEREF(0x1122D6F4) = 0x11767E48;
 		break;
 	default: //WTF
 		return 0;
