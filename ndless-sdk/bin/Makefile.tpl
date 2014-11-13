@@ -27,13 +27,13 @@ vpath %.elf $(DISTDIR)
 all: $(EXE).prg.tns
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -c $<
+	$(GCC) $(GCCFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(GXX) $(GCCFLAGS) -c $<
+	$(GXX) $(GCCFLAGS) -c $< -o $@
 	
 %.o: %.S
-	$(AS) -c $<
+	$(AS) -c $< -o $@
 
 $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
