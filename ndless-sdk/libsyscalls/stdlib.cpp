@@ -145,12 +145,19 @@ void *realloc(void *mem, size_t size)
 		return nullptr;
 	}
 
-	uint8_t *alloc_ptr = reinterpret_cast<uint8_t*>(reinterpret_cast<uint32_t>(mem) - *(reinterpret_cast<uint8_t*>(mem) - 1));
-	alloc_ptr = reinterpret_cast<uint8_t*>(syscall<e_realloc, void*>(alloc_ptr, size + 8));
+	uint8_t old_alignment = *(reinterpret_cast<uint8_t*>(mem) - 1);
+	uint8_t *old_ptr = reinterpret_cast<uint8_t*>(reinterpret_cast<uint32_t>(mem) - old_alignment);
+	uint8_t *new_ptr = reinterpret_cast<uint8_t*>(syscall<e_realloc, void*>(old_ptr, size + 8));
+	if(!new_ptr)
+		return nullptr;
 
-	uint8_t *aligned_ptr = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(alloc_ptr) + 8) & ~7);
+	uint8_t *aligned_ptr = reinterpret_cast<uint8_t*>((reinterpret_cast<uint32_t>(new_ptr) + 8) & ~7);
+	uint8_t new_alignment = reinterpret_cast<uint32_t>(aligned_ptr) - reinterpret_cast<uint32_t>(new_ptr);
 
-	*(aligned_ptr - 1) = reinterpret_cast<uint32_t>(aligned_ptr) - reinterpret_cast<uint32_t>(alloc_ptr);
+	if(old_alignment != new_alignment)
+		memmove(new_ptr + new_alignment, new_ptr + old_alignment, size);
+
+	*(aligned_ptr - 1) = new_alignment;
 
 	return reinterpret_cast<void*>(aligned_ptr);
 }
