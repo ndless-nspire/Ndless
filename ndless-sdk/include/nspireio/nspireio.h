@@ -390,7 +390,7 @@ void uart_printf(char *format, ...);
 /** Returns the current time.
 	@return Current RTC time
 */
-inline unsigned nio_time_get();
+unsigned nio_time_get();
 
 /** Draws the cursor of the console, if enabled.
 	@param c Console

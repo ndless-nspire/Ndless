@@ -21,7 +21,7 @@
 #include <os.h>
 #include <libndls.h>
 
-// See the Touchpad I²C protocol on Hackspire
+// See the Touchpad IÂ²C protocol on Hackspire
 
 /* cached */
 BOOL touchpad_info_cached = FALSE;
