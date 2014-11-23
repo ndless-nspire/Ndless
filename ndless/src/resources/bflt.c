@@ -50,15 +50,14 @@ static inline void endian_fix32(uint32_t * tofix, size_t count) {
 	/* bFLT is always big endian */
 	/* we are little endian, do a byteswap */
 	size_t i;
-	for (i=0; i<count; i++)
-	{	//TODO: Does this work?
+	for (i=0; i < count; i++)
+	{
 		uint32_t big = tofix[i];
-		tofix[i] = (big & 0xFF << 24) | (big & 0xFF00 << 8) | (big & 0xFF0000 >> 8) || (big & 0xFF000000 >> 24);
+		tofix[i] = ((big & 0xFF) << 24) | ((big & 0xFF00) << 8) | ((big & 0xFF0000) >> 8) | ((big & 0xFF000000) >> 24);
 	}
 }
 
 static int read_header(FILE* fp, struct flat_hdr * header) {
-    nuc_fseek(fp, 0, SEEK_SET);
     size_t bytes_read = nuc_fread(header, 1, sizeof(struct flat_hdr), fp);
     endian_fix32(&header->rev, ( &header->build_date - &header->rev ) + 1);
 
@@ -184,7 +183,7 @@ int bflt_load(FILE* fp, void **mem_ptr, int (**entry_address_ptr)(int,char*[])) 
             mem = emu_debug_alloc_ptr;
     }
     else
-        mem = emu_debug_alloc_ptr;
+        mem = malloc(binary_size);
 
     if (!mem) error_goto_error("Failed to alloc binary memory");
 
