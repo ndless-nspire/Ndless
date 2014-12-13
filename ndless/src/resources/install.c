@@ -29,7 +29,8 @@
 
 // OS-specific
 // Call to the dialog box display telling that the format isn't recognized.
-static unsigned const ploader_hook_addrs[] = {0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924};
+static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
+						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -38,7 +39,8 @@ BOOL ins_loaded_by_3rd_party_loader(void) {
 	return loaded_by_3rd_party_loader;
 }
 
-static unsigned const end_of_init_addrs[] = {0x1001264C, 0x100125D0, 0x10012470, 0x10012424};
+static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC, 0x1001046C, 0x1000ED30, 0x1000ECE0,
+						0x1001264C, 0x100125D0, 0x10012470, 0x10012424};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -82,7 +84,11 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	if (!installed) {
 		// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
 		HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
-		HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook);
+		if(ut_os_version_index < 6)
+			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
+		else
+			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_36);
+
 		lua_install_hooks();
 	}
 
@@ -98,15 +104,32 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		ins_uninstall();
 	}
 
+	if(ut_os_version_index < 6) {
+		PCFD fd = NU_Open("/phoenix/install/TI-Nspire.tnc", 0, 0); // any file will do to get a fd
+		if (fd > 0){
+			NU_Close(fd - 1); // the FILE* is unknown, this is an heuristic
+			NU_Close(fd);
+		}
+
+		// Continue OS startup
+		// Simulate the prolog of the thread function for correct function return. Set r4 to a dummy variable, written to by a sub-function that follows.
+		unsigned const init_task_return_addrs[] = {0x10001548, 0x10001548, 0x10001510, 0x10001510, 0x100014F8, 0x100014F8};
+		__asm volatile("add lr, pc, #8; stmfd sp!, {r4-r6,lr}; sub sp, sp, #0x18; mov r4, sp; mov pc, %0" : : "r" (init_task_return_addrs[ut_os_version_index]));
+	}
+
 	return 0;
 }
 
 
 // OS-specific
 // gui_gc_drawIcon + 4
-const unsigned ins_successmsg_hook_addrs[] = {0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348};
+const unsigned ins_successmsg_hook_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+						0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348};
 
 void ins_install_successmsg_hook(void) {
+	if(ins_successmsg_hook_addrs[ut_os_version_index] == 0)
+		return;
+
 	HOOK_INSTALL(ins_successmsg_hook_addrs[ut_os_version_index], ins_successsuccessmsg_hook);
 }
 

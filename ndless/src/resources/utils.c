@@ -42,17 +42,35 @@ unsigned int ut_os_version_index;
 void ut_read_os_version_index(void) {
 	switch (*(unsigned*)(OS_BASE_ADDRESS + 0x20)) {
 		// OS-specific
-		case 0x10375BB0:  // 3.6.0 non-CAS
+		case 0x102F0FA0:  // 3.1.0 non-CAS
 			ut_os_version_index = 0;
 			break;
-		case 0x103765F0:  // 3.6.0 CAS
+		case 0x102F16D0:  // 3.1.0 CAS
 			ut_os_version_index = 1;
 			break;
-		case 0x10375620:  // 3.6.0 non-CAS CX
+		case 0x102F0A10:  // 3.1.0 non-CAS CX
 			ut_os_version_index = 2;
 			break;
-		case 0x10376090:  // 3.6.0 CAS CX
+		case 0x102F11A0:  // 3.1.0 CAS CX
 			ut_os_version_index = 3;
+			break;
+		case 0x102DBF20:  // 3.1.0 CM-C
+			ut_os_version_index = 4;
+			break;
+		case 0x102DC6B0:  // 3.1.0 CAS CM-C
+			ut_os_version_index = 5;
+			break;
+		case 0x10375BB0:  // 3.6.0 non-CAS
+			ut_os_version_index = 6;
+			break;
+		case 0x103765F0:  // 3.6.0 CAS
+			ut_os_version_index = 7;
+			break;
+		case 0x10375620:  // 3.6.0 non-CAS CX
+			ut_os_version_index = 8;
+			break;
+		case 0x10376090:  // 3.6.0 CAS CX
+			ut_os_version_index = 9;
 			break;
 		default:
 			ut_calc_reboot();

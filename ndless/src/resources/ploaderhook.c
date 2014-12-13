@@ -294,18 +294,30 @@ void ld_free(void *resident_ptr) {
 }
 
 // When opening a document
-HOOK_DEFINE(plh_hook) {
+HOOK_DEFINE(plh_hook_36) {
 	char *halfpath; // [docfolder/]file.tns
 	char docpath[FILENAME_MAX];
-	halfpath = (char*)(HOOK_SAVED_SP(plh_hook)) + 0x788;
+	halfpath = (char*)(HOOK_SAVED_SP(plh_hook_36)) + 0x788;
 	snprintf(docpath, FILENAME_MAX, "/%s%s", get_documents_dir(), halfpath);
 	if (ld_exec(docpath, NULL) == 0xDEAD) {
-		HOOK_SAVED_REGS(plh_hook)[3] = HOOK_SAVED_REGS(plh_hook)[0]; // 'mov r3, r0' was overwritten by the hook
-		HOOK_RESTORE_RETURN_SKIP(plh_hook, -0x134, 0); // to the error dialog about the unsupported format (we've overwritten a branch with our hook)
+		HOOK_SAVED_REGS(plh_hook_36)[3] = HOOK_SAVED_REGS(plh_hook_36)[0]; // 'mov r3, r0' was overwritten by the hook
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_36, -0x134, 0); // to the error dialog about the unsupported format (we've overwritten a branch with our hook)
 	} else {
-		HOOK_RESTORE_RETURN_SKIP(plh_hook, -0xF0, 1); // skip the error dialog about the unsupported format
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_36, -0xF0, 1); // skip the error dialog about the unsupported format
 	}
 }
+
+HOOK_DEFINE(plh_hook_31) {
+	char *halfpath; // [docfolder/]file.tns
+	char docpath[FILENAME_MAX];
+	halfpath = (char*)(HOOK_SAVED_REGS(plh_hook_31)[5] /* r5 */ + 32);
+	snprintf(docpath, FILENAME_MAX, "/%s%s", get_documents_dir(), halfpath);
+	if (ld_exec(docpath, NULL) == 0xDEAD) {
+		HOOK_SAVED_REGS(plh_hook_31)[3] = HOOK_SAVED_REGS(plh_hook_31)[0]; // 'mov r3, r0' was overwritten by the hook
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_31, -0x114, 0); // to the error dialog about the unsupported format (we've overwritten a branch with our hook)
+	} else {
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_31, -0xDC, 1); // skip the error dialog about the unsupported format
+	}}
 
 static int startup_file_each_cb(const char *path, __attribute__((unused)) void *context) {
 	ld_exec(path, NULL);

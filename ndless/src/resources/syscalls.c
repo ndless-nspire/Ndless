@@ -30,7 +30,7 @@
 /* Values is an array of values for non-CAS 3.1, CAS 3.1, non-CAS CX 3.1, CAS CX 3.1, CM-C 3.1, CAS CM-C 3.1,
  * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6 */
 int sc_nl_osvalue(const int *values, unsigned size) {
-	unsigned index = ut_os_version_index + 6; // the first values are for backward compatibility with Ndless 3.1s
+	unsigned index = ut_os_version_index;
 	if (index >= size)
 		return 0;
 	return values[index];
@@ -51,7 +51,7 @@ void sc_ext_relocdatab(unsigned *dataptr, unsigned size, void *base) {
 }
 
 unsigned sc_nl_hwtype(void) {
-	return ut_os_version_index >= 2; // 1 if CX
+	return ut_os_version_index > 2 && (ut_os_version_index < 6 || ut_os_version_index > 8); // 1 if CX
 }
 
 // same as ut_os_version_index
@@ -61,7 +61,7 @@ unsigned sc_nl_osid(void) {
 
 unsigned sc_nl_hwsubtype(void) {
 	unsigned asic_user_flags_model = (*(volatile unsigned*)0x900A002C & 0x7C000000) >> 26;
-	return  (/* CM */ asic_user_flags_model == 2 || /* CM CAS */ asic_user_flags_model == 3) ? 1 : 0; // 1 if CM
+	return (/* CM */ asic_user_flags_model == 2 || /* CM CAS */ asic_user_flags_model == 3); // 1 if CM
 }
 
 BOOL sc_nl_isstartup(void) {
