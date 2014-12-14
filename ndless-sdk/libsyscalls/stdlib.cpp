@@ -240,6 +240,19 @@ void abort()
 	__builtin_unreachable();
 }
 
+int _execve(const char *filename, const char **argv, const char **envp)
+{
+	unsigned int argc = 0;
+	const char **argv_cnt  = argv;
+	while(*argv_cnt++)
+		++argc;
+
+	if(argc == 0 || argc == 1)
+		return syscall<e_nl_exec, int>(filename, 0, nullptr);
+	else
+		return syscall<e_nl_exec, int>(filename, argc - 1, argv + 1);
+}
+
 int _stat(const char *path, struct stat *st)
 {
 	struct nuc_stat nuc_st;
