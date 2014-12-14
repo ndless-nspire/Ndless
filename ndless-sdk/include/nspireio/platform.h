@@ -44,8 +44,8 @@
 
 // These functions are the same on all platforms...
 
-void nio_pixel_set(const int x, const int y, const unsigned int color);
-void nio_vram_pixel_set(const int x, const int y, const unsigned int color);
+void nio_pixel_set(const unsigned int x, const unsigned int y, const unsigned int color);
+void nio_vram_pixel_set(const unsigned int x, const unsigned int y, const unsigned int color);
 void nio_vram_fill(unsigned int color);
 void nio_vram_draw(void);
 unsigned int nio_cursor_clock(void);
