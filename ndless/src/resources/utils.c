@@ -49,49 +49,52 @@ void ut_read_os_version_index(void) {
 #ifndef NDLESS_39
 		// OS-specific
 #ifndef NDLESS_36
-		case 0x102F0FA0:  // 3.1.0 non-CAS
+		case 0x102F0FA0: // 3.1.0 non-CAS
 			ut_os_version_index = 0;
 			break;
-		case 0x102F16D0:  // 3.1.0 CAS
+		case 0x102F16D0: // 3.1.0 CAS
 			ut_os_version_index = 1;
 			break;
-		case 0x102F0A10:  // 3.1.0 non-CAS CX
+		case 0x102F0A10: // 3.1.0 non-CAS CX
 			ut_os_version_index = 2;
 			break;
-		case 0x102F11A0:  // 3.1.0 CAS CX
+		case 0x102F11A0: // 3.1.0 CAS CX
 			ut_os_version_index = 3;
 			break;
-		case 0x102DBF20:  // 3.1.0 CM-C
+		case 0x102DBF20: // 3.1.0 CM-C
 			ut_os_version_index = 4;
 			break;
-		case 0x102DC6B0:  // 3.1.0 CAS CM-C
+		case 0x102DC6B0: // 3.1.0 CAS CM-C
 			ut_os_version_index = 5;
 			break;
 #endif
-		case 0x10375BB0:  // 3.6.0 non-CAS
+		case 0x10375BB0: // 3.6.0 non-CAS
 			ut_os_version_index = 6;
 			break;
-		case 0x103765F0:  // 3.6.0 CAS
+		case 0x103765F0: // 3.6.0 CAS
 			ut_os_version_index = 7;
 			break;
-		case 0x10375620:  // 3.6.0 non-CAS CX
+		case 0x10375620: // 3.6.0 non-CAS CX
 			ut_os_version_index = 8;
 			break;
-		case 0x10376090:  // 3.6.0 CAS CX
+		case 0x10376090: // 3.6.0 CAS CX
 			ut_os_version_index = 9;
 			break;
 #endif
-		case 0x1037CDE0:  // 3.9.0 non-CAS
-			ut_os_version_index = 4;
+		case 0x1037CDE0: // 3.9.0 non-CAS
+			ut_os_version_index = 10;
 			break;
-		case 0x1037D320:  // 3.9.0 CAS
-			ut_os_version_index = 5;
+		case 0x1037D320: // 3.9.0 CAS
+			ut_os_version_index = 11;
 			break;
-		case 0x1037C760:  // 3.9.0 non-CAS CX
-			ut_os_version_index = 6;
+		case 0x1037C760: // 3.9.0 non-CAS CX
+			ut_os_version_index = 12;
 			break;
-		case 0x1037CCC0:  // 3.9.0 CAS CX
-			ut_os_version_index = 7;
+		case 0x1037CCC0: // 3.9.0 CAS CX
+			ut_os_version_index = 13;
+			break;
+		case 0x1037D160: // 3.9.1 non-CAS CX
+			ut_os_version_index = 16;
 			break;
 		default:
 			ut_calc_reboot();

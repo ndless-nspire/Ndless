@@ -14,20 +14,27 @@ int main()
 	//Unregister exploit
 	switch(ut_os_version_index)
 	{
-	case 4: //nothing
+	case 10: //nothing
 		DEREF(0x10F7B5B4) = 0x1147A86C;
 		DEREF(0x10EBBD14) = 0x112C1590;
 		break;
-	case 5: //CAS
+	case 11: //CAS
 		DEREF(0x10F4F5AC) = 0x114424B4;
 		DEREF(0x10E8FD0C) = 0x112891D8;
 		break;
-	case 6: //CX
+	case 12: //CX
 		DEREF(0x111CD6F4) = 0x11707E48;
 		break;
-	case 7: //CXCAS
+	case 13: //CXCAS
 		DEREF(0x1122D6F4) = 0x11767E48;
 		break;
+	case 14: //nothing 3.9.1
+	case 15: //CAS 3.9.1
+		return 0;
+	case 16: //CX 3.9.1
+		DEREF(0x111CD6E4) = 0x11707E38; 
+		break;
+	case 17: //CXCAS 3.9.1
 	default: //WTF
 		return 0;
 	}
@@ -36,7 +43,7 @@ int main()
 	unsigned int bootdata_start;
 	unsigned int bootdata_end;
 
-	if(ut_os_version_index > 5) //CX => Has partition table
+	if(ut_os_version_index == 12 || ut_os_version_index == 13 || ut_os_version_index == 16 || ut_os_version_index == 17) //CX => Has partition table
 	{
 		char manufflashdata[0x838 + 4];
 		syscall_local<e_read_nand, void>(manufflashdata, 0x838 + 4, 0, 0, 0, nullptr); // Read manuf data

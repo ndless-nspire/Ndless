@@ -13,14 +13,19 @@ enum OS : int {
 	CAS,
 	CX,
 	CXCAS
+
+	//The same for 3.9.1 again
 };
 
 // Address where the created buffer will be loaded at
-static uint32_t overflow_addr[4] = { 0x10EBB612, 0x10E8F60A, 0x1110D752, 0x1116D752 };
+static uint32_t overflow_addr[8] = { 0x10EBB612, 0x10E8F60A, 0x1110D752, 0x1116D752,
+					0x0, 0x0, 0x1110D742, 0x0 };
 // Address of a pointer to the struct we want to replace
-static const uint32_t struct_ptr[4] = { 0x10F7B5B4, 0x10F4F5AC, 0x111CD6F4, 0x1122D6F4 };
+static const uint32_t struct_ptr[8] = { 0x10F7B5B4, 0x10F4F5AC, 0x111CD6F4, 0x1122D6F4,
+					0x0, 0x0, 0x111CD6E4, 0x0 };
 // Where the binary (argv[1]) will be put in the buffer (chosen manually, because of unsafe locations)
-static const uint32_t loc_code[4] = { 0x10F7A084, 0x10F4E220, 0x111CCB84, 0x1122C084 };
+static const uint32_t loc_code[8] = { 0x10F7A084, 0x10F4E220, 0x111CCB84, 0x1122C084,
+					0x0, 0x0, 0x111CCB74, 0x0 };
 // The struct itself
 static uint32_t orig_struct[][32] = {
 {
@@ -158,10 +163,37 @@ static uint32_t orig_struct[][32] = {
 0x11767BC0,
 0x11767F94,
 0x00000000
-}};
-
-std::string luaForOS(OS os, std::string installer_filename)
+},
+{}, //TODO: nothing
+{}, //TODO: CAS
 {
+0x11707e80,
+0x11707ef8,
+0x11707fd0,
+0x11708b94,
+0x11708628,
+0x11709100,
+0x117091a4,
+0x11709248,
+0x117093d0,
+0x00000001,
+0x1009b08c,
+0x00008001,
+0x11709558,
+0x11707f58,
+0x11707e9c
+},
+{} //TODO: CXCAS
+};
+
+std::string luaForOS(int os, std::string installer_filename)
+{
+	if(loc_code[os] == 0x0)
+	{
+		std::cout << "Skipping OS " << os << "." << std::endl;
+		return "s = \"\"\n";
+	}
+
   	//Build the buffer content
 	std::ifstream installer_bin(installer_filename, std::ios::binary);
 
@@ -241,9 +273,9 @@ std::string luaForOS(OS os, std::string installer_filename)
 
 int main(int argc, char **argv)
 {
-	if(argc != 3)
+	if(argc != 3 && argc != 4)
 	{
-		std::cout << "Usage: installer.bin Problem1.xml" << std::endl;
+		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml [--3.9.1]" << std::endl;
 		return 1;
 	}
 
@@ -257,13 +289,13 @@ int main(int argc, char **argv)
 		<< "s = \"\"" << std::endl
 		<< "local cx = platform.isColorDisplay()" << std::endl
 		<< "if not cas and not cx then" << std::endl
-		<< luaForOS(OS::NCAS, argv[1])
+		<< luaForOS(OS::NCAS + (argc == 4 ? 4 : 0), argv[1])
 		<< "elseif cas and not cx then" << std::endl
-		<< luaForOS(OS::CAS, argv[1])
+		<< luaForOS(OS::CAS + (argc == 4 ? 4 : 0), argv[1])
 		<< "elseif not cas and cx then" << std::endl
-		<< luaForOS(OS::CX, argv[1])
+		<< luaForOS(OS::CX + (argc == 4 ? 4 : 0), argv[1])
 		<< "else" << std::endl
-		<< luaForOS(OS::CXCAS, argv[1])
+		<< luaForOS(OS::CXCAS + (argc == 4 ? 4 : 0), argv[1])
 		<< "end" << std::endl
 		<< "tiassert.assert(false, 0, s)" << std::endl
 		<< "end" << std::endl

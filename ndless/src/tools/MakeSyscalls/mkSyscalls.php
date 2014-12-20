@@ -5,7 +5,8 @@ if($argc != 3)
 //Has to be in the correct order as it's a multidimensional array! (OS-specific) (used in resources/utils.c)
 $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc", "OS_cascx-3.1.0.idc", "OS_cmc-3.1.0.idc", "OS_cascmc-3.1.0.idc",
 		"OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc",
-		"OS_ncas-3.9.0.idc", "OS_cas-3.9.0.idc", "OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc");
+		"OS_ncas-3.9.0.idc", "OS_cas-3.9.0.idc", "OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc",
+		"OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc", "OS_ncascx-3.9.1.idc", "OS_cascx-3.9.1.idc");
 
 $syscall_nr_list = fopen(__DIR__ . "/../../../../ndless-sdk/include/syscall-list.h", "r");
 if($syscall_nr_list === FALSE)
@@ -62,7 +63,11 @@ foreach($idc_files as $nr => $idc_file)
 	$filename = $argv[1] . "/" . $idc_file;
 	$idc_fp = @fopen($filename, "r");
 	if($idc_fp === FALSE)
-		die("Couldn't open '" . $filename . "'!\n");
+	{
+		$syscall_addrs[$nr] = array();
+		echo "Warning: couldn't open '" . $filename . "'!\n";
+		continue;
+	}
 	
 	while(($line = fgets($idc_fp)) !== FALSE)
 	{
@@ -105,7 +110,10 @@ for($nr = 0; $nr < $count_os; $nr++)
 		$syscall_name = $syscalls[$syscall];
 		if(!isset($syscall_addrs[$nr][$syscall_name]))
 		{
-			echo "Warning: Syscall '" . $syscall_name . "' not found in '" . $idc_files[$nr] . "'!\n";
+			//Only warn if the file was opened at all
+			if(count($syscall_addrs[$nr]) > 0)
+				echo "Warning: Syscall '" . $syscall_name . "' not found in '" . $idc_files[$nr] . "'!\n";
+
 			fwrite($syscall_addr_list, "0x0,\n");
 		}
 		else

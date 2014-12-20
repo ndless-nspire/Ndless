@@ -10,7 +10,7 @@ LDFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin
 vpath %.tns $(DISTDIR)
 
-all: ndless_installer_3.9.tns
+all: ndless_installer_3.9.tns ndless_installer_3.9.1.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -33,16 +33,25 @@ ndless_installer.bin: ndless_installer.elf
 stage0.bin: stage0.o
 	$(OBJCOPY) -O binary $< $@
 
-Problem1.xml: ndless_installer.bin stage0.bin
+ndless_installer_3.9.tns: ndless_installer.bin stage0.bin
 	../tools/XORInstaller/XORInstaller $< $(<:.bin=-xord.bin)
 	cat stage0.bin $(<:.bin=-xord.bin) > $(<:.bin=-escaped.bin)
 	rm $(<:.bin=-xord.bin)
 	../tools/MakeQnAInst/MakeQnAInst $(<:.bin=-escaped.bin) Problem1.xml
 	rm $(<:.bin=-escaped.bin)
-
-ndless_installer_3.9.tns: Problem1.xml
 	@mkdir -p $(DISTDIR)
-	../../../ndless-sdk/tools/luna/luna $< $(DISTDIR)/$@
+	../../../ndless-sdk/tools/luna/luna Problem1.xml $(DISTDIR)/$@
+	rm Problem1.xml
+
+ndless_installer_3.9.1.tns: ndless_installer.bin stage0.bin
+	../tools/XORInstaller/XORInstaller $< $(<:.bin=-xord.bin)
+	cat stage0.bin $(<:.bin=-xord.bin) > $(<:.bin=-escaped.bin)
+	rm $(<:.bin=-xord.bin)
+	../tools/MakeQnAInst/MakeQnAInst $(<:.bin=-escaped.bin) Problem1.xml --391
+	rm $(<:.bin=-escaped.bin)
+	@mkdir -p $(DISTDIR)
+	../../../ndless-sdk/tools/luna/luna Problem1.xml $(DISTDIR)/$@
+	rm Problem1.xml
 
 clean:
 	rm -f ndless_installer.elf ndless_installer.bin
