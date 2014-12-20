@@ -111,6 +111,7 @@ s1_startup_hook_return:
 int main() {
 	ut_disable_watchdog();
 	ut_read_os_version_index();
+	ut_os_version_index -= 6;
 	ut_disable_watchdog();
 		
 	// Disable all interrupts
