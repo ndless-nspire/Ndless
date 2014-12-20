@@ -275,20 +275,14 @@ int main(int argc, char **argv)
 {
 	if(argc != 3 && argc != 4)
 	{
-		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml [--3.9.1]" << std::endl;
+		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml [--391]" << std::endl;
 		return 1;
 	}
 
 	//Write LUA
 	std::ostringstream lua;
 
-	lua 	<< "on = {}" << std::endl
-		<< "local _, caserr = math.eval(\"solve()\")" << std::endl
-		<< "cas = caserr == 930" << std::endl
-		<< "function on.restore()" << std::endl
-		<< "s = \"\"" << std::endl
-		<< "local cx = platform.isColorDisplay()" << std::endl
-		<< "if not cas and not cx then" << std::endl
+	lua	<< "if not cas and not cx then" << std::endl
 		<< luaForOS(OS::NCAS + (argc == 4 ? 4 : 0), argv[1])
 		<< "elseif cas and not cx then" << std::endl
 		<< luaForOS(OS::CAS + (argc == 4 ? 4 : 0), argv[1])
@@ -296,10 +290,7 @@ int main(int argc, char **argv)
 		<< luaForOS(OS::CX + (argc == 4 ? 4 : 0), argv[1])
 		<< "else" << std::endl
 		<< luaForOS(OS::CXCAS + (argc == 4 ? 4 : 0), argv[1])
-		<< "end" << std::endl
-		<< "tiassert.assert(false, 0, s)" << std::endl
-		<< "end" << std::endl
-		<< "return {QuestionProperties={prompt=\"\"}, DropZone={vScreen={}}}" << std::endl;
+		<< "end" << std::endl;
 
 	//XML-Escape LUA
 	std::string lua_escaped = lua.str();
@@ -313,14 +304,7 @@ int main(int argc, char **argv)
 	//Write XML
 	std::ofstream output(argv[2]);
 	
-	output << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" << std::endl
-		<< "<prob xmlns=\"urn:TI.Problem\" ver=\"1.0\" pbname=\"\">" << std::endl
-		<< "<sym></sym><card clay=\"0\" h1=\"10000\" h2=\"10000\" w1=\"10000\" w2=\"10000\"><isDummyCard>0</isDummyCard>" << std::endl
-		<< "<flag>0</flag><wdgt xmlns:sc=\"urn:TI.ScriptApp\" type=\"TI.ScriptApp\" ver=\"1.0\">" << std::endl
-		<< "<sc:mFlags>1024</sc:mFlags><sc:value>0</sc:value><sc:script version=\"512\" id=\"3\"></sc:script>" << std::endl
-		<< "<sc:state>" << std::endl
-		<< lua_escaped << std::endl
-		<< "</sc:state><sc:scriptTitle></sc:scriptTitle></wdgt></card></prob>" << std::endl;
+	output << lua_escaped;
 
 	return 0;
 }

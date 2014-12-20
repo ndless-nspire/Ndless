@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prob xmlns="urn:TI.Problem" ver="1.0" pbname="">
+    <sym></sym>
+    <card clay="0" h1="10000" h2="10000" w1="10000" w2="10000">
+        <isDummyCard>0</isDummyCard>
+        <flag>0</flag>
+        <wdgt xmlns:sc="urn:TI.ScriptApp" type="TI.ScriptApp" ver="1.0">
+            <sc:mFlags>0</sc:mFlags>
+            <sc:value>8</sc:value>
+            <sc:cry>0</sc:cry>
+            <sc:legal>none</sc:legal>
+            <sc:schk>false</sc:schk>
+            <sc:guid>E229D13D5E8B4ACEB428FA06839C0DAC</sc:guid>
+            <sc:img_info>
+                <sc:tpath>/Users/jim/Library/Preferences/Texas Instruments/TI-Nspire CAS Teacher Software/</sc:tpath>
+                <sc:iname>1C86D1B39DEB85D42F438DE2C0C3BF78.BMP</sc:iname>
+            </sc:img_info>
+            <sc:img_info>
+                <sc:tpath>Users/jim/Library/Preferences/Texas Instruments/TI-Nspire CAS Teacher Software/</sc:tpath>
+                <sc:iname>BBF7096DCAF1CD03DE8364E14DB58939.BMP</sc:iname>
+            </sc:img_info>
+            <sc:md>
+                <sc:mde name="_VER" prop="134217728">1:1</sc:mde>
+                <sc:mde name="_RES" prop="67108864">AAEACE1C86D1B39DEB85D42F438DE2C0C3BF78.BMPAAGdeviceACEBBF7096DCAF1CD03DE8364E14DB58939.BMPAAEplug</sc:mde>
+                <sc:mde name="TARAL" prop="134217728">2:4</sc:mde>
+            </sc:md>
+            <sc:script version="33817092" id="0">
+
+local total_offset = 0
+local plug_offset = 0
+local stage = 0
+
+local isGood = false
+
+function on.construction()
+    timer.start(1)
+    devimg = image.new(_R.IMG.device)
+    plugimg = image.new(_R.IMG.plug) 
+end
+
+function on.paint(gc)
+    gc:setColorRGB(100,100,100)
+    gc:fillRect(0,0,320,240)
+    
+    gc:setColorRGB(255,255,255)
+    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+
+    if not isGood then
+        local _, caserr = math.eval(&quot;solve()&quot;)
+        cas = caserr == 930
+        local s = &quot;&quot;
+        local cx = platform.isColorDisplay()        

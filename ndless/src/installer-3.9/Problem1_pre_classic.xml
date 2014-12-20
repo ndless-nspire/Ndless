@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<prob xmlns="urn:TI.Problem" ver="1.0" pbname="">
+<sym></sym><card clay="0" h1="10000" h2="10000" w1="10000" w2="10000"><isDummyCard>0</isDummyCard>
+<flag>0</flag><wdgt xmlns:sc="urn:TI.ScriptApp" type="TI.ScriptApp" ver="1.0">
+<sc:mFlags>1024</sc:mFlags><sc:value>0</sc:value><sc:script version="512" id="3"></sc:script>
+<sc:state>
+on = {}
+local _, caserr = math.eval(&quot;solve()&quot;)
+cas = caserr == 930
+function on.restore()
+    s = &quot;&quot;
+    local cx = platform.isColorDisplay()

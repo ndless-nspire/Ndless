@@ -1,0 +1,19 @@
+
+        if platform.window.setBackgroundColor then
+            tiassert.assert(false, 0, s) 
+        end
+    end
+
+    promptZone.D2Editor:setVisible(false)
+    promptZone.D2Editor=nil
+    
+    s.QuestionProperties={prompt=&quot;&quot;}
+    s.DropZone={vScreen={}}
+
+
+	return s
+			
+			</sc:state>
+        </wdgt>
+    </card>
+</prob>
