@@ -118,15 +118,20 @@ template <int nr> int syscall_addr()
 		ut_os_version_index == 7 ? syscall_addrs[7][nr] :
 		ut_os_version_index == 8 ? syscall_addrs[8][nr] :
 		ut_os_version_index == 9 ? syscall_addrs[9][nr] :
-#endif
+#elif NDLESS_39 == 39
 		ut_os_version_index == 10 ? syscall_addrs[10][nr] :
 		ut_os_version_index == 11 ? syscall_addrs[11][nr] :
 		ut_os_version_index == 12 ? syscall_addrs[12][nr] :
 		ut_os_version_index == 13 ? syscall_addrs[13][nr] :
+#elif NDLESS_39 == 391
 		ut_os_version_index == 14 ? syscall_addrs[14][nr] :
 		ut_os_version_index == 15 ? syscall_addrs[15][nr] :
 		ut_os_version_index == 16 ? syscall_addrs[16][nr] :
-		syscall_addrs[17][nr];
+		ut_os_version_index == 17 ? syscall_addrs[17][nr] :
+#else
+	#error No Ndless 3.9 OS version given!
+#endif
+		0;
 }
 
 template <int nr, typename RETTYPE> inline RETTYPE syscall_local()

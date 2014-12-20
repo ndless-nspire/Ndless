@@ -80,7 +80,7 @@ void ut_read_os_version_index(void) {
 		case 0x10376090: // 3.6.0 CAS CX
 			ut_os_version_index = 9;
 			break;
-#endif
+#elif NDLESS_39 == 39
 		case 0x1037CDE0: // 3.9.0 non-CAS
 			ut_os_version_index = 10;
 			break;
@@ -93,9 +93,13 @@ void ut_read_os_version_index(void) {
 		case 0x1037CCC0: // 3.9.0 CAS CX
 			ut_os_version_index = 13;
 			break;
+#elif NDLESS_39 == 391
 		case 0x1037D160: // 3.9.1 non-CAS CX
 			ut_os_version_index = 16;
 			break;
+#else
+	#error No Ndless 3.9 OS version given!
+#endif
 		default:
 			ut_calc_reboot();
 	}
