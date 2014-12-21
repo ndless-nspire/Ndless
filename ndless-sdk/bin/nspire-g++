@@ -17,4 +17,4 @@ fi
 GCC=`(which arm-elf-g++ arm-none-eabi-g++ arm-linux-gnueabi-g++ | head -1) 2>/dev/null`
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -I "$DIRNAME/../include/freetype2" -fno-use-cxa-atexit -D _TINSPIRE -fuse-ld=gold "$@"
+"$GCC" -mcpu=arm926ej-s -I "$home/.ndless/include" -I "$DIRNAME/../include" -I "$DIRNAME/../include/freetype2" -fno-use-cxa-atexit -D _TINSPIRE -D _LDBL_EQ_DBL -fuse-ld=gold "$@"
