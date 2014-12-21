@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdarg>
 
+#include <zlib.h>
 #include <libndls.h>
 #include <syscall-decls.h>
 #include <zehn.h>
@@ -104,14 +105,41 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		return 1;
 	}
 
-	if(nuc_fread(base, remaining_file, 1, file) != 1)
+	if(relocs.data[0].type == Zehn_reloc_type::FILE_COMPRESSED)
 	{
-		puts("[Zehn] File read failed!");
-		return 1;
-	}
+		if(relocs.data[0].offset != static_cast<int>(Zehn_compress_type::ZLIB))
+		{
+			puts("[Zehn] Compression format not supported!");
+			return 1;
+		}
 
-	// Fill rest with zeros (.bss and other NOBITS sections)
-	std::fill(base + remaining_file, base + remaining_mem, 0);
+		Storage<uint8_t> compressed(remaining_file);
+		if(nuc_fread(compressed.data, remaining_file, 1, file) != 1)
+		{
+			puts("[Zehn] File read failed!");
+			return 1;
+		}
+
+		uLongf dest_len = remaining_mem;
+		if(uncompress(base, &dest_len, compressed.data, remaining_file) != Z_OK)
+		{
+			puts("[Zehn] Decompression failed!");
+			return 1;
+		}
+
+		std::fill(base + dest_len, base + remaining_mem, 0);
+	}
+	else
+	{
+		if(nuc_fread(base, remaining_file, 1, file) != 1)
+		{
+			puts("[Zehn] File read failed!");
+			return 1;
+		}
+	
+		// Fill rest with zeros (.bss and other NOBITS sections)
+		std::fill(base + remaining_file, base + remaining_mem, 0);
+	}
 
 	const char *application_name = "(unknown)", *application_author = "(unknown)", *application_notice = "(no notice)";
 	unsigned int application_version = 1, ndless_version_min = 0, ndless_version_max = UINT_MAX,
@@ -180,7 +208,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		case Zehn_flag_type::RUNS_ON_32MB:
 			if(f.data == false && (!has_colors || is_cm))
 			{
-				msgbox("Error", "The application %s required more than 32MB of RAM!", application_name);
+				msgbox("Error", "The application %s requires more than 32MB of RAM!", application_name);
 				return 2;
 			}
 			break;
@@ -227,6 +255,9 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		uint32_t *place = reinterpret_cast<uint32_t*>(base + r.offset);
 		switch(r.type)
 		{
+		//Handled above
+		case Zehn_reloc_type::FILE_COMPRESSED:
+			break;
 		case Zehn_reloc_type::ADD_BASE:
 			*place += reinterpret_cast<uint32_t>(base);
 			break;

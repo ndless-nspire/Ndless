@@ -1,3 +1,4 @@
+#include <zlib.h>
 #include <iostream>
 
 #include <boost/program_options.hpp>
@@ -33,6 +34,7 @@ int main(int argc, char **argv)
     additional.add_options()
             ("help", "show this message")
             ("include-bss", "include the contents of the NOBITS sections in the file")
+            ("compress", "compress the executable's contents")
             ("name", opt::value<std::string>(), "executable name")
             ("verbose", "output something, even if no error occured")
             ("author", opt::value<std::string>(), "executable author")
@@ -55,7 +57,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-	std::cout << "genzehn 1.1 by Fabian Vogt" << std::endl
+	std::cout << "genzehn 1.2 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
@@ -66,7 +68,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    bool verbose = args.count("verbose") > 0;
+    bool verbose = args.count("verbose") > 0, should_compress = args.count("compress") > 0;
 
     elfio input_reader;
 
@@ -322,15 +324,47 @@ int main(int argc, char **argv)
     if(extra_data.size() % 4 != 0)
         extra_data.resize((extra_data.size() + 4) & ~3);
 
+    std::vector<uint8_t> compressed_exec;
+
+    if(should_compress)
+    {
+        if(verbose)
+            std::cout << "Compressing executable... ";
+
+        uLongf compressed_size = compressBound(exec_data.size());
+        compressed_exec.resize(compressed_size);
+        if(compress(compressed_exec.data(), &compressed_size, exec_data.data(), exec_data.size()) != Z_OK)
+        {
+            std::cerr << "Compression failed!" << std::endl;
+            return 1;
+        }
+
+        compressed_exec.resize(compressed_size);
+
+        //The compress marker has to come before other relocs
+        reloc_table.insert(reloc_table.begin(), {Zehn_reloc_type::FILE_COMPRESSED, static_cast<uint32_t>(Zehn_compress_type::ZLIB)});
+
+        if(verbose)
+            std::cout << "done!" << std::endl;
+    }
+
     header.reloc_count = reloc_table.size();
     header.flag_count = flag_table.size();
     header.extra_size = extra_data.size();
+
     header.file_size = sizeof(header)
                     + reloc_table.size() * sizeof(Zehn_reloc)
                     + flag_table.size() * sizeof(Zehn_flag)
                     + extra_data.size() * sizeof(uint8_t)
                     + exec_data.size() * sizeof(uint8_t);
     header.alloc_size = header.file_size + skipped_nobits;
+
+    if(should_compress)
+    {
+        header.file_size -= exec_data.size();
+        header.file_size += compressed_exec.size();
+    }
+    
 
     if(verbose)
     {
@@ -341,13 +375,20 @@ int main(int argc, char **argv)
                      << "\t" << header.extra_size << "\tbytes extra data" << std::endl
                      << "\t" << header.alloc_size << "\tbytes needed to load this file" << std::endl
                      << "\t" << header.file_size << "\tbytes Zehn executable file" << std::endl;
+
+        if(should_compress)
+            std::cout << "\t" << (exec_data.size() - compressed_exec.size()) << "\tbytes saved by compression" << std::endl;
     }
 
     output_writer.write(reinterpret_cast<const char*>(&header), sizeof(header));
     output_writer.write(reinterpret_cast<const char*>(reloc_table.data()), reloc_table.size() * sizeof(Zehn_reloc));
     output_writer.write(reinterpret_cast<const char*>(flag_table.data()), flag_table.size() * sizeof(Zehn_flag));
     output_writer.write(reinterpret_cast<const char*>(extra_data.data()), extra_data.size() * sizeof(uint8_t));
-    output_writer.write(reinterpret_cast<const char*>(exec_data.data()), exec_data.size() * sizeof(uint8_t));
+
+    if(should_compress)
+        output_writer.write(reinterpret_cast<const char*>(compressed_exec.data()), compressed_exec.size() * sizeof(uint8_t));
+    else
+        output_writer.write(reinterpret_cast<const char*>(exec_data.data()), exec_data.size() * sizeof(uint8_t));
 
     output_writer.close();
 
