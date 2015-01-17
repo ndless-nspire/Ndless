@@ -7,7 +7,7 @@ LD  = nspire-ld
 GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -marm
-LDFLAGS =
+LDFLAGS = -Wl,--gc-sections
 ZEHNFLAGS = --name "colors"
 
 ifeq ($(DEBUG),FALSE)

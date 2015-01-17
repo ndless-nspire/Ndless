@@ -1,5 +1,8 @@
 #include <zlib.h>
+
 #include <iostream>
+#include <algorithm>
+#include <vector>
 
 #include <boost/program_options.hpp>
 
@@ -23,6 +26,15 @@ uint32_t zehn_extra_string(std::string s, std::vector<uint8_t> &extra_data)
     return pos;
 }
 
+std::string zehn_get_string(uint32_t pos, std::vector<uint8_t> &extra_data)
+{
+    if(pos > extra_data.size() - 1)
+        return "<invalid>";
+
+    const char *start = reinterpret_cast<const char*>(extra_data.data() + pos);
+    return std::string(start, strnlen(start, extra_data.size() - pos - 1));
+}
+
 int main(int argc, char **argv)
 {   
     opt::options_description required("Required options");
@@ -33,6 +45,7 @@ int main(int argc, char **argv)
     opt::options_description additional("Additional options");
     additional.add_options()
             ("help", "show this message")
+            ("info", "print information about a zehn file")
             ("include-bss", "include the contents of the NOBITS sections in the file")
             ("compress", "compress the executable's contents")
             ("name", opt::value<std::string>(), "executable name")
@@ -57,8 +70,123 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-	std::cout << "genzehn 1.2 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.3 by Fabian Vogt" << std::endl
                   << all << std::endl;
+        return 0;
+    }
+
+    if(args.count("info"))
+    {
+        if(args.count("input") != 1)
+        {
+            std::cerr << "You need to supply an input file: genzehn --info --input=file.tns" << std::endl;
+            return 1;
+        }
+
+        Zehn_header header;
+        uint32_t buffer[5120];
+        std::ifstream zehn_file(args["input"].as<std::string>(), std::ifstream::binary);
+        if(!zehn_file || (zehn_file.read(reinterpret_cast<char*>(buffer), sizeof(buffer)), zehn_file.gcount()) == 0)
+        {
+            std::cerr << "Failed to load '" << args["input"].as<std::string>() << "'!" << std::endl;
+            return 1;
+        }
+
+        //Try to find a Zehn signature in the first sizeof(buffer) bytes (same as in ndless_resources)
+        size_t words_read = zehn_file.gcount() / sizeof(uint32_t);
+        int zehn_start = -1;
+        for(unsigned int i = 0; i < words_read - 1; ++i)
+        {
+            if(buffer[i] == ZEHN_SIGNATURE && buffer[i + 1] == ZEHN_VERSION)
+            {
+                zehn_start = i * sizeof(uint32_t);
+                break;
+            }
+        }
+
+        if(zehn_start == -1)
+        {
+            std::cerr << "Input is not a supported Zehn file!" << std::endl;
+            return 1;
+        }
+
+        //Clear the EOF-bit, otherwise seekg will fail (wtf)
+        zehn_file.clear();
+        zehn_file.seekg(zehn_start, std::ios::beg);
+        if(!zehn_file.read(reinterpret_cast<char*>(&header), sizeof(header)))
+        {
+            std::cerr << "Failed to read header!" << std::endl;
+            return 1;
+        }
+
+        std::cout << std::hex << "Zehn header starts at byte 0x" << zehn_start << std::endl;
+
+        std::cout << std::dec
+                     << header.reloc_count << "\trelocations" << std::endl
+                     << header.flag_count << "\tflags" << std::endl
+                     << header.extra_size << "\tbytes extra data" << std::endl
+                     << header.alloc_size << "\tbytes needed to load this file" << std::endl
+                     << header.file_size << "\tbytes Zehn executable file" << std::endl;
+
+        std::vector<Zehn_reloc> relocs(header.reloc_count);
+        std::vector<Zehn_flag> flags(header.flag_count);
+        std::vector<uint8_t> extra_data(header.extra_size);
+
+        if(!zehn_file.read(reinterpret_cast<char*>(relocs.data()), sizeof(Zehn_reloc) * header.reloc_count))
+        {
+            std::cerr << "Failed to read relocs!" << std::endl;
+            return 1;
+        }
+
+        if(!zehn_file.read(reinterpret_cast<char*>(flags.data()), sizeof(Zehn_flag) * header.flag_count))
+        {
+            std::cerr << "Failed to read flags!" << std::endl;
+            return 1;
+        }
+
+        if(!zehn_file.read(reinterpret_cast<char*>(extra_data.data()), sizeof(uint8_t) * header.extra_size))
+        {
+            std::cerr << "Failed to read extra data!" << std::endl;
+            return 1;
+        }
+
+        if(header.reloc_count != 0 && relocs[0].type == Zehn_reloc_type::FILE_COMPRESSED)
+            std::cout << "This file is compressed (type " << relocs[0].offset << ")" << std::endl;
+
+        std::cout << std::endl;
+        for(auto flag : flags)
+        {
+            switch(flag.type)
+            {
+            case Zehn_flag_type::EXECUTABLE_NAME:
+                std::cout << "Application: " << zehn_get_string(flag.data, extra_data) << std::endl;
+                break;
+            case Zehn_flag_type::EXECUTABLE_VERSION:
+                std::cout << "Version: " << flag.data << std::endl;
+                break;
+            case Zehn_flag_type::EXECUTABLE_AUTHOR:
+                std::cout << "Author: " << zehn_get_string(flag.data, extra_data) << std::endl;
+                break;
+            case Zehn_flag_type::EXECUTABLE_NOTICE:
+                std::cout << "Notice: " << zehn_get_string(flag.data, extra_data) << std::endl;
+                break;
+            case Zehn_flag_type::NDLESS_VERSION_MAX:
+            case Zehn_flag_type::NDLESS_VERSION_MIN:
+            case Zehn_flag_type::NDLESS_REVISION_MAX:
+            case Zehn_flag_type::NDLESS_REVISION_MIN:
+            case Zehn_flag_type::RUNS_ON_32MB:
+            case Zehn_flag_type::RUNS_ON_CLICKPAD:
+            case Zehn_flag_type::RUNS_ON_COLOR:
+            case Zehn_flag_type::RUNS_ON_TOUCHPAD:
+                //TODO
+                break;
+
+            default:
+                std::cout << "Unknown flag type " << static_cast<int>(flag.type) << std::endl;
+                break;
+            }
+        }
+
         return 0;
     }
 

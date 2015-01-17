@@ -55,7 +55,6 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	ut_debug_trace(INSTTR_INS_ENTER);
 	ut_read_os_version_index();
 	BOOL installed = FALSE;
-
 // useless if non persistent and won't work since stage1 set it up
 #if 0
 	struct next_descriptor *installed_next_descriptor = ut_get_next_descriptor();

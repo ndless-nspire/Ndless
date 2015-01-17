@@ -91,8 +91,9 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		return 1;
 	}
 
-	uint32_t *ptr32 = docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 512 ? (docstat.st_size / 4) : 512);
-	while(ptr32 < ptr32_end)
+	// Scan the first 20KiB (5120 32bit values) for an embedded Zehn file
+	uint32_t *ptr32 = docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 5120 ? (docstat.st_size / 4) : 5120);
+	while(ptr32 < ptr32_end - 1)
 	{
 		// Found an embedded Zehn file
 		if(*ptr32 == 0x6e68655a && *(ptr32 + 1) == 1)
