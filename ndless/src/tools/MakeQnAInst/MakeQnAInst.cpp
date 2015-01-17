@@ -204,12 +204,28 @@ std::string luaForOS(int os, std::string installer_filename)
 	std::vector<uint8_t> buffer_content(loc_code[os] - overflow_addr[os]);
 
 	buffer_content.insert(buffer_content.end(), std::istreambuf_iterator<char>{installer_bin}, std::istreambuf_iterator<char>{});
+	orig_struct[os][10] = loc_code[os];
 
 	//4-byte alignment
 	buffer_content.resize((buffer_content.size() + 4) & ~3);
 
 	uint32_t newstruct_addr = buffer_content.size() + overflow_addr[os];
-	orig_struct[os][10] = loc_code[os];
+	if((newstruct_addr & 0xFF0000) == 0
+		|| (newstruct_addr & 0x00FF00) == 0)
+	{
+		std::cerr << "Struct address contains 0x00. Please change loc_code[" << os << "]!" << std::endl;
+		return "";
+	}
+
+	//This 0-byte is fixable, just add some padding
+	if((newstruct_addr & 0xFF) == 0)
+	{
+		newstruct_addr += 4;
+		buffer_content.push_back(0);
+		buffer_content.push_back(0);
+		buffer_content.push_back(0);
+		buffer_content.push_back(0);
+	}
 
 	//Copy patched struct into the buffer	
 	std::vector<uint8_t> patched_struct(reinterpret_cast<uint8_t*>(orig_struct[os]), reinterpret_cast<uint8_t*>(orig_struct[os] + sizeof(orig_struct[os])));
