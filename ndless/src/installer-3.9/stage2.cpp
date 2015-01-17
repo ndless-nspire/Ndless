@@ -70,7 +70,7 @@ int main()
 	for(unsigned int bootdata_current = bootdata_start; bootdata_current < bootdata_end; bootdata_current += nand_page_size)
 	{
 		char bootdata[nand_page_size];
-		syscall_local<e_read_nand, void>(bootdata, nand_page_size, bootdata_start, 0, 0, nullptr);
+		syscall_local<e_read_nand, void>(bootdata, nand_page_size, bootdata_current, 0, 0, nullptr);
 
 		if(bootdata[0] == 0xAA && bootdata[1] == 0xC6 && bootdata[2] == 0x8C && bootdata[3] == 0x92) // Found signature
 		{
