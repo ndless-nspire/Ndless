@@ -9,6 +9,6 @@ idb="$1"
 idc="${idb%%.idb}.idc"
 echo "$idc..."
 idag -Sidb2idc.idc -A $idb | grep -v "Thank you"
-./lighten_idc.sh < temp.idc > $idc
-rm -f temp.idc
+php lighten_idc.php temp.idc $idc
+rm temp.idc
 
