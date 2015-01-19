@@ -30,7 +30,9 @@
 // OS-specific
 // Call to the dialog box display telling that the format isn't recognized.
 static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
-						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924};
+						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x1000A79C, 0x0};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -40,7 +42,9 @@ BOOL ins_loaded_by_3rd_party_loader(void) {
 }
 
 static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC, 0x1001046C, 0x1000ED30, 0x1000ECE0,
-						0x1001264C, 0x100125D0, 0x10012470, 0x10012424};
+						0x1001264C, 0x100125D0, 0x10012470, 0x10012424,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x100123E8, 0x0};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -85,7 +89,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
-		else
+		else if(ut_os_version_index) //plh_hook_36 works for 3.9.1 as well
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_36);
 
 		lua_install_hooks();
@@ -96,7 +100,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0;
 	}
 	
-	if (installed) { // ndless_resources_3.6.tns run: uninstall
+	if (installed) { // ndless_resources.tns run: uninstall
 		if (show_msgbox_2b("Ndless", "Do you really want to uninstall Ndless r" STRINGIFY(NDLESS_REVISION) "?\nThe device will reboot.", "Yes", "No") == 2)
 			return 0;
 
@@ -123,7 +127,9 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 // OS-specific
 // gui_gc_drawIcon + 4
 const unsigned ins_successmsg_hook_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-						0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348};
+						0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x0, 0x0};
 
 void ins_install_successmsg_hook(void) {
 	if(ins_successmsg_hook_addrs[ut_os_version_index] == 0)

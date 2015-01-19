@@ -174,6 +174,12 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	uint32_t signature;
 
 	NUC_FILE *prgm = nuc_fopen(prgm_path, "rb");
+	if(!prgm)
+	{
+		puts("ld_exec: couldn't fopen file!\n");
+		return 0xDEAD;
+	}
+
 	if(nuc_fread(&signature, sizeof(signature), 1, prgm) != 1)
 	{
 		// empty file?
@@ -224,7 +230,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		nuc_fclose(prgm);
 		return 0xDEAD;
 	}	
-	
+
 	int intmask = TCT_Local_Control_Interrupts(-1); /* TODO workaround: disable the interrupts to avoid the clock on the screen */
 	wait_no_key_pressed(); // let the user release the Enter key, to avoid being read by the program
 	void *savedscr = malloc(SCREEN_BYTES_SIZE);
@@ -295,11 +301,13 @@ void ld_free(void *resident_ptr) {
 }
 
 // When opening a document
+
+//Works for 3.9.1 as well
 HOOK_DEFINE(plh_hook_36) {
 	char *halfpath; // [docfolder/]file.tns
 	char docpath[FILENAME_MAX];
 	halfpath = (char*)(HOOK_SAVED_SP(plh_hook_36)) + 0x788;
-	snprintf(docpath, FILENAME_MAX, "/%s%s", get_documents_dir(), halfpath);
+	snprintf(docpath, FILENAME_MAX, "%s%s", get_documents_dir(), halfpath);
 	if (ld_exec(docpath, NULL) == 0xDEAD) {
 		HOOK_SAVED_REGS(plh_hook_36)[3] = HOOK_SAVED_REGS(plh_hook_36)[0]; // 'mov r3, r0' was overwritten by the hook
 		HOOK_RESTORE_RETURN_SKIP(plh_hook_36, -0x134, 0); // to the error dialog about the unsupported format (we've overwritten a branch with our hook)

@@ -8,7 +8,7 @@ GENZEHN = genzehn
 
 GCCFLAGS = -Wall -Wextra -W -marm
 LDFLAGS = -Wl,-e,main
-ZEHNFLAGS = --name "ndless_resources_3.6" --include-bss
+ZEHNFLAGS = --name "ndless_resources" --include-bss
 
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -19,8 +19,8 @@ endif
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
 OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
 OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
-ZEHN = ndless_resources_3.6_zehn.tns
-EXE = ../../calcbin/ndless_resources_3.6.tns
+ZEHN = ndless_resources_zehn.tns
+EXE = ../../calcbin/ndless_resources.tns
 
 all: $(EXE)
 
