@@ -32,7 +32,7 @@
 static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
 						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924,
 						0x0, 0x0, 0x0, 0x0,
-						0x0, 0x0, 0x1000A79C, 0x0};
+						0x0, 0x0, 0x1000A79C, 0x1000A78C};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;

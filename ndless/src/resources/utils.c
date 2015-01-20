@@ -98,6 +98,9 @@ void ut_read_os_version_index(void) {
 		case 0x1037D160: // 3.9.1 non-CAS CX
 			ut_os_version_index = 16;
 			break;
+		case 0x1037D6C0: // 3.9.1 CAS CX
+			ut_os_version_index = 17;
+			break;
 #endif
 		default:
 			ut_calc_reboot();

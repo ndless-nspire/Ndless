@@ -36,6 +36,8 @@ int main()
 		DEREF(0x111CD6E4) = 0x11707E38; 
 		break;
 	case 17: //CXCAS 3.9.1
+		DEREF(0x1122D6E4) = 0x11767E38;
+		break;
 	default: //WTF
 		return 0;
 	}

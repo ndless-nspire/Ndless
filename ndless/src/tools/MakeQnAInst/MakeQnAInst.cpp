@@ -19,16 +19,16 @@ enum OS : int {
 
 // Address where the created buffer will be loaded at
 static uint32_t overflow_addr[8] = { 0x10EBB612, 0x10E8F60A, 0x1110D752, 0x1116D752,
-					0x0, 0x0, 0x1110D742, 0x0 };
+					0x0, 0x0, 0x1110D742, 0x1116D742 };
 // Address of a pointer to the struct we want to replace
 static const uint32_t struct_ptr[8] = { 0x10F7B5B4, 0x10F4F5AC, 0x111CD6F4, 0x1122D6F4,
-					0x0, 0x0, 0x111CD6E4, 0x0 };
+					0x0, 0x0, 0x111CD6E4, 0x1122D6E4 };
 // Where the binary (argv[1]) will be put in the buffer (chosen manually, because of unsafe locations)
 static const uint32_t loc_code[8] = { 0x10F7A084, 0x10F4E220, 0x111CCB84, 0x1122C084,
-					0x0, 0x0, 0x111CCB74, 0x0 };
+					0x0, 0x0, 0x111CCB74, 0x1122C074 };
 // The struct itself
 static uint32_t orig_struct[][32] = {
-{
+{ //3.9.0
 0x1147A8B4,
 0x1147A944,
 0x1147AA5C,
@@ -62,7 +62,7 @@ static uint32_t orig_struct[][32] = {
 0x00000000,
 0x1147A934
 },
-{
+{ //3.9.0 CAS
 0x114424FC,
 0x11442294,
 0x114426A4,
@@ -96,7 +96,7 @@ static uint32_t orig_struct[][32] = {
 0x00000000,
 0x1144257C,
 },
-{
+{ //3.9.0 CX
 0x11707E90,
 0x11707F08,
 0x11707FE0,
@@ -130,7 +130,7 @@ static uint32_t orig_struct[][32] = {
 0x11707F94,
 0x00000000
 },
-{
+{ //3.9.0 CX CAS
 0x11767E90,
 0x117E7F08,
 0x11767FE0,
@@ -166,7 +166,7 @@ static uint32_t orig_struct[][32] = {
 },
 {}, //TODO: nothing
 {}, //TODO: CAS
-{
+{ //3.9.1 CX
 0x11707e80,
 0x11707ef8,
 0x11707fd0,
@@ -183,7 +183,23 @@ static uint32_t orig_struct[][32] = {
 0x11707f58,
 0x11707e9c
 },
-{} //TODO: CXCAS
+{ //3.9.1 CX CAS
+0x11767e80,
+0x11767ef8,
+0x11767fd0,
+0x11768b94,
+0x11768628,
+0x11769100,
+0x117691a4,
+0x11769248,
+0x117693d0,
+0x00000001,
+0x1009ab2c,
+0x00008001,
+0x11769558,
+0x11767f58,
+0x11767e9c
+},
 };
 
 std::string luaForOS(int os, std::string installer_filename)
