@@ -25,6 +25,8 @@ while True:
   bytecount = 0
   idc = idcfile.readline()
   if len(idc) < 2 : break   # eof
+  while not 'MakeName' in idc : idc = idcfile.readline()
+  if "//" in idc : continue
   print idc,
   (a,b) = idc.split('(',1)
   (address,therest) = b.split(',',1)
@@ -56,6 +58,7 @@ while True:
      indx = -1
    if bytecount >= 0x40 :   # failed to find match
      strinx = idc.find("0X")
+     if strinx == -1: strinx = idc.find("0x")
      idcfilenew.write("//" + idc[0:strinx] + "0XFFFFFFFF" + idc[strinx+10:-1] + ":" + hex(0x10000000+indx) + ":" + hex(0x10000000+indx2) + "\n")
      break
    if indx >= 0:
@@ -66,6 +69,8 @@ while True:
      indx2 = -1    
     if indx2 <0 and bytecount >= 12:     # found unique match and long enough(3 instructions)
      strinx = idc.find("0X")
+     if strinx == -1: strinx = idc.find("0x")
+     print idc[0:strinx] + hex(0x10000000+indx) + idc[strinx+10:]
      idcfilenew.write(idc[0:strinx] + hex(0x10000000+indx) + idc[strinx+10:])
      break
    
