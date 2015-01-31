@@ -107,31 +107,33 @@ extern "C" int ut_os_version_index;
 
 template <int nr> int syscall_addr()
 {
-#ifndef NDLESS_39
+	return 
+		/* 0-5 is OS 3.1, not used in STAGE1
 		ut_os_version_index == 0 ? syscall_addrs[0][nr] :
 		ut_os_version_index == 1 ? syscall_addrs[1][nr] :
 		ut_os_version_index == 2 ? syscall_addrs[2][nr] :
 		ut_os_version_index == 3 ? syscall_addrs[3][nr] :
 		ut_os_version_index == 4 ? syscall_addrs[4][nr] :
-		ut_os_version_index == 5 ? syscall_addrs[5][nr] :
+		ut_os_version_index == 5 ? syscall_addrs[5][nr] : */
+
+#ifndef NDLESS_39
 		ut_os_version_index == 6 ? syscall_addrs[6][nr] :
 		ut_os_version_index == 7 ? syscall_addrs[7][nr] :
 		ut_os_version_index == 8 ? syscall_addrs[8][nr] :
-		ut_os_version_index == 9 ? syscall_addrs[9][nr] :
+		syscall_addrs[9][nr];
 #elif NDLESS_39 == 39
 		ut_os_version_index == 10 ? syscall_addrs[10][nr] :
 		ut_os_version_index == 11 ? syscall_addrs[11][nr] :
 		ut_os_version_index == 12 ? syscall_addrs[12][nr] :
-		ut_os_version_index == 13 ? syscall_addrs[13][nr] :
+		syscall_addrs[13][nr];
 #elif NDLESS_39 == 391
 		ut_os_version_index == 14 ? syscall_addrs[14][nr] :
 		ut_os_version_index == 15 ? syscall_addrs[15][nr] :
 		ut_os_version_index == 16 ? syscall_addrs[16][nr] :
-		ut_os_version_index == 17 ? syscall_addrs[17][nr] :
+		syscall_addrs[17][nr];
 #else
-	#error No Ndless 3.9 OS version given!
+	#error No (known) STAGE1 OS version given!
 #endif
-		0;
 }
 
 template <int nr, typename RETTYPE> inline RETTYPE syscall_local()
