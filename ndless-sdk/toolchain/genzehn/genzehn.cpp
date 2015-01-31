@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << "genzehn 1.3 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.3.1 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
@@ -127,6 +127,8 @@ int main(int argc, char **argv)
                      << header.extra_size << "\tbytes extra data" << std::endl
                      << header.alloc_size << "\tbytes needed to load this file" << std::endl
                      << header.file_size << "\tbytes Zehn executable file" << std::endl;
+
+	std::cout << std::hex << "Entry point:\t" << header.entry_offset << std::endl;
 
         std::vector<Zehn_reloc> relocs(header.reloc_count);
         std::vector<Zehn_flag> flags(header.flag_count);

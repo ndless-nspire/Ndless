@@ -104,23 +104,25 @@ HOOK_DEFINE(s1_startup_hook) {
 	clear_cache();
 	((int (*)(int argc, void* argv))(core + sizeof("PRG")))(1, &res_params); // Run the core installation
 s1_startup_hook_return:
-	HOOK_UNINSTALL(ndless_inst_resident_hook_addrs[ut_os_version_index], s1_startup_hook);
+	HOOK_UNINSTALL(ndless_inst_resident_hook_addrs[ut_os_version_index - 6], s1_startup_hook);
 	HOOK_RESTORE_RETURN(s1_startup_hook);
 }
 
 int main() {
 	ut_disable_watchdog();
 	ut_read_os_version_index();
-	ut_os_version_index -= 6;
 	ut_disable_watchdog();
+
+	//OS 3.6 starts at 6
+	const int version_index_36 = ut_os_version_index - 6;
 		
 	// Disable all interrupts
-	if (ut_os_version_index < 2) {
+	if (version_index_36 < 2) {
 			PATCH_SETW(0xDC00000C, 0xFFFFFFFF);
 	} else {
 	PATCH_SETW(0xDC000014, 0xFFFFFFFF);
 	}
-	if (ut_os_version_index < 2) {
+	if (version_index_36 < 2) {
 		uint32_t RX;
 		__asm volatile (
 			"mrs %0, cpsr      \n"
@@ -128,13 +130,13 @@ int main() {
 			"msr cpsr_c, %0    \n"
 		: "=r" (RX));
 	}
-	if (ut_os_version_index < 2) {
+	if (version_index_36 < 2) {
 			uint32_t dummyint = *((volatile uint32_t *)(0xDC000028));
 			(void)dummyint; // unused warning
 	}
 	
 	// Reset IRQ flags
-	if (ut_os_version_index > 1) {
+	if (version_index_36 > 1) {
 			PATCH_SETW(0x90010008, 0);
 			PATCH_SETW(0x90010008, 0);
 			PATCH_SETW(0x9001000C, 1);
@@ -168,7 +170,7 @@ int main() {
 			;
 	PATCH_SETW(0xB00001A4, 0x003C1120);
 
-	if (ut_os_version_index > 1) {
+	if (version_index_36 > 1) {
 		// Reset touchpad
 		write_touchpad(0x0004, 0x01);
 		// Disable I2C IRQ
@@ -185,7 +187,7 @@ int main() {
 
 	// Reset OS global variables to their initial values
 	// Reset internal RAM state, else unstable without USB plugged-in
-	switch (ut_os_version_index) {
+	switch (version_index_36) {
 		case 0:
 				#include "hrpatches-os-ncas-3.6.0.h"
 		break;
@@ -204,13 +206,13 @@ int main() {
 	// this thread use signature data passed by the boot2 and copied to the first OS variable at the beginning of the BSS
 	// this signature data may have been overwritten (and is always on classic TI-Nspire after opening the Lua installer)
 	// OS-specific
-	if (ut_os_version_index < 2) {
+	if (version_index_36 < 2) {
 		static unsigned const os_monitor_thread_addrs[] = {0x10135DF4, 0x10136418};
-		PATCH_SETW(os_monitor_thread_addrs[ut_os_version_index], 0xE12FFF1E); // "bx lr" at the beginning of the thread
+		PATCH_SETW(os_monitor_thread_addrs[version_index_36], 0xE12FFF1E); // "bx lr" at the beginning of the thread
 	}
 
 	// post hot-reboot hook
-	HOOK_INSTALL(ndless_inst_resident_hook_addrs[ut_os_version_index], s1_startup_hook);
+	HOOK_INSTALL(ndless_inst_resident_hook_addrs[version_index_36], s1_startup_hook);
 	
 	clear_cache();
 	((void(*)(void))0x10000000)(); // Hot-reboot the OS

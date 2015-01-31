@@ -42,6 +42,7 @@ unsigned int ut_os_version_index;
 void ut_read_os_version_index(void) {
 	switch (*(unsigned*)(OS_BASE_ADDRESS + 0x20)) {
 		// OS-specific
+#ifndef NDLESS_36
 		case 0x102F0FA0:  // 3.1.0 non-CAS
 			ut_os_version_index = 0;
 			break;
@@ -60,6 +61,7 @@ void ut_read_os_version_index(void) {
 		case 0x102DC6B0:  // 3.1.0 CAS CM-C
 			ut_os_version_index = 5;
 			break;
+#endif
 		case 0x10375BB0:  // 3.6.0 non-CAS
 			ut_os_version_index = 6;
 			break;
