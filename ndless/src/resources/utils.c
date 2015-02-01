@@ -36,7 +36,7 @@ struct next_descriptor ut_next_descriptor = {
 unsigned int ut_os_version_index;
 
 void __attribute__ ((noreturn)) ut_calc_reboot(void) {
-	*(unsigned*)0x900A0008 = 2; //CPU reset
+	*(volatile unsigned*)0x900A0008 = 2; //CPU reset
 	__builtin_unreachable();
 }
 
@@ -80,7 +80,8 @@ void ut_read_os_version_index(void) {
 		case 0x10376090: // 3.6.0 CAS CX
 			ut_os_version_index = 9;
 			break;
-#elif NDLESS_39 == 39
+#endif
+#if !defined(STAGE1) || NDLESS_39 == 39
 		case 0x1037CDE0: // 3.9.0 non-CAS
 			ut_os_version_index = 10;
 			break;
@@ -94,7 +95,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 13;
 			break;
 #endif
-#if !defined(NDLESS_39) || NDLESS_39 == 391
+#if !defined(STAGE1) || NDLESS_39 == 391
 		case 0x1037D160: // 3.9.1 non-CAS CX
 			ut_os_version_index = 16;
 			break;
