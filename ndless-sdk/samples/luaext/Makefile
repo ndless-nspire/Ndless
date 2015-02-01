@@ -4,12 +4,12 @@ GCC = nspire-gcc
 AS  = nspire-as
 GXX = nspire-g++
 LD  = nspire-ld
+LUNA = $(shell nspire-tools path)/tools/luna/luna
 GENZEHN = genzehn
-LUNA = ../../tools/luna/luna
 
 GCCFLAGS = -Wall -W -marm
 LDFLAGS =
-ZEHNFLAGS = --name "luaextdemo.luax"
+ZEHNFLAGS = --name "luaextdemo"
 
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -20,31 +20,33 @@ endif
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
 OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
 OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
-EXE = luaextdemo.luax.tns
+EXE = luaextdemo.luax
 DISTDIR = .
 vpath %.tns $(DISTDIR)
-vpath %.tns.elf $(DISTDIR)
+vpath %.elf $(DISTDIR)
 
-all: $(EXE) runluaextdemo.tns
+all: $(EXE).tns runluaextdemo.tns
 
 runluaextdemo.tns: runluaextdemo.lua
 	$(LUNA) $< $@
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -c $<
+	$(GCC) $(GCCFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(GXX) $(GCCFLAGS) -c $<
+	$(GXX) $(GCCFLAGS) -c $< -o $@
 	
 %.o: %.S
-	$(AS) -c $<
+	$(AS) -c $< -o $@
 
 $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
-	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+	$(LD) $^ -o $@ $(LDFLAGS)
 
-$(EXE): $(EXE).elf
-	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
+$(EXE).tns: $(EXE).elf
+	$(GENZEHN) --input $^ --output $@.zehn $(ZEHNFLAGS)
+	make-prg $@.zehn $@
+	rm $@.zehn
 
 clean:
-	rm -f *.o $(DISTDIR)/$(EXE) $(DISTDIR)/$(EXE).elf runluaextdemo.tns
+	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn runluaextdemo.tns

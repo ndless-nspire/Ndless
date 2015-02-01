@@ -1,3 +1,3 @@
-require "luaextdemo"
+nrequire "luaextdemo"
 
 luaextdemo.hello("world")
