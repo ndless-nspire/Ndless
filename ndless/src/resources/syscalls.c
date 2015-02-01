@@ -28,7 +28,8 @@
 /* Ndless extensions exposed as syscalls. See os.h for documentation. */
 
 /* Values is an array of values for non-CAS 3.1, CAS 3.1, non-CAS CX 3.1, CAS CX 3.1, CM-C 3.1, CAS CM-C 3.1,
- * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6 */
+ * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6, non-CAS 3.9.0, CAS 3.9.0, non-CAS 3.9.0, CAS CX 3.9.0,
+   non-CAS 3.9.1, CAS 3.9.1, non-CAS CX 3.9.1 and CAS CX 3.9.1 */
 int sc_nl_osvalue(const int *values, unsigned size) {
 	unsigned index = ut_os_version_index;
 	if (index >= size)
@@ -51,7 +52,20 @@ void sc_ext_relocdatab(unsigned *dataptr, unsigned size, void *base) {
 }
 
 unsigned sc_nl_hwtype(void) {
-	return ut_os_version_index > 2 && (ut_os_version_index < 6 || ut_os_version_index > 8); // 1 if CX
+	switch(ut_os_version_index)
+	{
+	case 0:
+	case 1:
+	case 6:
+	case 7:
+	case 10:
+	case 11:
+	case 14:
+	case 15:
+		return 0;
+	default:
+		return 1;
+	}
 }
 
 // same as ut_os_version_index

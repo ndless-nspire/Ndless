@@ -31,7 +31,7 @@
 // Call to the dialog box display telling that the format isn't recognized.
 static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
 						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924,
-						0x0, 0x0, 0x0, 0x0,
+						0x1000A810, 0x1000A7D0, 0x0, 0x0,
 						0x0, 0x0, 0x1000A79C, 0x1000A78C};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
@@ -44,7 +44,7 @@ BOOL ins_loaded_by_3rd_party_loader(void) {
 static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC, 0x1001046C, 0x1000ED30, 0x1000ECE0,
 						0x1001264C, 0x100125D0, 0x10012470, 0x10012424,
 						0x0, 0x0, 0x0, 0x0,
-						0x0, 0x0, 0x100123E8, 0x0};
+						0x0, 0x0, 0x0, 0x0};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -86,7 +86,9 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 
 	if (!installed) {
 		// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
-		HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
+		if(end_of_init_addrs[ut_os_version_index] != 0)
+			HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
+
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
 		else if(ut_os_version_index) //plh_hook_36 works for 3.9.1 as well
