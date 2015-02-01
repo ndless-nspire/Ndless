@@ -24,7 +24,7 @@ DISTDIR = .
 vpath %.tns $(DISTDIR)
 vpath %.elf $(DISTDIR)
 
-all: $(EXE).prg.tns
+all: $(EXE).tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
@@ -40,10 +40,9 @@ $(EXE).elf: $(OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $^ --output $@ $(ZEHNFLAGS)
-
-$(EXE).prg.tns: $(EXE).tns
-	make-prg $^ $@
+	$(GENZEHN) --input $^ --output $@.zehn $(ZEHNFLAGS)
+	make-prg $@.zehn $@
+	rm $@.zehn
 
 clean:
-	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
+	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn
