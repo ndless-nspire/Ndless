@@ -3,4 +3,4 @@ How to update an .idc file:
 -Load the IDC script in IDA
 -Make your changes
 -File->Produce File->Dump Database to IDC file
--Run lighten_idc.sh <your file> <destination>
+-Run "./lighten_idc.php <IDC file> <destination file>"

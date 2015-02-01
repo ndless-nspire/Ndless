@@ -1,3 +1,4 @@
+#!/usr/bin/php -f
 <?php
 $input = fopen($argv[1], "r");
 $input || die("Couldn't open input.");
@@ -17,7 +18,7 @@ fwrite($output, $head);
 $last_line = "";
 while(($line = fgets($input)) !== FALSE)
 {
-	if(strpos($line, "MakeName") === FALSE)
+	if(strpos($line, "MakeName") === FALSE && strpos($line, "MakeFunction") === FALSE)
 	{
 		$last_line = $line;
 		continue;
