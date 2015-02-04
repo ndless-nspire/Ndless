@@ -85,9 +85,16 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
-		// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
-		if(end_of_init_addrs[ut_os_version_index] != 0)
-			HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
+
+		// 3.9 doesn't need to be rebooted
+		if(ut_os_version_index < 10)
+		{
+			// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
+			if(end_of_init_addrs[ut_os_version_index] != 0)
+				HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
+		}
+		else
+			plh_startup();
 
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
@@ -131,7 +138,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 const unsigned ins_successmsg_hook_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 						0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348,
 						0x0, 0x0, 0x0, 0x0,
-						0x0, 0x0, 0x0, 0x0};
+						0x0, 0x0, 0x1002D804, 0x1002D798};
 
 void ins_install_successmsg_hook(void) {
 	if(ins_successmsg_hook_addrs[ut_os_version_index] == 0)

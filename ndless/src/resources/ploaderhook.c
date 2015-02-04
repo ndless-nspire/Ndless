@@ -336,13 +336,17 @@ static int startup_file_each_cb(const char *path, __attribute__((unused)) void *
 BOOL plh_isstartup = FALSE;
 BOOL plh_noscrredraw = FALSE;
 
-// Try to run all the documents in the startup folder and its sub-folders
-HOOK_DEFINE(plh_startup_hook) {
+void plh_startup() {
 	if (!isKeyPressed(KEY_NSPIRE_ESC)) {
 		plh_isstartup = TRUE;
 		file_each(NDLESS_DIR "/startup", startup_file_each_cb, NULL);
 		plh_isstartup = FALSE;
 	}
 	ins_install_successmsg_hook();
+}
+
+// Try to run all the documents in the startup folder and its sub-folders
+HOOK_DEFINE(plh_startup_hook) {
+	plh_startup();
 	HOOK_RESTORE_RETURN(plh_startup_hook);
 }
