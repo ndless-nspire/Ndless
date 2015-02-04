@@ -11,7 +11,7 @@
        
         gc:drawString(&quot;Connect handheld&quot; , 5, 10 + total_offset - 100) 
         gc:drawString(&quot;to computer to start&quot;, 5, 25 + total_offset - 100) 
-        gc:drawString(&quot;downgrade process&quot;   , 5, 40 + total_offset - 100) 
+        gc:drawString(&quot;the installation&quot;   , 5, 40 + total_offset - 100)
     else
         timer.stop()
         gc:drawString(&quot;This tool does not work with this OS/Device&quot; , 5, 10) 
