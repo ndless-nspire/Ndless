@@ -102,6 +102,7 @@ static main(void)
 	MakeName	(0X10084780,	"read_nand");
 	MakeName	(0X10084ABC,	"write_nand");
 	MakeName	(0X10084CF4,	"flash_get_block_data_size");
+	MakeName	(0X10084D20,	"nand_erase_range");
 	MakeName	(0X10086AE4,	"TI_NN_InstallOSServiceStart");
 	MakeName	(0X10087058,	"install_os_check_file");
 	MakeName	(0X100876D4,	"nn_perform_install_os");
@@ -1122,7 +1123,6 @@ static main(void)
 	MakeName	(0X118AD014,	"j__memcpy");
 	MakeName	(0X118AD4A8,	"_memcpy");
 	MakeName	(0X118B06F4,	"IOC_Suspend_Driver");
-	MakeName	(0X118BE7D8,	"nand_erase_range");
 	MakeName	(0X11A07A04,	"blowfish_encrypt");
 	MakeFunction    (0X10000050,0X10000290);
 	MakeFunction    (0X100002DC,0X100002E4);
