@@ -5,7 +5,10 @@
 		end
     end
 
-    if isGood then
+    if ndless then
+        timer.stop()
+        gc:drawString(&quot;Ndless is already installed!&quot; , 5, 10)
+    elseif isGood then
         gc:drawImage(plugimg, 150, -250 + total_offset + plug_offset)
         gc:drawImage(devimg, 0, 25 + total_offset)
        

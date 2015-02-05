@@ -10,7 +10,9 @@ LDFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin
 vpath %.tns $(DISTDIR)
 
-all: ndless_installer_3.9.0_classic.tns ndless_installer_3.9.0.tns ndless_installer_3.9.1.tns
+# 3.9.0 is not supported on CX and CX CAS
+# all: ndless_installer_3.9.0_classic.tns ndless_installer_3.9.0.tns ndless_installer_3.9.1.tns
+all: ndless_installer_3.9.0_classic.tns ndless_installer_3.9.1.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@

@@ -1,5 +1,5 @@
 
-        if platform.window.setBackgroundColor then
+        if platform.window.setBackgroundColor and not ndless then
             tiassert.assert(false, 0, s) 
         end
     end
