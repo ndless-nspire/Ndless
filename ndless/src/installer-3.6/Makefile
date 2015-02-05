@@ -10,7 +10,7 @@ LDFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin
 vpath %.tns $(DISTDIR)
 
-all: ndless_installer.tns
+all: ndless_installer_3.6.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -43,7 +43,7 @@ ndless_installer.lua: ndless_installer.bin stage0.bin
 	cat ndless_version.lua ndless_installer.lua.nobom.tpl.tmp $(<:.bin=-escaped.lua.tmp) > $@
 	rm $(<:.bin=-escaped.lua.tmp) $(<:.bin=-escaped.bin) ndless_installer.lua.nobom.tpl.tmp
 
-ndless_installer.tns: ndless_installer.lua
+ndless_installer_3.6.tns: ndless_installer.lua
 	@mkdir -p $(DISTDIR)
 	../../../ndless-sdk/tools/luna/luna $< $(DISTDIR)/$@
 

@@ -115,6 +115,7 @@ static main(void)
 	MakeName	(0X100714D0,	"check_for_nand");
 	MakeName	(0X10071EC4,	"read_nand");
 	MakeName	(0X10072200,	"write_nand");
+	MakeName	(0X10072464,	"nand_erase_range");
 	MakeName	(0X10072438,	"flash_get_block_data_size");
 	MakeName	(0X10072938,	"TI_NN_GetLocalNode");
 	MakeName	(0X100729B0,	"TI_NN_IsNodeResponsive");
