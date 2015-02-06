@@ -85,7 +85,6 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
-
 		// 3.9 doesn't need to be rebooted
 		if(ut_os_version_index < 10)
 		{
@@ -93,8 +92,19 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			if(end_of_init_addrs[ut_os_version_index] != 0)
 				HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
 		}
-		else
+		else // 3.9.x
+		{
+			// Run startup programs (and successmsg hook installation) now
 			plh_startup();
+
+			// Patch the annoying TI_RM_GetString error message
+			if(ut_os_version_index == 16) // CX
+				*(volatile uint32_t *) 0x1011193C = 0xEA000004;
+			else if(ut_os_version_index == 17) // CX CAS
+				*(volatile uint32_t *) 0x10111768 = 0xEA000004;
+
+			// The next HOOK_INSTALL invocation clears the cache for us
+		}
 
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
