@@ -98,7 +98,11 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			plh_startup();
 
 			// Patch the annoying TI_RM_GetString error message
-			if(ut_os_version_index == 16) // CX
+			if(ut_os_version_index == 10) // 3.9.0
+				*(volatile uint32_t *) 0x10111778 = 0xEA000004;
+			else if(ut_os_version_index == 11) // 3.9.0 CAS
+				*(volatile uint32_t *) 0x10111574 = 0xEA000004;
+			else if(ut_os_version_index == 16) // CX
 				*(volatile uint32_t *) 0x1011193C = 0xEA000004;
 			else if(ut_os_version_index == 17) // CX CAS
 				*(volatile uint32_t *) 0x10111768 = 0xEA000004;
