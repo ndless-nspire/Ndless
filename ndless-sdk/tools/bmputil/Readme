@@ -1,0 +1,2 @@
+This tool converts images (every format supported by Qt) to BMP images that can be included in tns documents using Luna.
+It's also possible to convert TI BMP images to other formats. The direction is chosen automatically, based on the format of the input file.
