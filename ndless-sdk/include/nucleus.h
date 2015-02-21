@@ -9,7 +9,13 @@ extern "C" {
 #include <string.h>
 #include <limits.h>
 
+#undef st_atime
+#undef st_ctime
+#undef st_mtime
+
+#ifndef BUFSIZ
 #define BUFSIZ 1024
+#endif
 #define OS_BASE_ADDRESS 0x10000000
 
 //lua.h requires BUFSIZ
@@ -98,7 +104,7 @@ struct nuc_stat {
 typedef void NUC_FILE;
 typedef void NUC_DIR;
 struct nuc_dirent {
-        char d_name[0];
+        char d_name[1];
 };
 
 //NavNet declarations
