@@ -5,6 +5,12 @@
 <sc:mFlags>1024</sc:mFlags><sc:value>0</sc:value><sc:script version="512" id="3"></sc:script>
 <sc:state>
 on = {}
+function on.paint(gc,x,y,w,h)
+	gc:setColorRGB(0)
+	gc:setFont(&quot;sansserif&quot;,&quot;b&quot;,10)
+	gc:drawString(&quot;Connect handheld to computer&quot;,5,10)
+	gc:drawString(&quot;to start the installation!&quot;,5,25)
+end
 local _, caserr = math.eval(&quot;solve()&quot;)
 cas = caserr == 930
 function on.restore()
