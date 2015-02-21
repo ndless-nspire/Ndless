@@ -16,14 +16,13 @@ PREFIX=$PWD/install # or the directory where the toolchain should be installed i
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
 BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
-GCC=gcc-4.9.1 # http://gcc.gnu.org/
-# newlib-2.1.0 is broken for ARM :-(
-NEWLIB=newlib-2.0.0 # http://sourceware.org/newlib/
-GDB=gdb-7.7 # http://www.gnu.org/software/gdb/
+GCC=gcc-4.9.2 # http://gcc.gnu.org/
+NEWLIB=newlib-2.2.0 # http://sourceware.org/newlib/
+GDB=gdb-7.8.1 # http://www.gnu.org/software/gdb/
 
 # For newlib
-export CFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -DABORT_PROVIDED -mcpu=arm926ej-s"
-export CXXFLAGS_FOR_TARGET="-DMALLOC_PROVIDED -DABORT_PROVIDED -mcpu=arm926ej-s"
+export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections"
+export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections"
 export PATH=$PREFIX/bin:$PATH
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
@@ -57,7 +56,7 @@ mkdir -p build build-binutils download
 if [ ! -f .downloaded ]; then
 	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/binutils.tar.bz2 && tar xvjf download/binutils.tar.bz2 && \
 	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2 -O download/gcc.tar.bz2 && tar xvjf download/gcc.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.bz2 -O download/gdb.tar.bz2 && tar xvjf download/gdb.tar.bz2 && \
+	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz -O download/gdb.tar.bz2 && tar xvJf download/gdb.tar.bz2 && \
 	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/newlib.tar.gz && tar xvzf download/newlib.tar.gz && \
 	touch .downloaded
 fi
