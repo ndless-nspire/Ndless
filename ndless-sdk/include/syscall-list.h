@@ -280,7 +280,7 @@
 #define e_send_key_event 262 // void send_key_event(struct s_ns_event* p1, unsigned short p2, BOOL p3, BOOL p4)
 #define e_send_click_event 263 // void send_click_event(struct s_ns_event* p1, unsigned short p2, BOOL p3, BOOL p4)
 #define e_send_pad_event 264 // void send_pad_event(struct s_ns_event* p1, unsigned short p2, BOOL p3, BOOL p4)
-#define e_getcwd 265 // char* getcwd(char* p1, unsigned int p2)
+#define e_getcwd 265 // char* getcwd(char* p1, size_t p2)
 #define e_sscanf 266
 #define e_TI_NN_SendKeyPress 267
 #define e_TI_NN_IsNodeResponsive 268
