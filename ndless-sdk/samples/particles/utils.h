@@ -24,10 +24,10 @@ typedef struct {
 
 typedef enum {false, true} bool;
 
-extern inline bool rect_intersect(const t_rect* r1, const t_rect* r2);
-extern inline void clearScreen();
-extern inline int getPixel(int x, int y);
-extern inline void setPixel(int x, int y, int color);
+extern bool rect_intersect(const t_rect* r1, const t_rect* r2);
+extern void clearScreen();
+extern int getPixel(int x, int y);
+extern void setPixel(int x, int y, int color);
 extern float sqrtf(float num);
 extern void fade(void *scrbuf, int n);
 

@@ -15,10 +15,10 @@ TARGET=arm-none-eabi
 PREFIX=$PWD/install # or the directory where the toolchain should be installed in
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
-BINUTILS=binutils-2.24 # http://www.gnu.org/software/binutils/
-GCC=gcc-4.9.2 # http://gcc.gnu.org/
-NEWLIB=newlib-2.2.0 # http://sourceware.org/newlib/
-GDB=gdb-7.8.1 # http://www.gnu.org/software/gdb/
+BINUTILS=binutils-2.25 # http://www.gnu.org/software/binutils/
+GCC=gcc-5.1.0 # http://gcc.gnu.org/
+NEWLIB=newlib-2.2.0-1 # http://sourceware.org/newlib/
+GDB=gdb-7.9 # http://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections"

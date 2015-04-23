@@ -23,18 +23,18 @@ typedef struct {
   float x, y, z;
 } t_vector;
 
-extern inline void vector_construct(t_vector* t_this);
-extern inline void vector_construct2(t_vector* t_this, float x, float y, float z);
-extern inline void vector_construct3(t_vector* t_this, const t_vector* vector);
-extern inline void vector_zero(t_vector* t_this);
-extern inline void vector_xAxis(t_vector* t_this);
-extern inline void vector_yAxis(t_vector* t_this);
-extern inline void vector_zAxis(t_vector* t_this);
-extern inline t_vector vector_add(const t_vector* vector1, const t_vector* vector2);
-extern inline t_vector vector_sub(const t_vector* vector1, const t_vector* vector2);
-extern inline t_vector vector_negate(const t_vector* vector);
-extern inline t_vector vector_mul(const t_vector* vector, float val);
-extern inline t_vector vector_div(const t_vector* vector, float val);
-extern inline bool vector_compare(const t_vector* vector1, const t_vector* vector2);
+extern void vector_construct(t_vector* t_this);
+extern void vector_construct2(t_vector* t_this, float x, float y, float z);
+extern void vector_construct3(t_vector* t_this, const t_vector* vector);
+extern void vector_zero(t_vector* t_this);
+extern void vector_xAxis(t_vector* t_this);
+extern void vector_yAxis(t_vector* t_this);
+extern void vector_zAxis(t_vector* t_this);
+extern t_vector vector_add(const t_vector* vector1, const t_vector* vector2);
+extern t_vector vector_sub(const t_vector* vector1, const t_vector* vector2);
+extern t_vector vector_negate(const t_vector* vector);
+extern t_vector vector_mul(const t_vector* vector, float val);
+extern t_vector vector_div(const t_vector* vector, float val);
+extern bool vector_compare(const t_vector* vector1, const t_vector* vector2);
 
 #endif

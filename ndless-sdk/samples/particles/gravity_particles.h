@@ -28,7 +28,7 @@ typedef struct {
 } t_gravity_particles;
 
 extern void gravity_particles_construct(t_gravity_particles* t_this, float gravity, int accelerationMultiplier);
-extern inline void gravity_particles_destruct(t_gravity_particles* t_this);
+extern void gravity_particles_destruct(t_gravity_particles* t_this);
 extern t_particle* gravity_particles_merge(t_gravity_particles* t_this, t_particle* i, t_particle* j);
 extern void gravity_particles_draw(t_gravity_particles* t_this);
 extern void add_particle(t_gravity_particles* gravity_particles);
