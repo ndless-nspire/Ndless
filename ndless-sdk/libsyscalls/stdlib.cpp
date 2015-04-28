@@ -505,6 +505,11 @@ void *_calloc_r(struct _reent *, size_t nmemb, size_t size)
 	return calloc(nmemb, size);
 }
 
+clock_t _times(struct tms *ptms)
+{
+	return 0;
+}
+
 // Miscellaneous
 void *__dso_handle __attribute__((weak));
 }
