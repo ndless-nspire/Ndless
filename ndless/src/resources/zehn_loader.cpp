@@ -269,7 +269,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 			*place = 0;
 			break;
 		default:
-			printf("[Zehn] Unsupported reloc %d!\n", r.type);
+			printf("[Zehn] Unsupported reloc %d!\n", static_cast<int>(r.type));
 			return 1;
 		}
 	}
