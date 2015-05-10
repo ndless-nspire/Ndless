@@ -40,8 +40,32 @@ private:
 	char16_t *buffer;
 };
 
+class EvaluateResult
+{
+public:
+	EvaluateResult() : buffer(nullptr) {}
+	EvaluateResult(char16_t *start) : buffer(start) {}
+	EvaluateResult(EvaluateResult &&other)
+	{
+		buffer = other.buffer;
+		other.buffer = nullptr;
+	}
+	EvaluateResult &operator=(EvaluateResult &&other)
+	{
+		buffer = other.buffer;
+		other.buffer = nullptr;
+		return *this;
+	}
+	EvaluateResult(EvaluateResult &other) = delete;
+	EvaluateResult &operator=(EvaluateResult &other) = delete;
+	~EvaluateResult() { syscall<e_free, void>(buffer); }
+	const char16_t *c_str() { return buffer; }
+private:
+	char16_t *buffer;
+};
+
 // Evaluates the math expression in input and returns a pre-allocated buffer (or nullptr), that has to be freed with evaluate_free
-char16_t *evaluate(void *state1, void *state2, const char16_t *input)
+EvaluateResult evaluate(void *state1, void *state2, const char16_t *input)
 {
 	void *math_expr = nullptr;
 	int str_offset = 0;
@@ -54,11 +78,6 @@ char16_t *evaluate(void *state1, void *state2, const char16_t *input)
 	TI_MS_MathExprToStr(math_expr, state2, &ret);
 	syscall<e_free, void>(math_expr); // Should be TI_MS_DeleteMathExpr
 	return reinterpret_cast<char16_t*>(ret);
-}
-
-void evaluate_free(char16_t *ptr)
-{	
-	syscall<e_free, void>(ptr);
 }
 
 // Returns pointer to the first character after this argument.
@@ -95,7 +114,7 @@ const char16_t *find_arg_end(const char16_t *start)
 	return start;
 }
 
-const char16_t *calchook_exec(void *state1, void *state2, const char16_t *cmd)
+const char16_t *calchook_exec(void *state1, void *state2, const char16_t *cmd, calchook_callback callback)
 {
 	std::vector<UTF16String> args;
 
@@ -112,37 +131,132 @@ const char16_t *calchook_exec(void *state1, void *state2, const char16_t *cmd)
 		start = next + 1;
 	}
 
-	if(args.size() == 0)
-		return u"\"Missing Argument!\"";
-
-	char *argv[args.size()];
+	// Evaluate all arguments
+	EvaluateResult args_evaluated[args.size()];
 	for(unsigned int i = 0; i < args.size(); ++i)
 	{
-		char16_t *res = evaluate(state1, state2, args[i].c_str());
-		if(!res)
+		args_evaluated[i] = evaluate(state1, state2, args[i].c_str());
+		if(!args_evaluated[i].c_str())
 			return nullptr;
+	}
 
-		size_t len = utf16_strlen(reinterpret_cast<uint16_t*>(res));
-		argv[i] = new char[2*len + 1];
-		if(!argv[i])
+	// Yes, this cast is ugly.
+	return callback(state1, state2, args.size(), reinterpret_cast<char16_t**>(args_evaluated));
+}
+
+struct CalchookReg {
+public:
+	CalchookReg(const char16_t *name, calchook_callback callback) : callback(callback)
+	{
+		this->length = utf16_strlen(reinterpret_cast<const uint16_t*>(name)) - 1;
+		this->name = new char16_t[this->length + 1];
+		memcpy(this->name, name, 2*this->length + 2);
+	}
+	CalchookReg(CalchookReg &&other)
+	{
+		name = other.name;
+		other.name = nullptr;
+	}
+	CalchookReg(CalchookReg &other) = delete;
+	CalchookReg &operator=(CalchookReg &other) = delete;
+	~CalchookReg()
+	{
+		delete[] name;
+	}
+	bool operator== (const char16_t *other)
+	{
+		return memcmp(name, other, length) == 0;
+	}
+
+	calchook_callback callback;
+	char16_t *name;
+	size_t length;
+};
+
+static std::vector<CalchookReg> calchook_registry;
+
+calchook_callback calchook_get(const char16_t *cmd)
+{
+	for(auto&& reg : calchook_registry)
+		if(reg == cmd)
+			return reg.callback;
+
+	return nullptr;
+}
+
+HOOK_DEFINE(calchook)
+{
+	const char16_t *cmd = reinterpret_cast<char16_t*>(HOOK_SAVED_REGS(calchook)[2]);
+
+	calchook_callback callback = calchook_get(cmd);
+	if(callback)
+	{
+		// Partially uninstall the hook to avoid recursion (also, hooks aren't reentrant)
+		// In this case we only change the hook target address to the original instructions back
+		// to avoid expensive I-Cache flushes
+		uintptr_t *hook_address = reinterpret_cast<uintptr_t*>(syscall_addrs[ut_os_version_index][e_calc_cmd] + 4);
+		*hook_address = reinterpret_cast<uintptr_t>(__calchook_end_instrs);
+
+		void *state1 = reinterpret_cast<void*>(HOOK_SAVED_REGS(calchook)[0]);
+		void *state2 = reinterpret_cast<void*>(HOOK_SAVED_REGS(calchook)[1]);
+		uint32_t result = reinterpret_cast<uint32_t>(calchook_exec(state1, state2, cmd, callback));
+		if(result)
+			HOOK_SAVED_REGS(calchook)[2] = result;			
+		// else TODO: What now?
+
+		// Install the hook again
+		*hook_address = reinterpret_cast<uintptr_t>(calchook);
+	}
+
+	HOOK_RESTORE_RETURN(calchook);
+}
+
+bool calchook_register(const char16_t *name, calchook_callback callback)
+{
+	if(name[utf16_strlen(reinterpret_cast<const uint16_t*>(name)) - 1] != '(' // Doesn't end on '('
+		|| calchook_get(name)) // Already registered
+		return false;
+
+	calchook_registry.emplace_back(name, callback);
+	return true;
+}
+
+const char16_t *calchook_ndls_run(void *, void *, unsigned int argc, char16_t *argv[])
+{
+	if(argc == 0)
+		return u"\"Missing Argument!\"";
+
+	unsigned int i;
+	char *argv_prgm[argc];
+	for(i = 0; i < argc; ++i)
+	{
+		size_t len = utf16_strlen(reinterpret_cast<uint16_t*>(argv[i]));
+		argv_prgm[i] = new char[2*len + 1];
+		if(!argv_prgm[i])
 		{
-			evaluate_free(res);
+			// Free already allocated argv_prgm
+			for(unsigned int j = 0; j < i; ++j)
+				delete[] argv_prgm[j];
+
 			return u"\"Out of memory!\"";
 		}
 
 		// Strip quotes from strings
-		if(*res == '"' && *(res+len-1) == '"')
+		if((*argv[i] == '"' && *(argv[i]+len-1) == '"')
+			|| (*argv[i] == '\'' && *(argv[i]+len-1) == '\''))
 		{
-			*(res+len-1) = 0;
-			utf162ascii(argv[i], reinterpret_cast<uint16_t*>(res + 1), 2*len);
+			*(argv[i]+len-1) = 0;
+			utf162ascii(argv_prgm[i], reinterpret_cast<uint16_t*>(argv[i] + 1), 2*len);
 		}
 		else
-			utf162ascii(argv[i], reinterpret_cast<uint16_t*>(res), 2*len);
-
-		evaluate_free(res);
+			utf162ascii(argv_prgm[i], reinterpret_cast<uint16_t*>(argv[i]), 2*len);
 	}
 
-	int ret = ld_exec_with_args(argv[0], args.size() - 1, argv + 1, nullptr);
+	int ret = ld_exec_with_args(argv_prgm[0], argc - 1, argv_prgm + 1, nullptr);
+
+	// Free argv_prgm
+	for(unsigned int j = 0; j < i; ++j)
+		delete[] argv_prgm[j];
 
 	// The return value is never freed, so use a static buffer
 	static char16_t ret16[16]; static char retascii[16];
@@ -151,35 +265,12 @@ const char16_t *calchook_exec(void *state1, void *state2, const char16_t *cmd)
 	return ret16;
 }
 
-HOOK_DEFINE(calchook)
-{
-	//TODO: Don't uninstall the hook everytime, as it flushes the cache.
-	//For now it's done to avoid recursion.
-	uint32_t address = syscall_addrs[ut_os_version_index][e_calc_cmd];
-	HOOK_UNINSTALL(address, calchook);
-
-	void *state1 = reinterpret_cast<void*>(HOOK_SAVED_REGS(calchook)[0]);
-	void *state2 = reinterpret_cast<void*>(HOOK_SAVED_REGS(calchook)[1]);
-	const char16_t *cmd = reinterpret_cast<char16_t*>(HOOK_SAVED_REGS(calchook)[2]);
-
-	const char16_t ndls_run[] = u"ndls_run(";
-	if(!memcmp(cmd, ndls_run, sizeof(ndls_run) - sizeof(char16_t)))
-	{
-		uint32_t result = reinterpret_cast<uint32_t>(calchook_exec(state1, state2, cmd));
-		if(result)
-			HOOK_SAVED_REGS(calchook)[2] = result;			
-		// else TODO: What now?
-	}
-
-	HOOK_INSTALL(address, calchook);
-	HOOK_RESTORE_RETURN(calchook);
-}
-
 void calchook_install()
 {
 	uint32_t address = syscall_addrs[ut_os_version_index][e_calc_cmd];
 	if(address == 0)
 		return;
 
+	calchook_register(u"ndls_run(", calchook_ndls_run);
 	HOOK_INSTALL(address, calchook);
 }
