@@ -25,6 +25,8 @@
 
 #include <os.h>
 #include <ngc.h>
+
+#include "calchook.h"
 #include "ndless.h"
 
 // OS-specific
@@ -116,6 +118,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_36);
 
 		lua_install_hooks();
+		calchook_install();
 	}
 
 	if (argv[0] && argv[0][0] == 'L') { // third-party launcher

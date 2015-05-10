@@ -216,8 +216,8 @@
 #define e_refresh_homescr 198 // void refresh_homescr()
 #define e_refresh_docbrowser 199 // void refresh_docbrowser(int p1)
 #define e_strtok 200
-#define e_utf162ascii 201
-#define e_utf16_strlen 202
+#define e_utf162ascii 201 // void utf162ascii(char *p1, const uint16_t *p2, int p3)
+#define e_utf16_strlen 202 // size_t utf16_strlen(const uint16_t *p1)
 #define e__show_1NumericInput 203 // int _show_1NumericInput(int p1, const char *p2, const char *p3, const char *p4, int *p5, int p6, int p7, int p8)
 #define e__show_2NumericInput 204 // int _show_2NumericInput(int p1, const char *p2, const char *p3, const char *p4, int *p5, int p6, int p7, int p8, const char *p9, int *p10, int p11, int p12, int p13)
 #define e__show_msgUserInput 205 // int _show_msgUserInput(int p1, String *p2, const char *p3, const char *p4)
@@ -354,14 +354,15 @@
 #define e_read_nand 336 // void read_nand(void* dest, int size, int nand_offset, int unknown, int percent_max, void* progress_cb)
 #define e_write_nand 337 // int write_nand(void* p1, int p2, unsigned int p3)
 #define e_nand_erase_range 338 // int nand_erase_range(int p1, int p2)
-#define e_calc_cmd 339 
+#define e_calc_cmd 339 // int TI_MS_evaluateExpr_ACBER(void *p1, void *p2, const uint16_t *p3, void *p4, void *p5)
 #define e_get_res_string 340 // char* get_res_string(int p1, int p2)
 #define e_disp_str 341 // void disp_str(const char *p1, int *p2, int p3)
+#define e_TI_MS_MathExprToStr 342 // int TI_MS_MathExprToStr(void *p1, void *p2, uint16_t **p3)
 
 // END_OF_LIST (always keep this line after the last constant, used by mksyscalls.sh)
 
 // Must be kept up-to-date with the value of the last syscall
-#define __SYSCALLS_LAST 340
+#define __SYSCALLS_LAST 342
 
 // Flag: 3 higher bits of the 3-bytes comment field of the swi instruction
 #define __SYSCALLS_ISEXT 0x200000

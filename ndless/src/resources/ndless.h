@@ -43,6 +43,10 @@
 
 #include <os.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* emu.c */
 extern void *emu_debug_alloc_ptr;
 static const size_t emu_debug_alloc_size = 8 * 1024 * 1024; //8MB
@@ -116,6 +120,10 @@ void sc_setup(void);
 /* luaext.c */
 void lua_install_hooks(void);
 lua_State *luaext_getstate(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GNU_AS */
 
