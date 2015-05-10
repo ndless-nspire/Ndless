@@ -96,6 +96,7 @@ static main(void)
 	MakeName	(0X100775A8,	"j_j_free_5");
 	MakeName	(0X10078D74,	"j_j_free_6");
 	MakeName	(0X1007C660,	"j_j_free_8");
+	MakeName	(0X1007C6F0,	"TI_MS_MathExprToStr");
 	MakeName	(0X1007C948,	"calc_cmd");
 	MakeName	(0X100819C0,	"flash_debug_print");
 	MakeName	(0X10083BE0,	"flash_ECC_word_to_bytes");

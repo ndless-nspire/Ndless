@@ -110,6 +110,7 @@ static main(void)
 	MakeName	(0X1006AED8,	"send_pad_event");
 	MakeName	(0X10076BEC,	"j_j_free_5");
 	MakeName	(0X100783B8,	"j_j_free_6");
+	MakeName	(0X1007B95C,	"TI_MS_MathExprToStr");
 	MakeName	(0X1007B8CC,	"j_j_free_8");
 	MakeName	(0X1007BBB4,	"calc_cmd");
 	MakeName	(0X10080BBC,	"flash_debug_print");
