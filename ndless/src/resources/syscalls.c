@@ -28,7 +28,7 @@
 /* Ndless extensions exposed as syscalls. See os.h for documentation. */
 
 /* Values is an array of values for non-CAS 3.1, CAS 3.1, non-CAS CX 3.1, CAS CX 3.1, CM-C 3.1, CAS CM-C 3.1,
- * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6, non-CAS 3.9.0, CAS 3.9.0, non-CAS 3.9.0, CAS CX 3.9.0,
+ * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6, non-CAS 3.9.0, CAS 3.9.0, non-CAS CX 3.9.0, CAS CX 3.9.0,
    non-CAS 3.9.1, CAS 3.9.1, non-CAS CX 3.9.1 and CAS CX 3.9.1 */
 int sc_nl_osvalue(const int *values, unsigned size) {
 	unsigned index = ut_os_version_index;
