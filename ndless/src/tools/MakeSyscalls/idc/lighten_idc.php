@@ -18,14 +18,14 @@ fwrite($output, $head);
 $last_line = "";
 while(($line = fgets($input)) !== FALSE)
 {
-	if(strpos($line, "MakeName") === FALSE && strpos($line, "MakeFunction") === FALSE)
+	if(strpos($line, "MakeName") === FALSE)
 	{
 		$last_line = $line;
 		continue;
 	}
 
 	//Skip string definitions and other unneeded names
-	if(strpos($last_line, "MakeStr") !== FALSE || strpos($line, "\"null") !== FALSE)
+	if(strpos($last_line, "MakeStr") !== FALSE || strpos($line, "\"null") !== FALSE || strpos($line, "j_") !== FALSE)
 	{
 		$last_line = $line;
 		continue;

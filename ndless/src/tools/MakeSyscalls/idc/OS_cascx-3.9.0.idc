@@ -1,13 +1,10 @@
 #define UNLOADED_FILE   1
 #include <idc.idc>
+
 static main(void)
 {
-	MakeRptCmt	(0x10000344,	"init BSS");
-	MakeName	(0x1000552c,	"j_TMT_Retreive_Clock");
 	MakeName	(0x10005b58,	"cursor_hide");
 	MakeName	(0x10005b84,	"cursor_show");
-	MakeName	(0x10005bbc,	"j_get_battery_door_detection_mode_0");
-	MakeName	(0x10005bd0,	"j_get_battery_door_detection_mode");
 	MakeName	(0x10005c8c,	"gui_gc_getGC");
 //	MakeName	(0XFFFFFFFF,	"get_documents_dir");:0xfffffff:0x100002e8
 	MakeName	(0x100074ec,	"Exitptt");
@@ -16,12 +13,10 @@ static main(void)
 	MakeName	(0x1000b3c4,	"_gui_gc_getFont");
 	MakeName	(0x1000b498,	"_gui_gc_blit_buffer");
 	MakeName	(0x1000b63c,	"_gui_gc_getIconSize");
-	MakeName	(0x1000b688,	"j__gui_gc_getIconSize");
 	MakeName	(0x1000b700,	"_gui_gc_setColorRGB");
 //	MakeName	(0XFFFFFFFF,	"gui_gc_new");:0xfffffff:0x100002e8
 	MakeName	(0x1000befc,	"_gui_gc_setFont");
 	MakeName	(0x1000bf3c,	"_gui_gc_getCharHeight");
-	MakeName	(0x1000bf50,	"j__gui_gc_stupid_GIMME_INPUT_FONT");
 	MakeName	(0x1000bf54,	"_gui_gc_copy");
 	MakeName	(0x1000bf88,	"_gui_gc_blit_gc");
 	MakeName	(0x1000c410,	"_gui_gc_getCharWidth");
@@ -29,7 +24,6 @@ static main(void)
 	MakeName	(0x1000c9e8,	"_gui_gc_drawString");
 	MakeName	(0x1000cc94,	"_gui_gc_drawImage");
 	MakeName	(0x1000cd54,	"_gui_gc_drawIcon");
-	MakeName	(0x1000cdec,	"j__gui_gc_drawIcon");
 	MakeName	(0x1000cdf0,	"_gui_gc_fillPoly");
 	MakeName	(0x1000d044,	"_gui_gc_drawPoly");
 	MakeName	(0x1000d190,	"_gui_gc_setAlpha");
@@ -46,21 +40,14 @@ static main(void)
 	MakeName	(0x1000dba8,	"_gui_gc_new");
 	MakeName	(0x100122e0,	"ndless_inst_resident_hook");
 	MakeName	(0x10012394,	"ndless_end_of_init");
-	MakeRptCmt	(0x1001239c,	"never returns");
-//	MakeName	(0XFFFFFFFF,	"j_j_free_7");:0xfffffff:0x1057d804
-	MakeName	(0x10015354,	"j_unlink");
-	MakeName	(0x1001ae34,	"j_j_free_0");
-	MakeName	(0x1001ae38,	"j_j_free_1");
 //	MakeName	(0XFFFFFFFF,	"nn_start_services");:0xfffffff:0x100011bc
 	MakeName	(0x1021d0a4,	"screenCallback");
 //	MakeName	(0XFFFFFFFF,	"nn_ext_echo_callback");:0xfffffff:0xfffffff
-//	MakeRptCmt	(0XFFFFFFFF,	"17000");:0xfffffff:0xfffffff
 	MakeName	(0x1001f968,	"TI_Echo_UDP_Init");
 	MakeName	(0x1001fad8,	"translateKey");
 	MakeName	(0x10022480,	"_show_msgbox_3b");
 	MakeName	(0x10022cd8,	"_show_msgbox_2b");
 	MakeName	(0x100233ec,	"show_dialog_box2_");
-//	MakeName	(0XFFFFFFFF,	"j_j_msc2_free_0");:0xfffffff:0xfffffff
 	MakeName	(0x1002cb1c,	"gui_gc_begin");
 	MakeName	(0x1002cb54,	"gui_gc_finish");
 //	MakeName	(0XFFFFFFFF,	"gui_gc_drawImage");:0xfffffff:0x1002cd7c
@@ -94,23 +81,13 @@ static main(void)
 	MakeName	(0x1002df8c,	"gui_gc_setColor");
 	MakeName	(0x1002dfa4,	"gui_gc_setRegion");
 	MakeName	(0x1002e0cc,	"gui_gc_copy");
-	MakeName	(0x10036104,	"j_j_free_2");
-//	MakeRptCmt	(0XFFFFFFFF,	"ressources_syst");:0xfffffff:0x1000f098
 	MakeName	(0x1003a998,	"compress_encrypt_tns");
 	MakeName	(0x1003c9b4,	"__OS_registerProgramEditor");
 	MakeName	(0x1004fac0,	"inflateInit");
-	MakeName	(0x10055508,	"j_j_free_3");
-	MakeName	(0x10055b1c,	"j_j_free_4");
 	MakeName	(0x10058aa8,	"_gui_gc_stupid_GIMME_INPUT_FONT");
 	MakeName	(0x1006af5c,	"send_key_event");
-	MakeRptCmt	(0x1006af80,	"type");
-	MakeRptCmt	(0x1006afe4,	"ascii");
-	MakeRptCmt	(0x1006afe8,	"key");
 	MakeName	(0x1006b580,	"send_click_event");
 	MakeName	(0x1006b640,	"send_pad_event");
-	MakeName	(0x1007704c,	"j_j_free_5");
-	MakeName	(0x10078818,	"j_j_free_6");
-	MakeName	(0x1007c0d4,	"j_j_free_8");
 	MakeName	(0x1007c3bc,	"calc_cmd");
 	MakeName	(0x1008143c,	"flash_debug_print");
 	MakeName	(0x100837ec,	"flash_ECC_word_to_bytes");
@@ -133,7 +110,6 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"TI_NN_NodeEnumNext");:0xfffffff:0x10003794
 //	MakeName	(0XFFFFFFFF,	"TI_NN_GetNodeMaxPktSize");:0xfffffff:0x100666d4
 //	MakeName	(0XFFFFFFFF,	"TI_NN_GetConnMaxPktSize");:0xfffffff:0x1048eee0
-//	MakeName	(0XFFFFFFFF,	"j_TI_NN_GetConnMaxPktSize");:0xfffffff:0x10000308
 //	MakeName	(0XFFFFFFFF,	"TI_NN_FreeServiceStuct");:0xfffffff:0x10000310
 //	MakeName	(0XFFFFFFFF,	"TI_NN_LoadConnectors");:0xfffffff:0x1000454c
 //	MakeName	(0XFFFFFFFF,	"TI_NN_LoadNavstack");:0xfffffff:0x10000310
@@ -142,7 +118,6 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"TI_NN_Write");:0xfffffff:0x10001b28
 //	MakeName	(0XFFFFFFFF,	"TI_NN_Read");:0xfffffff:0x10001b28
 //	MakeName	(0XFFFFFFFF,	"TI_NN_NodeEnumInitProcResponse");:0xfffffff:0x102b8bb8
-//	MakeRptCmt	(0XFFFFFFFF,	"15000");:0xfffffff:0x100aecd0
 //	MakeName	(0XFFFFFFFF,	"TI_NN_StartService");:0xfffffff:0x100031a0
 //	MakeName	(0XFFFFFFFF,	"TI_NN_InvalidateConnectionHandle");:0xfffffff:0xfffffff
 //	MakeName	(0XFFFFFFFF,	"TI_NN_StopService");:0xfffffff:0x100011bc
@@ -191,7 +166,6 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"writeScreenRequestPacket");:0xfffffff:0x1032bea8
 //	MakeName	(0XFFFFFFFF,	"write_screen_data");:0xfffffff:0x10001b28
 //	MakeName	(0XFFFFFFFF,	"nn_handle_screen_operation_cb");:0xfffffff:0x10001b28
-//	MakeRptCmt	(0XFFFFFFFF,	"30000");:0xfffffff:0x1005e284
 //	MakeName	(0XFFFFFFFF,	"TI_NN_GetNodeScreen");:0xfffffff:0x10369600
 //	MakeName	(0XFFFFFFFF,	"TI_HAL_getStatinfo");:0xfffffff:0xfffffff
 //	MakeName	(0XFFFFFFFF,	"start_sync_service");:0xfffffff:0xfffffff
@@ -208,26 +182,18 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"TI_NN_GetFile");:0xfffffff:0x105ea72c
 	MakeName	(0x1009d12c,	"find_connection");
 	MakeName	(0x100a1634,	"TI_NS_WritePacketToRemoteStream");
-	MakeRptCmt	(0x100a16b0,	"cn_write?");
 	MakeName	(0x100a1940,	"append_pkt_to_hold_q");
 	MakeName	(0x100a1a34,	"send_remote_packet");
 	MakeName	(0x100a1d44,	"q_pkt_n_wait_for_ack");
 	MakeName	(0x100a2c48,	"process_received_pckt");
 	MakeName	(0x100a4d90,	"create_pkt_list");
 	MakeName	(0x100a4fec,	"TI_NS_Write");
-	MakeName	(0x100bd76c,	"j_printf");
 	MakeName	(0x100c0a18,	"get_battery_door_detection_mode");
 	MakeName	(0x100c1480,	"set_task_name");
 	MakeName	(0x100c5568,	"publish_send_immediate");
 	MakeName	(0x100cba54,	"disp_str");
 	MakeName	(0x100d0d60,	"ti_pm_register_dma");
 	MakeName	(0x100d1438,	"reboot");
-	MakeName	(0x100eac04,	"j_string_free_1");
-	MakeName	(0x100eac08,	"j_string_new_0");
-	MakeName	(0x100eac80,	"j_string_concat_utf16_0");
-	MakeName	(0x100ead08,	"j_string_set_utf16_0");
-	MakeName	(0x100f0ca0,	"j_msc2_free_0");
-//	MakeName	(0XFFFFFFFF,	"j_j_free_9");:0xfffffff:0x100e5c5c
 //	MakeName	(0XFFFFFFFF,	"get_res_string");:0xfffffff:0x100f3934
 	MakeName	(0x10111060,	"get_res_string_sys");
 	MakeName	(0x10110cc8,	"read_unaligned");
@@ -238,14 +204,6 @@ static main(void)
 	MakeName	(0x1013853c,	"lua_platform_isDeviceModeRendering");
 	MakeName	(0x1013855c,	"lua_platform_gc");
 	MakeName	(0x1013ced4,	"log_rs232");
-	MakeName	(0x1013d380,	"j_log_rs232");
-	MakeName	(0x1017ac14,	"j_j_free_11");
-	MakeName	(0x101a5d98,	"j_j_free_24");
-	MakeName	(0x101a7760,	"j_j_free_10");
-	MakeName	(0x101a7988,	"j_j_free_16");
-	MakeName	(0x101b3e58,	"j_j_free_12");
-//	MakeName	(0XFFFFFFFF,	"j_show_dialog_box?");:0x10000000:0x10000001
-	MakeName	(0x101f8288,	"j_crypt_decrypt_tns_D_block");
 	MakeName	(0x101f8328,	"des_start_decrypt");
 	MakeName	(0x101f8660,	"crypt_decrypt_tns_D_block");
 	MakeName	(0x101f8d38,	"des_get_keys");
@@ -264,12 +222,7 @@ static main(void)
 	MakeName	(0x10205344,	"engine_table_select");
 	MakeName	(0x1021c05c,	"touchpad_write");
 	MakeName	(0x1021c3a8,	"touchpad_read");
-	MakeName	(0x1027fa78,	"j_j_free_13");
 //	MakeName	(0XFFFFFFFF,	"get_event");:0xfffffff:0x10078d6c
-//	MakeRptCmt	(0XFFFFFFFF,	"pending event flag");:0xfffffff:0x100543f0
-//	MakeRptCmt	(0XFFFFFFFF,	"fill up the event struct");:0xfffffff:0x10282d90
-	MakeRptCmt	(0x103fadd8,	"pending event flag");
-	MakeName	(0x1028d0ac,	"j_get_documents_dir");
 	MakeName	(0x1028e0fc,	"string_len");
 	MakeName	(0x1028e104,	"string_charAt");
 	MakeName	(0x1028e150,	"string_truncate");
@@ -293,15 +246,9 @@ static main(void)
 	MakeName	(0x1028f160,	"string_formatNumber");
 	MakeName	(0x1028f49c,	"string_sprintf_utf16");
 	MakeName	(0x1028f4f8,	"string_formatInteger");
-	MakeName	(0x102b1bb4,	"j_memcpy_0");
-	MakeName	(0x102b1bb8,	"j_memset_0");
-	MakeName	(0x102b1bbc,	"j_free");
 	MakeName	(0x102b1d80,	"unknown_TI_AllocateBlock_");
-	MakeName	(0x102b1d84,	"j_memcpy");
-	MakeName	(0x102b1d88,	"j_memset");
 	MakeName	(0x102b202c,	"utf162ascii");
 	MakeName	(0x102b4bc0,	"ascii2utf16");
-//	MakeName	(0XFFFFFFFF,	"j_j_free_14");:0xfffffff:0xfffffff
 	MakeName	(0x102be350,	"refresh_homescr");
 	MakeName	(0x102bef80,	"refresh_docbrowser");
 	MakeName	(0x102d5900,	"Expat_XML_Parse");
@@ -342,7 +289,6 @@ static main(void)
 	MakeName	(0x10303ef4,	"DMC_Allocate_Memory");
 	MakeName	(0x10304104,	"DMC_Deallocate_Memory_0");
 	MakeName	(0x103226b0,	"isspace");
-	MakeRptCmt	(0x1035b450,	"fill up the event struct");
 	MakeName	(0x103622d8,	"cursor_hide2");
 	MakeName	(0x10365e74,	"nn_pkt_malloc");
 //	MakeName	(0XFFFFFFFF,	"TCC_Current_Task_Pointer");:0xfffffff:0x1037b944
@@ -387,12 +333,6 @@ static main(void)
 	MakeName	(0x1037e5b8,	"TMT_Timer_Interrupt");
 	MakeName	(0x1037e738,	"luaopen_image");
 	MakeName	(0x1037ed5c,	"get_internal_event");
-	MakeRptCmt	(0x1037ed64,	"'KSAT'");
-	MakeRptCmt	(0x1037ed78,	" = KSAT?");
-	MakeRptCmt	(0x1037edac,	"internal event dest");
-	MakeRptCmt	(0x1037edbc,	"get the event");
-	MakeRptCmt	(0x1037edf0,	"internal event");
-	MakeRptCmt	(0x1037edf4,	"event struct dest");
 	MakeName	(0x1037ee1c,	"create_event_queue");
 	MakeName	(0x1037f034,	"send_to_event_queue");
 	MakeName	(0x1038e414,	"FfxVSprintf");
@@ -417,21 +357,13 @@ static main(void)
 	MakeName	(0x103de9dc,	"_usb_mk_device_name");
 	MakeName	(0x103dead8,	"usb_register_driver");
 	MakeName	(0x103debcc,	"unregister_drivers");
-	MakeRptCmt	(0x103debd4,	"chained list of drivers");
 	MakeName	(0x103dec18,	"register_drivers");
-	MakeRptCmt	(0x103dec20,	"table of drivers");
 	MakeName	(0x103dec60,	"_usb_match");
-	MakeRptCmt	(0x103deccc,	"call the match method");
-	MakeRptCmt	(0x103decd0,	"UMATCH_*");
-	MakeRptCmt	(0x103dece4,	"= 0");
-	MakeRptCmt	(0x103dece8,	"next in chained list");
-	MakeRptCmt	(0x103ded2c,	"call the attach method");
 	MakeName	(0x103df2d8,	"usbd_errstr");
 	MakeName	(0x103dfd20,	"alloc_tdi_4x_otg");
 	MakeName	(0x103e25a8,	"alloc_tdi_4x");
 	MakeName	(0x103e34f0,	"dcd_free_pipe");
 	MakeName	(0x103e37cc,	"build_single_td");
-	MakeRptCmt	(0x103e8b30,	"nSpireDev0");
 	MakeName	(0x103e8c8c,	"cn_write");
 	MakeName	(0x103e8d34,	"EOREAD4");
 	MakeName	(0x103e8d58,	"EOWRITE4");
@@ -439,15 +371,8 @@ static main(void)
 	MakeName	(0x103e91c0,	"bsd_printf");
 	MakeName	(0x103e91d8,	"bsd_panic");
 	MakeName	(0x103e9714,	"bsd_free2");
-	MakeName	(0x103e9718,	"j_msc2_free");
 	MakeName	(0x103e971c,	"bsd_malloc");
 	MakeName	(0x103e9898,	"snprintf");
-//	MakeName	(0XFFFFFFFF,	"j_strcpy");:0xfffffff:0x10007eec
-//	MakeName	(0XFFFFFFFF,	"j_strncmp");:0xfffffff:0x10007ef0
-//	MakeName	(0XFFFFFFFF,	"j_strcmp");:0xfffffff:0x10007ef4
-//	MakeName	(0XFFFFFFFF,	"j_strlen");:0xfffffff:0x10007ef8
-//	MakeName	(0XFFFFFFFF,	"j_memset_1");:0xfffffff:0x10007efc
-//	MakeName	(0XFFFFFFFF,	"j_memcpy_1");:0xfffffff:0x10007f00
 	MakeName	(0x103e9a00,	"_tsleep");
 	MakeName	(0x103e9b04,	"usbd_delay_ms");
 	MakeName	(0x103fa600,	"errno_addr");
@@ -547,7 +472,6 @@ static main(void)
 	MakeName	(0x1040c4c0,	"unlink");
 	MakeName	(0x1040c748,	"write");
 	MakeName	(0x1040d008,	"lua_cursor_show");
-	MakeName	(0x1040d25c,	"j_NU_Open");
 	MakeName	(0x1040d744,	"NU_Done");
 	MakeName	(0x1040d7b0,	"NU_Get_Next");
 	MakeName	(0x1040d810,	"NU_Get_First");
@@ -570,18 +494,12 @@ static main(void)
 	MakeName	(0x10478318,	"ehci_unknownvendor_attach");
 	MakeName	(0x1047850c,	"alloc_ucompdev");
 	MakeName	(0x10478898,	"unknown_match2");
-	MakeRptCmt	(0x10478e40,	"SUSPEND");
 	MakeName	(0x10479274,	"uhub_explore");
-	MakeRptCmt	(0x104797e8,	"power");
 	MakeName	(0x10479994,	"bus_generic_resume");
 	MakeName	(0x104799cc,	"bus_generic_shutdown");
-	MakeRptCmt	(0x10479ba8,	"UHF_PORT_RESET");
 	MakeName	(0x10479d04,	"bus_generic_suspend");
-	MakeRptCmt	(0x10479e24,	"SUSPEND");
 	MakeName	(0x10479e58,	"uhub_detach");
 	MakeName	(0x10479f70,	"uhub_attach");
-	MakeRptCmt	(0x10479fc0,	"%s");
-	MakeRptCmt	(0x10479fcc,	"%s\\n");
 	MakeName	(0x1047a4f4,	"uhub_match");
 	MakeName	(0x1047a79c,	"usb_attach");
 	MakeName	(0x1047a988,	"usbd_find_idesc");
@@ -591,7 +509,6 @@ static main(void)
 	MakeName	(0x1047b4f8,	"usbd_set_config_index");
 	MakeName	(0x1047bb38,	"usbd_reset_port");
 	MakeName	(0x1047bdf0,	"usbd_new_device");
-	MakeRptCmt	(0x1047c0d4,	"usbd_remove_device ?");
 	MakeName	(0x1047c760,	"usbd_devinfo");
 	MakeName	(0x1047ca80,	"usbd_setup_xfer");
 	MakeName	(0x1047cb44,	"usbd_setup_isoc_xfer");
@@ -623,7 +540,6 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"usbd_clear_endpoint_stall");:0x1047d8b0:0x1047dc94
 	MakeName	(0x1047dd00,	"usbd_open_pipe_ival");
 	MakeName	(0x1047de50,	"usbd_open_pipe_intr");
-	MakeRptCmt	(0x1047dea4,	"inlined usbd_setup_xfer");
 	MakeName	(0x1047df3c,	"usbd_open_pipe");
 	MakeName	(0x1047df58,	"usbd_intr_transfer");
 	MakeName	(0x1047e010,	"usbd_bulk_transfer");
@@ -643,17 +559,11 @@ static main(void)
 	MakeName	(0x1048199c,	"ehci_device_ctrl_close");
 	MakeName	(0x104819d8,	"ehci_abort_xfer");
 	MakeName	(0x10481b84,	"ehci_device_ctrl_abort");
-	MakeName	(0x10481b88,	"j_ehci_abort_xfer_0");
-	MakeName	(0x10481b8c,	"j_ehci_abort_xfer_1");
 	MakeName	(0x10481fd8,	"ehci_open");
 	MakeName	(0x104823fc,	"bsd_free");
-	MakeRptCmt	(0x10482fa0,	"Texas Instruments ID");
-	MakeRptCmt	(0x10482fb0,	"TI-Nspire ?");
 	MakeName	(0x10483424,	"alloc_jhid_general");
 	MakeName	(0x104837cc,	"jhid_attach");
 	MakeName	(0x10483b14,	"jhid_match");
-	MakeRptCmt	(0x10483b38,	"HID");
-	MakeRptCmt	(0x10485580,	"usb_gadget_info. Never reached.");
 	MakeName	(0x104858c8,	"dma_alloc");
 	MakeName	(0x104864ac,	"utf16_strlen");
 	MakeName	(0x10489dc0,	"__rt_udiv_2");
@@ -667,40 +577,16 @@ static main(void)
 	MakeName	(0x1048cde8,	"blowfish_initialize_ctx");
 	MakeName	(0x1048cfe8,	"cert_decrypt");
 	MakeName	(0x1048dec8,	"blowfish_encrypt_8bit_unused");
-//	MakeName	(0XFFFFFFFF,	"j_string_set_utf16");:0xfffffff:0x107451f4
-	MakeName	(0x1052a7f8,	"j_TMT_Retreive_Clock_0");
-	MakeName	(0x10551bb8,	"j_SMC_Delete_Semaphore_0");
-	MakeName	(0x10552858,	"j_SMC_Delete_Semaphore_1");
-	MakeName	(0x1055285c,	"j_j_SMC_Delete_Semaphore_1");
-	MakeName	(0x1055379c,	"j_SMC_Delete_Semaphore_2");
-	MakeName	(0x105537a0,	"j_j_SMC_Delete_Semaphore_2");
-	MakeName	(0x10553efc,	"j_SMC_Delete_Semaphore_3");
-//	MakeName	(0XFFFFFFFF,	"j_msc2_free_1");:0xfffffff:0xfffffff
 	MakeName	(0x105726e4,	"registerNotifyCb");
-//	MakeName	(0XFFFFFFFF,	"j_j_free");:0xfffffff:0x100004c0
-	MakeName	(0x105856b4,	"j_j_free_15");
-//	MakeName	(0XFFFFFFFF,	"j_j_free_17");:0xfffffff:0x10585ed0
-//	MakeName	(0XFFFFFFFF,	"j_j_free_18");:0xfffffff:0x10585ed0
-//	MakeName	(0XFFFFFFFF,	"j_j_free_19");:0xfffffff:0x10585ed0
-//	MakeName	(0XFFFFFFFF,	"j_j_free_20");:0xfffffff:0x10585ed0
-//	MakeName	(0XFFFFFFFF,	"j_j_free_23");:0xfffffff:0x10585ed0
 	MakeName	(0x1059789c,	"ascii2utf16_with_alloc");
 	MakeName	(0x105b5a90,	"string_free_0");
-	MakeName	(0x105b5ad4,	"j_string_new_1");
 	MakeName	(0x105dc970,	"show_dialog_box?");
 	MakeName	(0x105f5524,	"_show_2NumericInput");
 	MakeName	(0x105f5a30,	"_show_1NumericInput");
 	MakeName	(0x105f5e30,	"TI_DM_1NumericInput_System");
 //	MakeName	(0XFFFFFFFF,	"TI_DM_1NumericInput_PartialFunc");:0xfffffff:0x105f5e30
-	MakeName	(0x105f6440,	"j_unknown_TI_ZIPArchive_Open");
 	MakeName	(0x10616a70,	"__OS_drawProgramEditor");
 	MakeName	(0x106535e8,	"getfunc");
-	MakeName	(0x106c102c,	"j_string_concat_utf16");
-//	MakeName	(0XFFFFFFFF,	"j_string_str");:0xfffffff:0x100c57c0
-//	MakeName	(0XFFFFFFFF,	"j_string_free");:0xfffffff:0x10000001
-//	MakeName	(0XFFFFFFFF,	"j_string_new");:0xfffffff:0x10000001
-//	MakeName	(0XFFFFFFFF,	"j_msc2_free_2");:0xfffffff:0x10000001
-	MakeName	(0x10805a90,	"j_SMC_Delete_Semaphore_4");
 	MakeName	(0x10808498,	"getcurrenv");
 	MakeName	(0x108084e4,	"lua_xmove");
 	MakeName	(0x108085a0,	"lua_setlevel");
@@ -907,21 +793,10 @@ static main(void)
 	MakeName	(0x1081b220,	"luaV_gettable");
 	MakeName	(0x1081b8d0,	"tonumber");
 	MakeName	(0x10820058,	"luaX_init");
-//	MakeName	(0XFFFFFFFF,	"j_unknown_TI_AllocateBlock_");:0xfffffff:0x109494a4
-	MakeName	(0x1094977c,	"j_j_free_21");
 //	MakeName	(0XFFFFFFFF,	"_show_msgUserInput");:0xfffffff:0x10001b28
 	MakeName	(0x10950c94,	"lua_var_recall");
-	MakeName	(0x1097ecfc,	"j_strncpy");
-	MakeName	(0x1099c714,	"j_j_free_22");
-	MakeName	(0x109a0158,	"j_j_j_free_24");
 	MakeName	(0x109a27f4,	"isprint");
-//	MakeName	(0XFFFFFFFF,	"j_SMC_Delete_Semaphore_6");:0xfffffff:0x102c08b5
-//	MakeName	(0XFFFFFFFF,	"j_msc2_free_4");:0xfffffff:0x102c08b5
-	MakeName	(0x109ba010,	"j_j_free_25");
-	MakeName	(0x109ba014,	"j_unknown_TI_AllocateBlock__0");
 	MakeName	(0x109e6e7c,	"lua_math__evalexpr");
-	MakeName	(0x10a062b4,	"j_j_free_26");
-	MakeName	(0x10a09480,	"j_j_free_27");
 	MakeName	(0x10a09c54,	"a84chdrvr");
 	MakeName	(0x10a09c60,	"a84chuser");
 	MakeName	(0x10a09c9c,	"a84cfuser");
@@ -1563,5 +1438,4 @@ static main(void)
 //	MakeName	(0XFFFFFFFF,	"stdin");:0x10000000:0x10000001
 	MakeName	(0x1128DDF0,	"stdout");
 	MakeName	(0x1128DE3C,	"stderr");
-
 }

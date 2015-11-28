@@ -1,5 +1,6 @@
 #define UNLOADED_FILE   1
 #include <idc.idc>
+
 static main(void)
 {
 	MakeName	(0X10005CD4,	"gui_gc_getGC");
@@ -40,10 +41,6 @@ static main(void)
 	MakeName	(0X1000C67C,	"_gui_gc_begin");
 	MakeName	(0X1000C7D8,	"_gui_gc_free");
 	MakeName	(0X1000C7F4,	"_gui_gc_new");
-	MakeName	(0X100117B8,	"j_j_free");
-	MakeName	(0X100118EC,	"j_unlink");
-	MakeName	(0X10016558,	"j_j_free_0");
-	MakeName	(0X1001655C,	"j_j_free_1");
 	MakeName	(0X10018E40,	"TI_NN_SendKeyPress");
 	MakeName	(0X1001A5A4,	"__OS_eventloop_debug");
 	MakeName	(0X1001CC24,	"_show_msgbox_3b");
@@ -82,9 +79,7 @@ static main(void)
 	MakeName	(0X10024158,	"gui_gc_setColorRGB");
 	MakeName	(0X100241CC,	"gui_gc_setColor");
 	MakeName	(0X100241E4,	"gui_gc_copy");
-	MakeName	(0X1002A134,	"j_j_free_2");
 	MakeName	(0X1002FE48,	"GUI_new_Frame_Scratchpad");
-	MakeName	(0X1002FE6C,	"j_GUI_new_Frame_Scratchpad");
 	MakeName	(0X1003FB58,	"GUI_addNew_Button");
 	MakeName	(0X1003FBAC,	"GUI_addNew_SaveButton");
 	MakeName	(0X1003FBE4,	"GUI_addNew_DefaultsButton");
@@ -98,17 +93,12 @@ static main(void)
 	MakeName	(0X1003FF10,	"GUI_add_2Buttons");
 	MakeName	(0X10042214,	"__OS_drawScrollBarDocBrowser");
 	MakeName	(0X10043024,	"__OS_registerScrollBarDocBrowser");
-	MakeName	(0X10046E34,	"j_j_free_14");
-	MakeName	(0X10047448,	"j_j_free_3");
 	MakeName	(0X100545F4,	"GUI_addNew_GridLayout");
 	MakeName	(0X10059E7C,	"send_key_event");
 	MakeName	(0X1005A4A0,	"send_click_event");
 	MakeName	(0X1005A560,	"send_pad_event");
-	MakeName	(0X10065AE4,	"j_j_free_4");
-	MakeName	(0X1006708C,	"j_j_free_5");
 	MakeName	(0X10067508,	"_TI_log_string_somewhere");
 	MakeName	(0X100689B8,	"utf16_sprintf_0");
-	MakeName	(0X10068A30,	"j_j_free_6");
 	MakeName	(0X1006E0AC,	"read_nand");
 	MakeName	(0X1006E3E8,	"write_nand");
 	MakeName	(0X1006E64C,	"nand_erase_range");
@@ -177,15 +167,9 @@ static main(void)
 	MakeName	(0X1007FE4C,	"TI_NN_DirEnumNext");
 	MakeName	(0X100800B4,	"TI_NN_DirEnumInit");
 	MakeName	(0X100802EC,	"TI_NN_GetFile");
-	MakeName	(0X100A275C,	"j_printf");
 	MakeName	(0X100C1350,	"__OS_drawProgramEditor");
 	MakeName	(0X100C175C,	"__OS_registerProgramEditor");
-	MakeName	(0X100C6BB0,	"j_string_str");
-	MakeName	(0X100C6BB8,	"j_string_new");
-	MakeName	(0X100C6C0C,	"j_string_concat_utf16");
-	MakeName	(0X100C6CA0,	"j_string_set_utf16");
 	MakeName	(0X100DA574,	"string_free");
-	MakeName	(0X100E562C,	"j_j_free_7");
 	MakeName	(0X100E5E54,	"get_res_string");
 	MakeName	(0X100E5ED8,	"get_res_string_sys");
 	MakeName	(0X100F6938,	"__OS_drawScriptAppErr");
@@ -214,28 +198,11 @@ static main(void)
 	MakeName	(0X100FB5E0,	"lua_image_copy");
 	MakeName	(0X100FC0B8,	"lua_document_markChanged");
 	MakeName	(0X100FC0E8,	"lua_var_store");
-	MakeName	(0X1012F894,	"j_j_free_8");
-	MakeName	(0X10155A5C,	"j_j_free_9");
-	MakeName	(0X10157058,	"j_j_free_10");
-	MakeName	(0X10157230,	"j_j_free_11");
-	MakeName	(0X10162C60,	"j_j_free_12");
-	MakeName	(0X1019C550,	"j_j_GUI_Frame_invalidate");
-	MakeName	(0X1019C564,	"j_j_GUI_Button_setTEnable_0");
-	MakeName	(0X1019C588,	"j_j_GUI_MLTextEntry_setText_0_0");
-	MakeName	(0X1019C59C,	"j_j_GUI_Panel_setMarginV_0");
-	MakeName	(0X1019C5A0,	"j_j_GUI_Panel_setMarginH_0");
-	MakeName	(0X1019C5A4,	"j_j_GUI_Panel_setGridMargin_0");
-	MakeName	(0X1019C600,	"j_j_j_GUI_Button_setTEnable");
-	MakeName	(0X1019C634,	"j_j__GUI_addNew_Panel");
-	MakeName	(0X1019C638,	"j_j_GUI_getContentPane_0");
-	MakeName	(0X1019C704,	"j_j__GUI_Panel_setLayout_0");
 	MakeName	(0X1019C770,	"GUI_ButtonGroup_add");
 	MakeName	(0X101C07C4,	"touchpad_write");
 	MakeName	(0X101C0B00,	"touchpad_read");
-	MakeName	(0X1020502C,	"j_j_free_13");
 	MakeName	(0X102094DC,	"TI_ColorPicker");
 	MakeName	(0X1021A7D4,	"get_event");
-	MakeName	(0X1021B14C,	"j_get_documents_dir");
 	MakeName	(0X1021BE84,	"string_str");
 	MakeName	(0X1021BE8C,	"string_len");
 	MakeName	(0X1021BE94,	"string_charAt");
@@ -259,13 +226,9 @@ static main(void)
 	MakeName	(0X1021CD1C,	"string_formatNumber");
 	MakeName	(0X1021D148,	"string_sprintf_utf16");
 	MakeName	(0X1021D1A4,	"string_formatInteger");
-	MakeName	(0X102205F4,	"j_free");
-	MakeName	(0X102206DC,	"j_memcpy");
-	MakeName	(0X102206E0,	"j_memset");
 	MakeName	(0X10222E84,	"utf16_snprintf");
 	MakeName	(0X10223164,	"ascii2utf16");
 	MakeName	(0X102232E8,	"utf162ascii");
-	MakeName	(0X1022988C,	"j_j_free_15");
 	MakeName	(0X1022BC70,	"__OS_call_scratchpad");
 	MakeName	(0X1022C04C,	"refresh_homescr");
 	MakeName	(0X1022C1D0,	"__OS_eventloop");
@@ -295,12 +258,6 @@ static main(void)
 	MakeName	(0X1033C2D0,	"usbd_errstr");
 	MakeName	(0X10346624,	"bsd_malloc");
 	MakeName	(0X103467A0,	"snprintf");
-	MakeName	(0X10346804,	"j_strcpy");
-	MakeName	(0X10346808,	"j_strncmp");
-	MakeName	(0X1034680C,	"j_strcmp");
-	MakeName	(0X10346810,	"j_strlen");
-	MakeName	(0X10346814,	"j_memset_0");
-	MakeName	(0X10346818,	"j_memcpy_0");
 	MakeName	(0X10346A0C,	"usbd_delay_ms");
 	MakeName	(0X103574DC,	"errno_addr");
 	MakeName	(0X1035B424,	"isalpha");
@@ -374,7 +331,6 @@ static main(void)
 	MakeName	(0X10368AD8,	"rmdir");
 	MakeName	(0X10368C70,	"stat");
 	MakeName	(0X10368F4C,	"unlink");
-	MakeName	(0X10369CD0,	"j_NU_Open");
 	MakeName	(0X1036A1B8,	"NU_Done");
 	MakeName	(0X1036A224,	"NU_Get_Next");
 	MakeName	(0X1036A284,	"NU_Get_First");
@@ -391,7 +347,6 @@ static main(void)
 	MakeName	(0X103E5D80,	"usbd_set_config_index");
 	MakeName	(0X103E63C0,	"usbd_reset_port");
 	MakeName	(0X103E6678,	"usbd_new_device");
-	MakeRptCmt	(0X103E695C,	"usbd_remove_device ?");
 	MakeName	(0X103E6FE8,	"usbd_devinfo");
 	MakeName	(0X103E7308,	"usbd_setup_xfer");
 	MakeName	(0X103E73CC,	"usbd_setup_isoc_xfer");
@@ -422,7 +377,6 @@ static main(void)
 	MakeName	(0X103E851C,	"usbd_clear_endpoint_stall");
 	MakeName	(0X103E8588,	"usbd_open_pipe_ival");
 	MakeName	(0X103E86D8,	"usbd_open_pipe_intr");
-	MakeRptCmt	(0X103E872C,	"inlined usbd_setup_xfer");
 	MakeName	(0X103E87C4,	"usbd_open_pipe");
 	MakeName	(0X103E87E0,	"usbd_intr_transfer");
 	MakeName	(0X103E8898,	"usbd_bulk_transfer");
@@ -440,14 +394,11 @@ static main(void)
 	MakeName	(0X1046EE0C,	"gui_TextEntry_emptyListener");
 	MakeName	(0X1047A264,	"GUI_new_MenuItem_1");
 	MakeName	(0X1047A2AC,	"GUI_MLTextEntry_enableBorder");
-	MakeName	(0X1047A2C8,	"j_GUI_MLTextEntry_setText_0");
 	MakeName	(0X1047A638,	"_GUI_Panel_setLayout_0");
 	MakeName	(0X1047A768,	"GUI_addNew_MLTextEntry_0");
 	MakeName	(0X1047A8C4,	"GUI_addNew_TextPane2D");
 	MakeName	(0X1047A97C,	"_GUI_addNew_Panel");
 	MakeName	(0X1047A9D8,	"GUI_getContentPane_0");
-	MakeName	(0X1047AA44,	"j_GUI_new_Frame_5");
-	MakeName	(0X1047AA48,	"j_GUI_new_Frame_4");
 	MakeName	(0X1047AB24,	"GUI_Button_isEnable");
 	MakeName	(0X1047AB58,	"GUI_Button_setIcon");
 	MakeName	(0X1047AB68,	"GUI_Button_getIcon");
@@ -476,12 +427,6 @@ static main(void)
 	MakeName	(0X10482374,	"GUI_new_Frame_2");
 	MakeName	(0X104823D4,	"GUI_new_Frame_4");
 	MakeName	(0X10482434,	"GUI_new_Frame_5");
-	MakeName	(0X10486708,	"j_j_free_16");
-	MakeName	(0X10486CC4,	"j_j_free_17");
-	MakeName	(0X10487938,	"j_j_free_18");
-	MakeName	(0X1048803C,	"j_j_free_19");
-	MakeName	(0X10488A18,	"j_j_free_20");
-	MakeName	(0X10489A5C,	"j_GUI_Button_setTEnable");
 	MakeName	(0X10489EE4,	"GUI_MLTextEntry_maximize");
 	MakeName	(0X10489F0C,	"GUI_MLTextEntry_setMinimumRows");
 	MakeName	(0X10489F18,	"GUI_MLTextEntry_disableMathBox");
@@ -492,18 +437,7 @@ static main(void)
 	MakeName	(0X1048B6BC,	"GUI_MLTextEntry_setText_0");
 	MakeName	(0X1048B79C,	"GUI_MLTextEntry_setFormattedText");
 	MakeName	(0X10492B2C,	"GUI_utf16_getWidth");
-	MakeName	(0X104AD8E8,	"j_string_new_0");
-	MakeName	(0X104D49C4,	"j_GUI_Frame_invalidate");
-	MakeName	(0X104D4A2C,	"j_GUI_MLTextEntry_setText_0_0");
-	MakeName	(0X104D4E50,	"j_GUI_Button_setTEnable_0");
-	MakeName	(0X104D50C8,	"j_GUI_Panel_setGridMargin_0");
-	MakeName	(0X104D50CC,	"j_GUI_Panel_setMarginV_0");
-	MakeName	(0X104D50D0,	"j_GUI_Panel_setMarginH_0");
-	MakeName	(0X104D50E0,	"j__GUI_Panel_setLayout_0");
-	MakeName	(0X104D5268,	"j__GUI_addNew_Panel");
-	MakeName	(0X104D543C,	"j_GUI_getContentPane_0");
 	MakeName	(0X104D5440,	"GUI_new_Frame_0");
-	MakeName	(0X104D582C,	"j_j_GUI_Button_setTEnable");
 	MakeName	(0X104E9418,	"_show_2NumericInput");
 	MakeName	(0X104E96E4,	"TI_DM_2NumericInput_Matrix");
 	MakeName	(0X104E9790,	"_show_1NumericInput");
@@ -703,13 +637,8 @@ static main(void)
 	MakeName	(0X106B5208,	"luaX_init");
 	MakeName	(0X107427BC,	"utf16_sprintf");
 	MakeName	(0X107759C4,	"TI_NN_Login");
-	MakeName	(0X1077B470,	"j_j_free_21");
 	MakeName	(0X1077D0EC,	"_show_msgUserInput");
-	MakeName	(0X107A0E1C,	"j_strncpy");
-	MakeName	(0X107BDA40,	"j_j_free_22");
-	MakeName	(0X107C1354,	"j_j_j_free_22");
 	MakeName	(0X107C4CEC,	"isprint");
-	MakeName	(0X107D62F0,	"j_j_free_23");
 	MakeName	(0X108000EC,	"a84chdrvr");
 	MakeName	(0X108000F8,	"a84chuser");
 	MakeName	(0X10800134,	"a84cfuser");
@@ -1143,5 +1072,4 @@ static main(void)
 	MakeName	(0X10B62034,	"stdin");
 	MakeName	(0X10B62080,	"stdout");
 	MakeName	(0X10B620CC,	"stderr");
-
 }

@@ -1,9 +1,8 @@
 #define UNLOADED_FILE   1
 #include <idc.idc>
+
 static main(void)
 {
-	MakeName	(0X1000549C,	"j_TMT_Retreive_Clock");
-	MakeName	(0X10005CBC,	"j_get_battery_door_detection_mode");
 	MakeName	(0X10005D64,	"gui_gc_getGC");
 	MakeName	(0X10005DD0,	"get_documents_dir");
 	MakeName	(0X10008BF4,	"file_exists");
@@ -43,10 +42,6 @@ static main(void)
 	MakeName	(0X1000C6B8,	"_gui_gc_begin");
 	MakeName	(0X1000C814,	"_gui_gc_free");
 	MakeName	(0X1000C830,	"_gui_gc_new");
-	MakeName	(0X10012EE4,	"j_j_free");
-	MakeName	(0X10013018,	"j_unlink");
-	MakeName	(0X10018428,	"j_j_free_0");
-	MakeName	(0X1001842C,	"j_j_free_1");
 	MakeName	(0X1001A954,	"nn_ext_echo_callback");
 	MakeName	(0X1001AF54,	"TI_NN_SendKeyPress");
 	MakeName	(0X1001E378,	"translateKey");
@@ -86,13 +81,10 @@ static main(void)
 	MakeName	(0X10027F2C,	"gui_gc_setColorRGB");
 	MakeName	(0X10027FA0,	"gui_gc_setColor");
 	MakeName	(0X10027FB8,	"gui_gc_copy");
-	MakeName	(0X1002DED8,	"j_j_free_2");
 	MakeName	(0X10032288,	"compress_encrypt_tns");
 	MakeName	(0X10045518,	"inflateInit");
 	MakeName	(0X10045FB8,	"__OS_drawScrollBarDocBrowser");
 	MakeName	(0X10046DC8,	"__OS_registerScrollBarDocBrowser");
-	MakeName	(0X1004ABD8,	"j_j_free_3");
-	MakeName	(0X1004B1EC,	"j_j_free_4");
 	MakeName	(0X100503B4,	"doc_save_images");
 	MakeName	(0X100561BC,	"read_ini_variable");
 	MakeName	(0X1005694C,	"parse_ini_content");
@@ -101,11 +93,8 @@ static main(void)
 	MakeName	(0X1005DC68,	"send_key_event");
 	MakeName	(0X1005E28C,	"send_click_event");
 	MakeName	(0X1005E34C,	"send_pad_event");
-	MakeName	(0X100698D0,	"j_j_free_5");
-	MakeName	(0X1006AE78,	"j_j_free_6");
 	MakeName	(0X1006B6E4,	"log_0");
 	MakeName	(0X1006B968,	"read_ap");
-	MakeName	(0X1006C810,	"j_j_free_7");
 	MakeName	(0X1006F13C,	"flash_debug_print");
 	MakeName	(0X10070F1C,	"flash_ECC_word_to_bytes");
 	MakeName	(0X10070F40,	"flash_query_status");
@@ -187,19 +176,12 @@ static main(void)
 	MakeName	(0X10084104,	"TI_NN_GetFile");
 	MakeName	(0X10087DC4,	"nn_mutex_unlock");
 	MakeName	(0X10087E98,	"nn_mutex_lock");
-	MakeName	(0X100A68CC,	"j_printf");
 	MakeName	(0X100A6D3C,	"check_boot2_update");
 	MakeName	(0X100A9A80,	"get_battery_door_detection_mode");
 	MakeName	(0X100B0B24,	"check_file_in_tns");
 	MakeName	(0X100B8954,	"reboot");
 	MakeName	(0X100C530C,	"__OS_drawProgramEditor");
 	MakeName	(0X100C5718,	"__OS_registerProgramEditor");
-	MakeName	(0X100CAB6C,	"j_string_str");
-	MakeName	(0X100CAB70,	"j_string_free");
-	MakeName	(0X100CAB74,	"j_string_new");
-	MakeName	(0X100CABC8,	"j_string_concat_utf16");
-	MakeName	(0X100CAC5C,	"j_string_set_utf16");
-	MakeName	(0X100E95E8,	"j_j_free_8");
 	MakeName	(0X100E9E10,	"get_res_string");
 	MakeName	(0X100E9E94,	"get_res_string_sys");
 	MakeName	(0X100E9EA4,	"read_unaligned");
@@ -286,14 +268,6 @@ static main(void)
 	MakeName	(0X10100904,	"luaL_openlibs");
 	MakeName	(0X101023F0,	"log_rs232");
 	MakeName	(0X101024BC,	"log");
-	MakeName	(0X1010288C,	"j_log_rs232");
-	MakeName	(0X10133B84,	"j_j_free_9");
-	MakeName	(0X10159D4C,	"j_j_free_24");
-	MakeName	(0X1015B348,	"j_j_free_10");
-	MakeName	(0X1015B520,	"j_j_free_11");
-	MakeName	(0X10166F50,	"j_j_free_12");
-	MakeName	(0X101A0AC0,	"j_show_dialog_box?");
-	MakeName	(0X101A2CA8,	"j_crypt_decrypt_tns_D_block");
 	MakeName	(0X101A2D48,	"des_start_decrypt");
 	MakeName	(0X101A3080,	"crypt_decrypt_tns_D_block");
 	MakeName	(0X101A3758,	"des_get_keys");
@@ -313,10 +287,8 @@ static main(void)
 	MakeName	(0X101AFD64,	"engine_table_select");
 	MakeName	(0X101C4B88,	"touchpad_write");
 	MakeName	(0X101C4EC4,	"touchpad_read");
-	MakeName	(0X10209494,	"j_j_free_13");
 	MakeName	(0X1020D978,	"TI_ColorPicker");
 	MakeName	(0X1021EC70,	"get_event");
-	MakeName	(0X1021F5E8,	"j_get_documents_dir");
 	MakeName	(0X10220320,	"string_str");
 	MakeName	(0X10220328,	"string_len");
 	MakeName	(0X10220330,	"string_charAt");
@@ -342,13 +314,9 @@ static main(void)
 	MakeName	(0X10221320,	"string_formatNumber2");
 	MakeName	(0X102215E4,	"string_sprintf_utf16");
 	MakeName	(0X10221640,	"string_formatInteger");
-	MakeName	(0X10224A90,	"j_free");
 	MakeName	(0X10224B74,	"unknown_TI_AllocateBlock_");
-	MakeName	(0X10224B78,	"j_memcpy");
-	MakeName	(0X10224B7C,	"j_memset");
 	MakeName	(0X10227600,	"ascii2utf16");
 	MakeName	(0X10227784,	"utf162ascii");
-	MakeName	(0X1022DD28,	"j_j_free_14");
 	MakeName	(0X102304E8,	"refresh_homescr");
 	MakeName	(0X10231128,	"refresh_docbrowser");
 	MakeName	(0X1024B7A8,	"Expat_XML_Parse");
@@ -387,7 +355,6 @@ static main(void)
 	MakeName	(0X10278784,	"TCT_Current_Thread1");
 	MakeName	(0X1027878C,	"DMC_Deallocate_Memory_0");
 	MakeName	(0X10278EC8,	"TMC_Start_Timer");
-	MakeName	(0X102791C4,	"j_TMC_Start_Timer");
 	MakeName	(0X102970C0,	"isspace");
 	MakeName	(0X102F0320,	"TCC_Current_Task_Pointer");
 	MakeName	(0X102F04C0,	"TCC_Dispatch_LISR");
@@ -458,12 +425,6 @@ static main(void)
 	MakeName	(0X103600C8,	"bsd_malloc");
 	MakeName	(0X10360244,	"snprintf");
 	MakeName	(0X10360274,	"bsd_sprintf");
-	MakeName	(0X103602A8,	"j_strcpy");
-	MakeName	(0X103602AC,	"j_strncmp");
-	MakeName	(0X103602B0,	"j_strcmp");
-	MakeName	(0X103602B4,	"j_strlen");
-	MakeName	(0X103602B8,	"j_memset_0");
-	MakeName	(0X103602BC,	"j_memcpy_0");
 	MakeName	(0X103604B0,	"usbd_delay_ms");
 	MakeName	(0X10370F80,	"errno_addr");
 	MakeName	(0X10372448,	"pthread_create");
@@ -559,7 +520,6 @@ static main(void)
 	MakeName	(0X10382788,	"stat");
 	MakeName	(0X10382A64,	"unlink");
 	MakeName	(0X10382CEC,	"write");
-	MakeName	(0X103837E8,	"j_NU_Open");
 	MakeName	(0X10383CD0,	"NU_Done");
 	MakeName	(0X10383D3C,	"NU_Get_Next");
 	MakeName	(0X10383D9C,	"NU_Get_First");
@@ -638,9 +598,6 @@ static main(void)
 	MakeName	(0X103F6D10,	"ehci_check_intr");
 	MakeName	(0X103F8734,	"ehci_rem_qh");
 	MakeName	(0X103F8800,	"ehci_abort_xfer");
-	MakeName	(0X103F89AC,	"j_ehci_abort_xfer");
-	MakeName	(0X103F89B0,	"j_ehci_abort_xfer_0");
-	MakeName	(0X103F89B4,	"j_ehci_abort_xfer_1");
 	MakeName	(0X103F8E00,	"ehci_open");
 	MakeName	(0X103F9224,	"bsd_free");
 	MakeName	(0X103FC6F0,	"dma_alloc");
@@ -656,13 +613,6 @@ static main(void)
 	MakeName	(0X10401AE0,	"blowfish_initialize_ctx");
 	MakeName	(0X10401CE0,	"cert_decrypt");
 	MakeName	(0X10402BC0,	"blowfish_encrypt_8bit_unused");
-	MakeName	(0X10492920,	"j_j_free_15");
-	MakeName	(0X10492B88,	"j_j_free_16");
-	MakeName	(0X10493144,	"j_j_free_17");
-	MakeName	(0X10493DB8,	"j_j_free_18");
-	MakeName	(0X104944BC,	"j_j_free_19");
-	MakeName	(0X10494E98,	"j_j_free_20");
-	MakeName	(0X104B9D90,	"j_string_new_0");
 	MakeName	(0X104E0074,	"show_dialog_box?");
 	MakeName	(0X104F4190,	"_show_2NumericInput");
 	MakeName	(0X104F4508,	"_show_1NumericInput");
@@ -855,15 +805,8 @@ static main(void)
 	MakeName	(0X106BA1DC,	"luaT_init");
 	MakeName	(0X106C05F8,	"luaX_init");
 	MakeName	(0X107DC8D0,	"TI_NN_Login");
-	MakeName	(0X107E20A8,	"j_unknown_TI_AllocateBlock_");
-	MakeName	(0X107E237C,	"j_j_free_21");
 	MakeName	(0X107E3FF8,	"_show_msgUserInput");
-	MakeName	(0X10807D78,	"j_strncpy");
-	MakeName	(0X1082499C,	"j_j_free_22");
-	MakeName	(0X108282B0,	"j_j_j_free_22");
 	MakeName	(0X10829B88,	"isprint");
-	MakeName	(0X1083B18C,	"j_j_free_23");
-	MakeName	(0X1083B190,	"j_unknown_TI_AllocateBlock__0");
 	MakeName	(0X10864F88,	"a84chdrvr");
 	MakeName	(0X10864F94,	"a84chuser");
 	MakeName	(0X10864FD0,	"a84cfuser");
@@ -1294,5 +1237,4 @@ static main(void)
 	MakeName	(0X10BCA69C,	"stdin");
 	MakeName	(0X10BCA6E8,	"stdout");
 	MakeName	(0X10BCA734,	"stderr");
-
 }
