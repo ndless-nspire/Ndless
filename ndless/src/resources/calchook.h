@@ -1,6 +1,7 @@
 #ifndef CALKHOOK_H
 #define CALCHOOK_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 // uchar.h doesn't exist in newlib...

@@ -103,6 +103,20 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 17;
 			break;
 #endif
+#ifndef STAGE1
+		case 0x10386E70: // 4.0.0.235 non-CAS CX
+			ut_os_version_index = 18;
+			break;
+		case 0x103873B0: // 4.0.0.235 CAS CX
+			ut_os_version_index = 19;
+			break;
+		case 0x1038C290: // 4.0.3.93 non-CAS CX
+			ut_os_version_index = 20;
+			break;
+		case 0x1038C7D0: // 4.0.3.93 CAS CX
+			ut_os_version_index = 21;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}

@@ -6,7 +6,17 @@ if($argc != 3)
 $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc", "OS_cascx-3.1.0.idc", "OS_cmc-3.1.0.idc", "OS_cascmc-3.1.0.idc",
 		"OS_ncas-3.6.0.idc", "OS_cas-3.6.0.idc", "OS_ncascx-3.6.0.idc", "OS_cascx-3.6.0.idc",
 		"OS_ncas-3.9.0.idc", "OS_cas-3.9.0.idc", "OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc",
-		"OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc", "OS_ncascx-3.9.1.idc", "OS_cascx-3.9.1.idc");
+		"OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc", "OS_ncascx-3.9.1.idc", "OS_cascx-3.9.1.idc",
+		"OS_ncascx-4.0.0.idc", "OS_cascx-4.0.0.idc",
+		"OS_ncascx-4.0.3.idc", "OS_cascx-4.0.3.idc");
+
+//Whether the file above is important. If not, no warnings will be printed
+$important = array(true, true, true, true, true, true,
+		   true, true, true, true,
+		   true, true, false, false,
+		   false, false, true, true,
+		   true, true,
+		   true, true);
 
 $syscall_nr_list = fopen(__DIR__ . "/../../../../ndless-sdk/include/syscall-list.h", "r");
 if($syscall_nr_list === FALSE)
@@ -111,7 +121,7 @@ for($nr = 0; $nr < $count_os; $nr++)
 		if(!isset($syscall_addrs[$nr][$syscall_name]))
 		{
 			//Only warn if the file was opened at all
-			if(count($syscall_addrs[$nr]) > 0)
+			if($important[$nr] && count($syscall_addrs[$nr]) > 0)
 				echo "Warning: Syscall '" . $syscall_name . "' not found in '" . $idc_files[$nr] . "'!\n";
 
 			fwrite($syscall_addr_list, "0x0,\n");
