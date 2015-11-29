@@ -1,0 +1,10 @@
+                
+                    local x, y = addressToXY(0x13FF0000)
+                    drawByteString(gc, x, y, s)
+                end
+                
+
+            </sc:script>
+        </wdgt>
+    </card>
+</prob>

@@ -1,0 +1,14 @@
+0x00: entryId -> dm_next_memory
+0x04: entryRefCnt -> dm_previous_memory
+0x08: tc -> dm_memory_free
+0x0c: fc -> dm_memory_pool
+0x10: fst
+0x14: cc
+0x18: fest
+0x1c: feun
+0x20: bit 4: fesub bit 3: fesup bit 2: fest
+
+fest == ? -> fest & 0xfc
+fest == 1 -> fest | 1 & 0xfd
+fest == 2 -> fest | 2 & 0xfe
+fest == 3 -> fest | 3

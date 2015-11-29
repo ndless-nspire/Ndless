@@ -116,7 +116,7 @@ template <int nr> int syscall_addr()
 		ut_os_version_index == 4 ? syscall_addrs[4][nr] :
 		ut_os_version_index == 5 ? syscall_addrs[5][nr] : */
 
-#ifndef NDLESS_39
+#ifdef NDLESS_36
 		ut_os_version_index == 6 ? syscall_addrs[6][nr] :
 		ut_os_version_index == 7 ? syscall_addrs[7][nr] :
 		ut_os_version_index == 8 ? syscall_addrs[8][nr] :
@@ -131,6 +131,12 @@ template <int nr> int syscall_addr()
 		ut_os_version_index == 15 ? syscall_addrs[15][nr] :
 		ut_os_version_index == 16 ? syscall_addrs[16][nr] :
 		syscall_addrs[17][nr];
+                /* Not used in any STAGE1
+                ut_os_version_index == 18 ? syscall_addrs[18][nr] :
+                syscall_addrs[19][nr]; */
+#elif defined(NDLESS_403)
+                ut_os_version_index == 20 ? syscall_addrs[20][nr] :
+                syscall_addrs[21][nr];
 #else
 	#error No (known) STAGE1 OS version given!
 #endif

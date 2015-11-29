@@ -110,6 +110,8 @@ void ut_read_os_version_index(void) {
 		case 0x103873B0: // 4.0.0.235 CAS CX
 			ut_os_version_index = 19;
 			break;
+#endif
+#if !defined(STAGE1) || NDLESS_403
 		case 0x1038C290: // 4.0.3.93 non-CAS CX
 			ut_os_version_index = 20;
 			break;

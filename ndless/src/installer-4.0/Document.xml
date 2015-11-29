@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<doc ver="1.0">
+	<properties>
+		<product>15</product>
+		<platform>2</platform>
+		<swver>Luna</swver>
+		<date>Jul 26 2015</date>
+	</properties>
+	<settings>
+		<assessmentMode>0</assessmentMode>
+		<lastview>1</lastview>
+		<readOnlyMode>0</readOnlyMode>
+		<lang>en</lang>
+		<dfmt>0</dfmt>
+		<tfmt>0</tfmt>
+		<curr>0</curr>
+		<expf>1</expf>
+		<ddig>7</ddig>
+		<angf>1</angf>
+		<exapp>1</exapp>
+		<cplxf>1</cplxf>
+		<unit>1</unit>
+		<vectf>1</vectf>
+		<base>1</base>
+		<gg_ddig>4</gg_ddig>
+		<gg_graphang>1</gg_graphang>
+		<gg_geomang>2</gg_geomang>
+		<gg_axisendv>1</gg_axisendv>
+		<gg_tooltipfunman>0</gg_tooltipfunman>
+		<gg_autopoi>1</gg_autopoi>
+		<gg_calcmenu>0</gg_calcmenu>
+		<gg_hideplotlabels>0</gg_hideplotlabels>
+		<boldnessFactor>100</boldnessFactor>
+	</settings>
+	<cardIntendedData>
+		<cardIntendedWidth>320</cardIntendedWidth>
+		<cardIntendedHeight>240</cardIntendedHeight>
+		<cardIntendedDensity>131.958755</cardIntendedDensity>
+	</cardIntendedData>
+	<rights></rights>
+	<nps>2</nps>
+	<imgsize>0</imgsize>
+</doc>

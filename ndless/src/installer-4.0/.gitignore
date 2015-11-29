@@ -1,0 +1,8 @@
+*.o
+*.bin
+*.elf
+Problem2.xml
+luabin
+Problem1.xml
+Problem2.xml
+Problem1_mid.xml

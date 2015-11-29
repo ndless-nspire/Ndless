@@ -1,0 +1,25 @@
+/* See http://sourceware.org/binutils/docs-2.20/ld/Scripts.html#Scripts */
+
+ENTRY(_start);
+STARTUP(stage0.o);
+
+/* Avoid the useless default padding between sections */
+SECTIONS
+{
+	. = 0x0;
+	.text : { 
+		_start = .;
+		*(.text);
+	}
+	/* .bss before .data, to make sure space is allocated for it in the binary file */
+	.bss : {
+		*(.bss);
+		}
+	.data : {
+		*(.data);
+	}
+}
+
+__got_size = SIZEOF(.got) / 4;
+__exidx_start = .;
+__exidx_end = .;
