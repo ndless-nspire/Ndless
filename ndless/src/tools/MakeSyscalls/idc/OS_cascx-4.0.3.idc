@@ -97,7 +97,6 @@ static main(void)
 	MakeName	(0X10049468,	"gui_gc_setAlpha");
 	MakeName	(0X10051D64,	"inflateInit");
 	MakeName	(0X1005D8B0,	"load_res_file");
-	MakeName	(0X1005F7D4,	"TCT_Local_Control_Interrupts");
 	MakeName	(0X1006D3CC,	"send_key_event");
 	MakeName	(0X1006D9F0,	"send_click_event");
 	MakeName	(0X1006DAB0,	"send_pad_event");
@@ -359,6 +358,7 @@ static main(void)
 	MakeName	(0X10306718,	"inflate");
 	MakeName	(0X1030CF14,	"adler32");
 	MakeName	(0X1030DE50,	"CSC_Priority_Place_On_List");
+	MakeName	(0X1030DEC8,	"CSC_Remove_From_List");
 	MakeName	(0X1030E0F0,	"ERC_System_Error");
 	MakeName	(0X1030E654,	"IOC_Request_Driver");
 	MakeName	(0X1030E770,	"IOC_Delete_Driver");
@@ -369,10 +369,12 @@ static main(void)
 	MakeName	(0X1031111C,	"QUC_Send_To_Queue");
 	MakeName	(0X103130D0,	"TMS_Delete_Timer");
 	MakeName	(0X103134BC,	"DMC_Cleanup");
+	MakeName	(0X103134EC,	"DMC_Deallocate_Memory");
 	MakeName	(0X103139E0,	"DMC_Allocate_Memory");
 	MakeName	(0X1033219C,	"isspace");
 	MakeName	(0X10375984,	"nn_pkt_malloc");
 	MakeName	(0X1038B40C,	"TCC_Current_Task_Pointer");
+	MakeName	(0X1038BBD0,	"TCC_Resume_Task");
 	MakeName	(0X1038BED8,	"TCC_Terminate_Task");
 	MakeName	(0X1038C03C,	"TCC_Reset_Task");
 	MakeName	(0X1038C244,	"TCC_Create_Task");
@@ -381,9 +383,14 @@ static main(void)
 	MakeName	(0X1038C8B0,	"int_irq_enable");
 	MakeName	(0X1038C8D8,	"int_irq_disable");
 	MakeName	(0X1038C900,	"INT_Retreive_Shell");
+	MakeName	(0X1038D6F8,	"TCT_Local_Control_Interrupts");
 	MakeName	(0X1038D740,	"TCT_Build_Task_Stack");
 	MakeName	(0X1038D868,	"TCT_Build_Signal_Frame");
+	MakeName	(0X1038DA3C,	"TCT_Control_To_System");
 	MakeName	(0X1038DB34,	"TCT_Protect");
+	MakeName	(0X1038DB9C,	"TCT_Unprotect");
+	MakeName	(0X1038DBFC,	"TCT_System_Unprotect");
+	MakeName	(0X1038DC90,	"TCT_Set_Current_Protect");
 	MakeName	(0X1038DCA4,	"TCT_Protect_Switch");
 	MakeName	(0X1038DCEC,	"TCT_Schedule_Protected");
 	MakeName	(0X1038E058,	"TMT_Retreive_Clock");
