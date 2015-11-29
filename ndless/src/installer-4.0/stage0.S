@@ -14,10 +14,23 @@ b start
 .word 0x0
 start:
 
-push {lr}
+push {r4, r5, lr}
 
+@ CAS or non-CAS?
+ldr r4, =0x1040eb04 @ CASCX
+cmp lr, r4
+beq cascx
+ldr r4, =0x1112ca10 @ pool ptr
+ldr r5, =0x1040E434 @ free
+b find
+
+cascx:
+ldr r4, =0x11190a10 @ pool ptr
+ldr r5, =0x1040E974 @ free
+
+find:
 @ Find broken chunk
-ldr r0, =0x11190a44 @ pool->first chunk
+ldr r0, [r4, #0x34] @ pool->first chunk
 ldr r1, =0x13FF0000 @ fake_pool
 
 loop:
@@ -36,16 +49,14 @@ str r1, [r2, #0x0] @ broken->next = broken + (40*262144) + sizeof(malloc_header)
 str r0, [r2, #0x4] @ broken->prev = r0
 mov r1, #0
 str r1, [r2, #0x8] @ broken->free = 0
-ldr r1, =0x11190a10
-str r1, [r2, #0xc] @ broken->pool = pool
+str r4, [r2, #0xc] @ broken->pool = pool
 add r0, r2, #0x10
-mov lr, pc
-ldr pc, =0x1040E974 @ free(broken + sizeof(malloc_header))
+blx r5 @ free(broken + sizeof(malloc_header))
 
 bl call_main
 
 mov r0, #0
-pop {pc}
+pop {r4, r5, pc}
 
 call_main:
 	stmfd sp!, {r4-r11,lr} @ and never destroy r0 and r1 which are C's argc and argv

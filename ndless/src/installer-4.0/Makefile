@@ -11,7 +11,7 @@ LFLAGS := -nostdlib -Tldscript
 DISTDIR := ../../calcbin
 vpath %.tns $(DISTDIR)
 
-all: ndless_installer_4.0.3_cascx.tns
+all: ndless_installer_4.0.3_cx.tns ndless_installer_4.0.3_cascx.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
@@ -46,6 +46,6 @@ test: ndless_installer_4.0.3_cascx.tns
 	firebird-send $^ ndless
 
 clean:
-	rm -f luabin Problem1.xml Problem2.xml Problem1_mid.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.0.3_cascx.tns
+	rm -f luabin Problem1.xml Problem2.xml Problem1_mid.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.0.3_cx.tns $(DISTDIR)/ndless_installer_4.0.3_cascx.tns
 
 .PHONY: test clean

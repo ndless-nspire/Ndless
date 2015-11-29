@@ -11,7 +11,7 @@ int main()
 	ut_read_os_version_index();
 
 	//Unregister exploit
-        *reinterpret_cast<unsigned int*>(ut_os_version_index == 20 ? 0x0 : 0x1113E6BC) = 0;
+        *reinterpret_cast<unsigned int*>(ut_os_version_index == 20 ? 0x110DA6BC : 0x1113E6BC) = 0;
 
 	const char *res_path = "/documents/ndless/ndless_resources.tns";
 

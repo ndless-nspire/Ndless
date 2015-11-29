@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<prob xmlns="urn:TI.Problem" ver="1.0" pbname="">
+	<sym></sym>
+	<card clay="0" h1="10000" h2="10000" w1="10000" w2="10000">
+		<isDummyCard>0</isDummyCard>
+		<flag>0</flag>
+		<wdgt xmlns:np="urn:TI.Notepad" type="TI.Notepad" ver="2.0">
+			<np:mFlags>1024</np:mFlags>
+			<np:value>3</np:value>
+			<np:fmtxt>
+				&lt;r2dtotree version=&quot;1&quot;&gt;
+					&lt;formatManager tableSize=&quot;262140&quot; capacity=&quot;262144&quot;&gt;
+						&lt;formatEntry entryIndex=&quot;107374182&quot; entryID=&quot;335479040&quot; entryRefCnt=&quot;286107324&quot; tc=&quot;1&quot; fc=&quot;335478784&quot; fs=&quot;11&quot; fst=&quot;0&quot; cc=&quot;0&quot; fest=&quot;0&quot; feun=&quot;&quot; fesub=&quot;0&quot; fesup=&quot;0&quot; fn0=&quot;TI-Nspire Sans&quot;&gt;&lt;/formatEntry&gt;
+					&lt;/formatManager&gt;
+					&lt;node name=&quot;1doc&quot;&gt;
+						&lt;node name=&quot;1para&quot;&gt;
+							&lt;node name=&quot;1rtline&quot;&gt;
+								&lt;leaf name=&quot;1word&quot; np=&quot;1&quot; id0=&quot;0&quot; pp0=&quot;0&quot;&gt;&lt;/leaf&gt;
+								&lt;node name=&quot;0el&quot; flags=&quot;8&quot; id0=&quot;1&quot;&gt;
+									&lt;mbox&gt;
+										&lt;attr iomode=&quot;1&quot; digits=&quot;0&quot; angle=&quot;0&quot; symbol=&quot;1&quot; wrap=&quot;true&quot; warn=&quot;true&quot; comp=&quot;2&quot; active=&quot;true&quot; id0=&quot;3&quot;&gt;&lt;/attr&gt;
+										&lt;out&gt;
+											&lt;full&gt;111&lt;/full&gt;
+											&lt;warn&gt;{}&lt;/warn&gt;
+											&lt;err&gt;0&lt;/err&gt;
+										&lt;/out&gt;
+									&lt;/mbox&gt;
+									&lt;node name=&quot;0el&quot; id0=&quot;2&quot;&gt;
+										&lt;leaf name=&quot;0text&quot; np=&quot;1&quot; id0=&quot;2&quot; pp0=&quot;3&quot;&gt;111&lt;/leaf&gt;
+									&lt;/node&gt;
+									&lt;node name=&quot;0el&quot; id0=&quot;3&quot;&gt;
+										&lt;leaf name=&quot;0text&quot; readonly=&quot;1&quot; np=&quot;1&quot; id0=&quot;3&quot; pp0=&quot;3&quot;&gt;111&lt;/leaf&gt;
+									&lt;/node&gt;
+								&lt;/node&gt;
+								&lt;leaf name=&quot;1word&quot; np=&quot;1&quot; id0=&quot;0&quot; pp0=&quot;0&quot;&gt;
+									&lt;cursor index=&quot;0&quot;&gt;&lt;/cursor&gt;
+								&lt;/leaf&gt;
+							&lt;/node&gt;
+						&lt;/node&gt;
+					&lt;/node&gt;
+				&lt;/r2dtotree&gt;
+			</np:fmtxt>
+		</wdgt>
+	</card>
+</prob>
