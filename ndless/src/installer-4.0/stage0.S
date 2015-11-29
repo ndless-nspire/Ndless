@@ -13,7 +13,6 @@ b start
 .word 0x0
 .word 0x0
 start:
-bkpt
 
 push {lr}
 
@@ -44,7 +43,7 @@ mov lr, pc
 ldr pc, =0x1040E974 @ free(broken + sizeof(malloc_header))
 
 bl call_main
-	
+
 mov r0, #0
 pop {pc}
 
