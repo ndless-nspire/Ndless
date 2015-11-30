@@ -10,6 +10,7 @@
 			<np:fmtxt>
 				&lt;r2dtotree version=&quot;1&quot;&gt;
 					&lt;formatManager tableSize=&quot;262140&quot; capacity=&quot;262144&quot;&gt;
+                                                &lt;formatEntry entryIndex=&quot;0&quot; entryID=&quot;3776970864&quot; entryRefCnt=&quot;3776970864&quot; tc=&quot;1&quot; fc=&quot;287595484&quot; fs=&quot;11&quot; fst=&quot;0&quot; cc=&quot;0&quot; fest=&quot;0&quot; feun=&quot;0&quot; fesub=&quot;0&quot; fesup=&quot;0&quot; fn0=&quot;TI-Nspire Sans&quot;&gt;&lt;/formatEntry&gt;
 						&lt;formatEntry entryIndex=&quot;107374182&quot; entryID=&quot;335479040&quot; entryRefCnt=&quot;286107324&quot; tc=&quot;1&quot; fc=&quot;335478784&quot; fs=&quot;11&quot; fst=&quot;0&quot; cc=&quot;0&quot; fest=&quot;0&quot; feun=&quot;&quot; fesub=&quot;0&quot; fesup=&quot;0&quot; fn0=&quot;TI-Nspire Sans&quot;&gt;&lt;/formatEntry&gt;
 					&lt;/formatManager&gt;
 					&lt;node name=&quot;1doc&quot;&gt;
