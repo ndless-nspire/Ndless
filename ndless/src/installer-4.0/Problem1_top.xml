@@ -74,15 +74,6 @@
                     return offset % 320, math.floor(offset / 320)
                 end
                 
-                function getTestString(n)
-                    local out = {}
-                    for i=1, n * 256 do
-                        out[i] = string.char(i % 256)
-                        end
-                
-                    return table.concat(out)
-                end
-                
                 
                 function on.paint(gc)
                     gc:begin()
