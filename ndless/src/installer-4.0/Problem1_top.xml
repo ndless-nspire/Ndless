@@ -73,8 +73,12 @@
                     local offset = math.floor((address - 0x13FDA800) / 2)
                     return offset % 320, math.floor(offset / 320)
                 end
-                
-                
+
+                local function drawXCenteredString(gc, str, y)
+                    gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, "top")
+                end
+
+
                 function on.paint(gc)
                     gc:begin()
                     local 

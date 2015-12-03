@@ -2,7 +2,7 @@
                     drawByteString(gc, x, y, s)
 
                     gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
-                    gc:drawString(&quot;Ndless for OS 4.0.3&quot;, 70, 30, &quot;top&quot;)
+                    drawXCenteredString(gc, &quot;Ndless for OS 4.0.3&quot;, 30)
 
                     gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
 
@@ -16,6 +16,9 @@
                         gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
                         gc:drawString(&quot;Ctrl+W&quot;, 100, 60, &quot;top&quot;)
                     end
+
+                    gc:setColorRGB(0, 0, 0)
+                    gc:fillRect(0, 100, platform.window:width(), 2)
                 end
 
             </sc:script>
