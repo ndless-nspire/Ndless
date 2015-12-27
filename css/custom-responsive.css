@@ -1,0 +1,219 @@
+@media (min-width: 768px) and (max-width: 979px) {
+
+	.top-text {
+		margin-top: 0;
+	}
+	
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+
+	.affix {
+		margin: 0 auto;
+		top: 0;
+	}
+	
+	.navbar .brand img{
+		margin-top: 5px;
+	}
+	
+	.navbar .btn-navbar {
+		margin-top: 13px;
+	}
+	
+	#home {	
+		padding-top: 40px;
+	}
+	
+	.top-content {
+		text-align: center;
+	}
+	
+	.top-text {
+		margin-top: 0;
+		padding: 0px 20px 40px 20px;
+	}
+	
+	.top-text h1 {
+		margin-bottom: 30px;
+	}
+	
+	a.top-text{
+		margin-right: 10px;
+		margin-left: 10px;
+	}
+	
+	#footer .container {
+		text-align: center;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	
+	#footer .social img{
+		float: none;
+	}
+	
+	.modal-body {
+		margin-top: 0;
+		padding-bottom: 0;
+	}
+	
+}
+
+@media (max-width: 480px) {
+
+	.affix {
+		margin: 0 auto;
+		top: 0;
+	}
+	
+	.navbar .brand img{
+		margin-top: 5px;
+	}
+	
+	.navbar .btn-navbar {
+		margin-top: 13px;
+	}
+	
+	#home {
+		text-align: center;
+		padding-top: 40px;
+	}
+	
+	.top-text {
+		margin-top: 0;
+		padding: 10px 10px 0px 10px;
+	}
+	
+	.top-text h1 {
+		font-size: 45px;
+		line-height: 45px;
+		margin-bottom: 20px;
+	}
+	
+	.top-text p {
+		font-size: 20px;
+		line-height: 24px;
+	}
+	
+	.top-image {
+		display: none;
+	}
+	
+	#subscribe input {
+		width: 50%;
+		min-width:20px;
+	}
+	
+	p.small-text {
+		font-size: 14px;
+	}
+	
+	a.top-text{
+		margin-right: 10px;
+		margin-left: 10px;
+	}
+	
+	.featurette-heading {
+		font-size: 40px;
+		font-weight: 300;
+		line-height: 40px;
+		letter-spacing: -1px;
+	}
+	
+	#features .featurette-heading {
+		font-size: 40px;
+		font-weight: 300;
+		line-height: 40px;
+		letter-spacing: -1px;
+	}
+	
+	#features p {
+		font-size: 18px;
+		line-height: 26px;
+	}
+	
+	ul.big-li > li {
+		font-size: 16px;
+		line-height: 26px;
+	}
+	
+	ul.big-li > li i {
+		padding-right: 10px;
+	}
+	
+	#features .media-body p {
+		padding-top: 5px;
+		font-size: 14px;
+		line-height: 20px;
+	}
+	
+	.additional-features {
+		text-align: center;
+	}
+	
+	#footer .container {
+		text-align: center;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	
+	#footer .social img{
+		float: none;
+	}
+	
+	.modal-body {
+		margin-top: 0;
+		padding-bottom: 0;
+	}
+	
+	#myModal h3 {
+		font-size: 18px;
+	}
+	
+	#myModal address {
+		font-size: 12px;
+	}
+	
+}
+
+@media screen and (max-width: 73.5em) {
+
+	.cbp-so-scroller {
+		font-size: 65%;
+	}
+
+	.cbp-so-section h2 {
+		margin: 0;
+	}
+
+	.cbp-so-side img {
+		max-width: 120%;
+	}
+	
+}
+
+@media screen and (max-width: 41.125em) {
+
+	.cbp-so-side {
+		float: none;
+		width: 100%;
+	}
+
+	.cbp-so-side img {
+		max-width: 100%;
+	}
+	
+}
+
+@media screen and (max-width: 30.6em) { 
+
+	.cbp-qtrotator {
+		font-size: 70%;
+	}
+
+	.cbp-qtrotator img {
+		width: 80px;
+	}
+	
+}

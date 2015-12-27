@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Ndless for TI-Nspire</title>
+    <meta name="description" content="Ndless, the TI-Nspire calculator extension for native applications">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS / STYLES -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+	<link href="css/custom-responsive.css" rel="stylesheet">
+	<link href="css/normalize.css" rel="stylesheet">
+	<link rel="shortcut icon" href="http://ndless.me/favicon.png?v=2" />
+	<!-- END CSS / STYLES -->
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="favicon.png">
+    <!-- END FAVICON -->
+    
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49028943-1', 'ndless.me');
+  ga('send', 'pageview');
+
+		</script>
+  </head>
+
+  <body>
+  <!-- Github ribbon - http://aralbalkan.com/scribbles/fork-me-on-github-retina-ribbons/ -->
+  <a href="https://github.com/ndless-nspire/Ndless"><img style="position: fixed; top: 0; right: 0; border: 0; width: 149px; height: 149px; z-index:10000;" src="http://aral.github.com/fork-me-on-github-retina-ribbons/right-green@2x.png" alt="Fork me on GitHub"></a>
+  	
+	<!-- HOME SECTION -->
+	<section id="home">
+	  <!-- NAVBAR -->
+	  <div id="navbar" class="navbar navbar-static-top" data-spy="affix">
+		<div class="navbar-inner">
+		  <div class="container">
+			<a class="btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			  <i class="icon-arrow-down"></i>
+			</a>
+			
+			<!-- LOGO / BRAND -->
+			<a class="brand" href="#">Ndless for TI-Nspire</a>
+			<!-- END LOGO / BRAND -->
+			
+			<!-- NAVBAR COLLAPSE -->
+			<div class="nav-collapse collapse">
+			  <ul class="nav pull-right">
+			    <li><a class="smoothScroll" href="#icons">Features</a></li>
+			    <li><a class="smoothScroll" href="#features">Get it!</a></li>
+			    <li><a class="smoothScroll" href="#SDK">SDK</a></li>
+				<li><a class="smoothScroll" href="http://ndlessly.wordpress.com">Blog</a></li>
+			    <li><a href="#myModal" data-toggle="modal">Contact</a></li>
+				<li><a class="smoothScroll" href="36">Ndless 3.6</a></li>
+			  </ul>
+			</div> 
+			<!-- END NAVBAR COLLAPSE -->
+			
+		  </div>
+		</div>
+	  </div>
+	  <!-- END NAVBAR -->
+	  
+	  <!-- TOP CONTENT -->
+	  <div class="container top-content">
+		<div class="row">
+		  
+		  <!-- TOP TEXT -->
+		  <div class="span4 top-text">
+		    <!--<h1></h1>-->
+			<!--<p></p>-->
+			<br>	
+		  </div>
+		  <!-- END TOP TEXT -->
+		  
+		  <!-- TOP IMAGE -->		  
+		  <!--
+		  <div class="span6 top-image">	
+			<img src="img/375x500.gif" alt="top image">
+		  </div>
+		  -->
+		  <!-- END TOP IMAGE -->
+				
+		</div>			
+	  </div>
+	  <!-- END TOP CONTENT -->
+	</section>
+	<!-- END HOME SECTION -->
+	
+	<!-- ABOUT SECTION -->
+	<section id="about">
+	  <!-- TOP ABOUT TEXT -->
+	  <div class="container first">
+		<div class="row">
+		  <div class="span12">
+			<p class="muted" style="color: white">A can of code.</p>
+			<h2 class="featurette-heading" style="color: white">Endless possibilities.</h2>
+		  </div>
+		</div>
+	  </div>
+	  <!-- END TOP ABOUT TEXT -->
+	</section>
+	<!-- END ABOUT SECTION -->
+	
+	<section id="icons">
+	  <!-- ABOUT TEXT WITH ICON / IMAGE -->
+	  <div class="container second">
+		<div class="row">
+			<div class="span4">
+				<img src="img/icon/2.png" width="30%" height="30%" alt="">
+				<h3>Other languages</h3>
+				<p>Program in other languages like Python and JavaScript, directly on your calculator</p>
+			</div>
+		  <div class="span4">
+			<img src="img/icon/1.png" width="30%" height="30%" alt="">
+			<h3>Apps</h3>
+			<p>Install on your TI-Nspire PDF, image &amp; video viewers, emulators, Linux, games and more</p>
+		  </div>
+		  <div class="span4">
+			<img src="img/icon/3.png" width="30%" height="30%" alt="">
+			<h3>OS enhancements</h3>
+			<p>Plug in USB keyboards and mice. Enhance Lua with extensions. Use other CAS engines</p>
+		  </div>	
+		</div>
+	  </div>
+	  <!-- END ABOUT TEXT WITH ICON / IMAGE -->
+	</section>
+	
+	<!-- FEATURES SECTION -->
+	<section id="features">
+	  <div id="cbp-so-scroller" class="cbp-so-scroller">
+		
+		<!-- LEFT FEATURES -->
+		<section class="cbp-so-section">
+		  <!-- LEFT FEATURES TEXT -->
+	   	  <article class="cbp-so-side cbp-so-side-left">
+			<h2 class="featurette-heading">Ndless<br/><span class="muted">The very best for<br/>your <nobr>TI-Nspire.</nobr></span></h2>
+			<p class="muted">Open your calculator to 100+ powerful native applications</p>
+			<br>
+			<a class="btn btn-ndless btn-large" href="https://github.com/ndless-nspire/Ndless/releases/tag/v3.6" target="_blank">Ndless v3.6 for OS 3.6 (recommended)</a>
+			<p/><a class="btn btn-ndless btn-large" href="https://github.com/ndless-nspire/Ndless/releases/tag/v3.9" target="_blank">Ndless v3.9 for OS 3.9</a>
+			<br>
+			<p>
+			Follow the <a href="http://tiplanet.org/ndless" target="_blank">installation guide</a>.<br/>
+			Download <a href="http://ndless-apps.org" target="_blank">apps</a>.<br/>
+			Get <a href="http://ndlessly.wordpress.com/ndless-troubleshooting/" target="_blank">help</a>.
+			</p>
+		  </article>
+		  <!-- END LEFT FEATURES TEXT -->
+		  
+		  <!-- LEFT FEATURES IMAGE -->
+		  <figure class="cbp-so-side cbp-so-side-right">
+			<a href="https://ndless-apps.org/" style="display: block">
+			<img src="img/apps.jpg" alt="Ndless">
+			</a>
+		  </figure>
+		  <!-- END LEFT FEATURES IMAGE -->
+		</section>
+		<!-- END LEFT FEATURES -->
+		
+		<!-- RIGHT FEATURES -->
+		<section id="SDK" class="cbp-so-section">
+		  <!-- RIGHT FEATURES IMAGE -->
+		  <figure class="cbp-so-side cbp-so-side-left">
+			<img src="img/sdk.png" alt="SDK">
+		  </figure>
+		  <!-- END RIGHT FEATURES IMAGE -->
+		  
+		  <!-- RIGHT FEATURES TEXT -->
+		  <article class="cbp-so-side cbp-so-side-right">
+			<h2 class="featurette-heading">Ndless SDK<br/><span class="muted">Make your own apps.</span></h2>
+			<p class="muted"></p>
+			<ul class="icons-ul big-li muted">
+	 		  <li><i class="icon-ok"></i>ARM, C and C++ supported</li>
+	 		  <li><i class="icon-ok"></i>Many libraries available</li>
+			  <li><i class="icon-ok"></i>Emulator &amp; GDB Debugger</li>
+			  <li><i class="icon-ok"></i>Standard C and USB API</li>
+			</ul>
+			<br>
+			<a class="btn btn-info btn-large" href="http://ndlessly.wordpress.com/ndless-for-developers" target="_blank">Get the SDK</a>
+		  </article>
+		  <!-- END RIGHT FEATURES TEXT -->
+		</section>
+		<!-- END RIGHT FEATURES -->
+		
+	  </div>
+	  
+	  <!-- ADDITIONAL FEATURES -->
+	  <div class="container additional-features"> 
+		<div class="container-narrow">
+		  <div class="row-fluid marketing">
+		  
+			<div class="span4">
+				
+		      <div class="media">
+				<div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b pull-left">
+				  <a href="#set-9" class="hi-icon hi-icon-archive">Icon</a>
+				</div>
+			    <div class="media-body">
+				  <h4 class="media-heading">Apps</h4>
+				  <p>Browse the archives at <a href="http://ndless-apps.org">ndless-apps.org</a>, <a href="http://tiplanet.org/forum/archives_cat.php?cat=Nspire&lang=en"><nobr>TI-Planet</nobr></a> and <a href="http://www.ticalc.org/pub/nspire/asm/">ticalc.org</a></p>
+				  
+			    </div>
+			  </div>
+	
+			</div>
+
+			<div class="span4">
+				
+			  <div class="media">
+				<div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b pull-left">
+				  <a href="#set-9" class="hi-icon hi-icon-user">Icon</a>
+				</div>
+				<div class="media-body">
+				  <h4 class="media-heading">Exchange</h4>
+				  <p>Join the community on <a href="http://codewalr.us" target="_blank">Codewalrus</a> [EN] and <a href="http://tiplanet.org" target="_blank"><nobr>TI-Planet</nobr></a> [FR/EN]</p>
+			    </div>
+			  </div>
+
+			</div>
+				
+			<div class="span4">
+				
+			  <div class="media">
+				<div class="hi-icon-wrap hi-icon-effect-9 hi-icon-effect-9b pull-left">
+				  <a href="#set-9" class="hi-icon hi-icon-chat">Icon</a>
+				</div>
+				<div class="media-body">
+				  <h4 class="media-heading">Follow us</h4>
+				  <p>Subscribe to <a href="http://ndlessly.wordpress.com" target="_blank">Ndlessly</a> for the latest news</p>
+			    </div>
+			  </div>
+
+			</div>			
+				
+		  </div>
+		</div>
+	  </div>
+	  <!-- END ADDITIONAL FEATURES -->
+	  
+	</section>
+	<!-- END FEATURES SECTION -->
+	
+	
+	<!-- FOOTER SECTION -->
+	<section id="footer">
+	<svg id="curveDownColor" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100" viewBox="0 0 100 100" preserveAspectRatio="none">
+	  <path d="M0 0 C 50 100 80 100 100 0 Z"/>
+	</svg>
+	  <div class="container">
+		<div class="row-fluid">
+		  
+		  <!-- COPYRIGHT -->
+		  <div class="span6">
+			<p class="copyright"><strong>The Ndless team</strong> &copy; Copyright 2015. Background by Levak.</p>
+		  </div>
+		  <!-- END COPYRIGHT -->
+		  
+		  <!-- SOCIAL ICON -->
+		  <div class="span6">
+			<div class="social">
+			  <a href="http://ndlessly.wordpress.com/feed/"><img src="img/social/rss.png" class="img-circle" alt="rss"></a>
+			</div>
+		  </div>
+		  <!-- END SOCIAL ICON -->
+		  
+		</div>
+	  </div>
+	</section>
+	<!-- END FOOTER SECTION -->
+	
+	<!-- CONTACT MODAL -->
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 id="myModalLabel">About</h3>
+	  </div>
+	  <div class="modal-body">
+		<div class="row">  
+		  
+		  <!-- ADDRESS -->
+		  <div class="span4"> 
+		  <div class="span4"> 
+			<p><strong>Ndless</strong> and the <strong>Ndless SDK</strong> are brought to you by <strong>the Ndless Team</strong>.</p>
+
+			<p>Tell us about your Ndless experience!</p>
+			
+			<p/>
+			<p><strong>Contact:</strong> Olivier Armand (`ExtendeD`)<br/>
+			<a href="#">olivier.calc@gmail.com</a></p>
+			<p/><p/>
+			<p>Thank you for using Ndless.</p>
+			<p>Help its development, 
+			<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=olivier%2ecalc%40gmail%2ecom&amp;lc=US&amp;item_name=Ndless&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank"><img style="vertical-align:middle;" alt="Donate" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" /> !</a>
+			</p>
+		  </div> 
+		  <!-- END ADDRESS -->
+		</div>
+	  </div>
+	  <div class="modal-footer">
+	  </div>
+	</div>
+	<!-- END CONTACT MODAL -->
+
+    <!-- JAVASCRIPT -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+	<script src="js/bootstrap-collapse.js"></script>
+	<script src="js/bootstrap-affix.js"></script>
+	<script src="js/modernizr.custom.js"></script>
+	<script src="js/classie.js"></script>
+	<script src="js/cbpscroller.js"></script>
+	<script src="js/smoothscroll.js"></script>
+	<script src="js/jquery.cbpqtrotator.min.js"></script>
+	
+	<!-- CUSTOM JAVASCRIPT -->
+	<script type="text/javascript">
+	  new cbpScroller( document.getElementById( 'cbp-so-scroller' ) );
+	</script>
+		
+	<script type="text/javascript">
+	  $( function() {
+	  
+		"use strict";
+			/*
+			- how to call the plugin:
+			$( selector ).cbpQTRotator( [options] );
+			- options:
+			{
+				// default transition speed (ms)
+				speed : 700,
+				// default transition easing
+				easing : 'ease',
+				// rotator interval (ms)
+				interval : 8000
+			}
+			- destroy:
+			$( selector ).cbpQTRotator( 'destroy' );
+			*/
+
+		$( '#cbp-qtrotator' ).cbpQTRotator();
+
+	  } );
+	</script>		
+	
+  </body>
+</html>
