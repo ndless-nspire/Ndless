@@ -252,7 +252,8 @@ p.small-text {
 .btn-ndless { 
   color: #FFFFFF; 
   background-color: #204503; 
-  border-color: #130269; 
+  border-color: #130269;
+  margin-right: -4px;
 } 
  
 .btn-ndless:hover, 
