@@ -84,14 +84,14 @@ static unsigned const ndless_inst_resident_hook_addrs[] = {0x10012598, 0x1001251
 // Install the resident part
 HOOK_DEFINE(s1_startup_hook) {
 	struct nuc_stat res_stat;
-	const char *res_path = "/documents/ndless/ndless_resources_3.6.tns";
+	const char *res_path = "/documents/ndless/ndless_resources.tns";
 	NUC_FILE *res_file;
 	char *core;
 	char *res_params = NULL;
 
 	if (!(res_file = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb"))) {
 		int x = 0;
-		syscall_local<e_disp_str, void>("Oops, you've forgotten to transfer                   'ndless_resources_3.6'! Ndless won't be installed.", &x, 10);
+		syscall_local<e_disp_str, void>("Oops, you've forgotten to transfer                   'ndless_resources.tns'! Ndless won't be installed.", &x, 10);
 		volatile int i;
 		for (i = 0; i < 100000000; i++) // libndls's sleep() requires is_classic, not available here
 			;
