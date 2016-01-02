@@ -40,7 +40,6 @@ Prerequisites: OS 4.0.3 on CX or CX CAS
 * Transfer ndless_resources.tns into the same folder
 * Open the installer
 * Close the installer with Ctrl+W
-* Connect the handheld to your computer!
 * Have fun!
 
 OS 3.9.x <img src="https://i.imgur.com/rT8Ltmy.png" align="right">
