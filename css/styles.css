@@ -103,7 +103,7 @@ h1,h2,h3,h4 {
 ==============================================*/
 
 body {
-	background: url("../img/bg40.png") bottom right no-repeat;
+	background: url("../img/bg40.png") center center no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
 }
