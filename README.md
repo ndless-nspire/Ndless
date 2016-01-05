@@ -36,7 +36,7 @@ OS 4.0.3 <img src="https://i.imgur.com/oEsrtC2.png" align="right">
 
 Prerequisites: OS 4.0.3 on CX or CX CAS
 
-* Transfer ndless_installer_4.0.3_cx.tns or ndless_installer_4.0.3_cx.tns into a folder named "ndless" (top-level)
+* Transfer ndless_installer_4.0.3_cx.tns or ndless_installer_4.0.3_cascx.tns into a folder named "ndless" (top-level)
 * Transfer ndless_resources.tns into the same folder
 * Open the installer
 * Close the installer with Ctrl+W
