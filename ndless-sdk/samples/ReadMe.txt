@@ -1,8 +1,0 @@
-- colors: color screen demo. Only for TI-Nspire CX.
-- freetype: freetype font demo.
-- helloworld-cpp: Hello World written in C++.
-- helloworld-sdl: nSDL-based Hello World.
-- helloworld-assembly: Hello World written in ARM assembly.
-- link-sdl: nSDL demo from the nSDL distribution.
-- luaext: Lua native extension demo.
-- particles: screen/keyboard demo.
