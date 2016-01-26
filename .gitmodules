@@ -1,3 +1,6 @@
+[submodule "nspire-io"]
+	path = ndless-sdk/thirdparty/nspire-io
+	url = https://github.com/Vogtinator/nspire-io.git
 [submodule "zlib"]
 	path = ndless-sdk/thirdparty/zlib
 	url = https://github.com/madler/zlib.git
