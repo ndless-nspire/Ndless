@@ -1,0 +1,7 @@
+[submodule "zlib"]
+	path = ndless-sdk/thirdparty/zlib
+	url = https://github.com/madler/zlib.git
+	ignore = dirty
+[submodule "freetype2"]
+	path = ndless-sdk/thirdparty/freetype2
+	url = git://git.sv.nongnu.org/freetype/freetype2.git

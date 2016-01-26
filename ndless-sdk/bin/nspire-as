@@ -22,4 +22,4 @@ fi
 
 # gcc instead of as, to call the C preprocessor
 GCC=`(which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null`
-"$GCC" -mcpu=arm926ej-s -I "$DIRNAME/../include" -D GNU_AS "$@"
+"$GCC" -mcpu=arm926ej-s -D GNU_AS "$@" -I "$DIRNAME/../include"

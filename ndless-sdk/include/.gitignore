@@ -1,2 +1,5 @@
 syscall-decls.h
 syscall-addrs.h
+zconf.h
+zlib.h
+freetype2

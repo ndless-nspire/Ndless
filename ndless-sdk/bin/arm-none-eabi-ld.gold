@@ -30,12 +30,19 @@ for arg in "$@"; do
 	esac
 done
 
-stdlib="-lfreetype -lz -lSDL_gfx -lSDL_image -lSDL -lm --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc"
-if [ $NOSTDLIB -eq 1 ]; then stdlib=""; fi
+declare -a stdlib
+if [ $NOSTDLIB -ne 1 ]; then
+	for lib in freetype z SDL_gfx SDL_image SDL; do
+		if [ -f "$DIRNAME/../lib/lib${lib}.a" ]; then
+			stdlib=("${stdlib[@]}" "-l$lib")
+		fi
+	done
+	stdlib=("${stdlib[@]}" -lm --start-group -lnspireio -lstdc++ -lndls -lsyscalls$NSPIREIO -lc --end-group -lgcc)
+fi
 
 (cd "$DIRNAME/../system" && make -s all)
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-`basename $0 | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -L "$DIRNAME/../lib" -L "$home/.ndless/lib" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" $stdlib "$DIRNAME/../system/crtn.o"
+`basename $0 | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" "${stdlib[@]}" "$DIRNAME/../system/crtn.o" -L "$DIRNAME/../lib" -L "$home/.ndless/lib"

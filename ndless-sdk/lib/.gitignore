@@ -1,3 +1,5 @@
 libndls.a
 libsyscalls.a
 libsyscalls_nspireio.a
+libz.a
+libfreetype.a

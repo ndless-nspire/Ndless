@@ -1,4 +1,4 @@
-SUBDIRS = tools libsyscalls libndls samples
+SUBDIRS = libsyscalls libndls thirdparty tools samples
 
 all:
 	@for i in $(SUBDIRS); do \
