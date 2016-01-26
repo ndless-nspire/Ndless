@@ -45,4 +45,4 @@ fi
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-`basename $0 | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" "${stdlib[@]}" "$DIRNAME/../system/crtn.o" -L "$DIRNAME/../lib" -L "$home/.ndless/lib"
+`basename "$0" | cut -f1 -d'.'` --emit-relocs -T "$DIRNAME/../system/ldscript" -static "$DIRNAME/../system/crt0.o" "$DIRNAME/../system/crti.o" "${args[@]}" "${stdlib[@]}" "$DIRNAME/../system/crtn.o" -L "$DIRNAME/../lib" -L "$home/.ndless/lib"
