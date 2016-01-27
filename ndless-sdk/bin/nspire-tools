@@ -61,7 +61,7 @@ case "$1" in
 		cp "$DIRNAME/main.c.tpl" main.c
 		;;
 	path)
-		echo $(dirname $DIRNAME)/
+		echo $(dirname "$DIRNAME")/
 		;;
 	*)
 		usage

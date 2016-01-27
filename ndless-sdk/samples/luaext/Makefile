@@ -4,7 +4,7 @@ GCC = nspire-gcc
 AS  = nspire-as
 GXX = nspire-g++
 LD  = nspire-ld
-LUNA = $(shell nspire-tools path)/tools/luna/luna
+LUNA = "$(shell nspire-tools path)/tools/luna/luna"
 GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -marm
