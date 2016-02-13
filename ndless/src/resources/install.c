@@ -91,14 +91,14 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
-		// 3.9 doesn't need to be rebooted
+		// 3.9, 4.0 don't need to be rebooted
 		if(ut_os_version_index < 10)
 		{
 			// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
 			if(end_of_init_addrs[ut_os_version_index] != 0)
 				HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
 		}
-		else // 3.9.x
+		else // 3.9, 4.0
 		{
 			// Run startup programs (and successmsg hook installation) now
 			plh_startup();
@@ -108,10 +108,14 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 				*(volatile uint32_t *) 0x10111778 = 0xEA000004;
 			else if(ut_os_version_index == 11) // 3.9.0 CAS
 				*(volatile uint32_t *) 0x10111574 = 0xEA000004;
-			else if(ut_os_version_index == 16) // CX
+			else if(ut_os_version_index == 16) // 3.9.1 CX
 				*(volatile uint32_t *) 0x1011193C = 0xEA000004;
-			else if(ut_os_version_index == 17) // CX CAS
+			else if(ut_os_version_index == 17) // 3.9.1 CX CAS
 				*(volatile uint32_t *) 0x10111768 = 0xEA000004;
+			else if(ut_os_version_index == 20) // 4.0.3 CX
+				*(volatile uint32_t *) 0x1011811C = 0xEA000004;
+			else if(ut_os_version_index == 21) // 4.0.3 CX CAS
+				*(volatile uint32_t *) 0x10117F6C = 0xEA000004;
 
 			// The next HOOK_INSTALL invocation clears the cache for us
 		}
