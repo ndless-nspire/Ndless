@@ -100,14 +100,14 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
-		// 3.9, 4.0 don't need to be rebooted
+		// 3.9 and 4.0.3 don't need to be rebooted
 		if(ut_os_version_index < 10)
 		{
 			// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
 			if(end_of_init_addrs[ut_os_version_index] != 0)
 				HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
 		}
-		else // 3.9, 4.0
+		else // 3.9 and 4.0.3
 		{
 			// Run startup programs (and successmsg hook installation) now
 			plh_startup();
