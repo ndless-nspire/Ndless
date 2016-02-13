@@ -52,6 +52,15 @@ static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC,
 						0x10012420, 0x100123CC,
 						0x100124F4, 0x100124A0};
 
+// OS-specific
+// get_res_string + 0xC8
+static unsigned const error_msg_patch_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x0, 0x0,
+						0x10111778, 0x10111574, 0x0, 0x0,
+						0x0, 0x0, 0x1011193C, 0x10111768,
+						0x10112DC4, 0x10112C14,
+						0x1011811C, 0x10117F6C};
+
 void ins_uninstall(void) {
 	ut_calc_reboot();
 }
@@ -104,18 +113,8 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			plh_startup();
 
 			// Patch the annoying TI_RM_GetString error message
-			if(ut_os_version_index == 10) // 3.9.0
-				*(volatile uint32_t *) 0x10111778 = 0xEA000004;
-			else if(ut_os_version_index == 11) // 3.9.0 CAS
-				*(volatile uint32_t *) 0x10111574 = 0xEA000004;
-			else if(ut_os_version_index == 16) // 3.9.1 CX
-				*(volatile uint32_t *) 0x1011193C = 0xEA000004;
-			else if(ut_os_version_index == 17) // 3.9.1 CX CAS
-				*(volatile uint32_t *) 0x10111768 = 0xEA000004;
-			else if(ut_os_version_index == 20) // 4.0.3 CX
-				*(volatile uint32_t *) 0x1011811C = 0xEA000004;
-			else if(ut_os_version_index == 21) // 4.0.3 CX CAS
-				*(volatile uint32_t *) 0x10117F6C = 0xEA000004;
+			if (error_msg_patch_addrs[ut_os_version_index] != 0)
+				*(volatile uint32_t *) error_msg_patch_addrs[ut_os_version_index] = 0xEA000004;
 
 			// The next HOOK_INSTALL invocation clears the cache for us
 		}
