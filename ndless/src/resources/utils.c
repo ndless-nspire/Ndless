@@ -119,6 +119,14 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 21;
 			break;
 #endif
+#if !defined(STAGE1) || NDLESS_420
+		case 0x1039C7A0: // 4.2.0.532 non-CAS CX
+			ut_os_version_index = 22;
+			break;
+		case 0x1039CD20: // 4.2.0.532 CAS CX
+			ut_os_version_index = 23;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}

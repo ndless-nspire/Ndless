@@ -8,13 +8,15 @@ $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc
 		"OS_ncas-3.9.0.idc", "OS_cas-3.9.0.idc", "OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc",
 		"OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc", "OS_ncascx-3.9.1.idc", "OS_cascx-3.9.1.idc",
 		"OS_ncascx-4.0.0.idc", "OS_cascx-4.0.0.idc",
-		"OS_ncascx-4.0.3.idc", "OS_cascx-4.0.3.idc");
+		"OS_ncascx-4.0.3.idc", "OS_cascx-4.0.3.idc",
+		"OS_ncascx-4.2.0.idc", "OS_cascx-4.2.0.idc");
 
 //Whether the file above is important. If not, no warnings will be printed
 $important = array(true, true, true, true, true, true,
 		   true, true, true, true,
 		   true, true, false, false,
 		   false, false, true, true,
+		   true, true,
 		   true, true,
 		   true, true);
 
@@ -75,7 +77,9 @@ foreach($idc_files as $nr => $idc_file)
 	if($idc_fp === FALSE)
 	{
 		$syscall_addrs[$nr] = array();
-		echo "Warning: couldn't open '" . $filename . "'!\n";
+		if($important[$nr])
+			echo "Warning: couldn't open '" . $filename . "'!\n";
+
 		continue;
 	}
 	

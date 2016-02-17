@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prob xmlns="urn:TI.Problem" ver="1.0" pbname="">
+    <sym></sym>
+    <card clay="0" h1="10000" h2="10000" w1="10000" w2="10000">
+        <isDummyCard>0</isDummyCard>
+        <flag>0</flag>
+        <wdgt xmlns:sc="urn:TI.ScriptApp" type="TI.ScriptApp" ver="1.0">
+            <sc:mFlags>0</sc:mFlags>
+            <sc:value>8</sc:value>
+            <sc:cry>0</sc:cry>
+            <sc:legal>none</sc:legal>
+            <sc:schk>false</sc:schk>
+            <sc:guid>E229D13D5E8B4ACEB428FA06839C0DAC</sc:guid>
+            <sc:md>
+                <sc:mde name="_VER" prop="134217728">1:1</sc:mde>
+                <sc:mde name="TARAL" prop="134217728">1:0</sc:mde>
+            </sc:md>
+            <sc:script version="33817092" id="0">
+                platform.apiLevel = &quot;1.0&quot;
+                
+                local bit_shiftLeft = function(int, n)
+                    return int*2^n
+                end
+                
+                local bit_shiftRight = function(int, n)
+                    return math.floor(int/2^n)
+                end
+                
+                local bit_and = function(a, b)
+                    local result = 0
+                    local d = 256
+                    while d &gt;= 1 do
+                        d = d/2
+                        local aa,bb = a-d, b-d
+                        local aaa,bbb = aa&gt;=0, bb&gt;=0
+                        if aaa and bbb then result = result + d end
+                        if aaa then a = aa end
+                        if bbb then b = bb end
+                    end
+                    return result
+                end
+                
+                function bytes2color(byte2, byte1)
+                    local r5 = bit_shiftRight(byte1, 3)
+                    local g6 = bit_shiftLeft(bit_and(byte1, 7), 3) + bit_shiftRight(byte2, 5)
+                    local b5 = bit_and(byte2, 31)
+                
+                    local r8 = bit_shiftLeft(r5, 3)
+                    local g8 = bit_shiftLeft(g6, 2)
+                    local b8 = bit_shiftLeft(b5, 3)
+                
+                    return r8, g8, b8
+                end
+                
+                function drawByteString(gc, x, y, byteString)
+                    local width = 320
+                
+                    if #byteString % 2 == 1 then
+                        byteString = byteString .. &quot;\0&quot;
+                    end
+                
+                    for i=0, #byteString-1, 2 do
+                        local r, g, b = bytes2color(byteString:byte(i+1, i+2))
+                        gc:setColorRGB(r, g, b)
+                        local xx = (x + i/2) % width
+                        local yy = y + math.floor((x + i/2) / width)
+                
+                        gc:fillRect(xx, yy, 1, 1)
+                    end
+                end
+                
+                function addressToXY(address)
+                    local offset = math.floor((address - 0x13FDA800) / 2)
+                    return offset % 320, math.floor(offset / 320)
+                end
+
+                local function drawXCenteredString(gc, str, y)
+                    gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, "top")
+                end
+
+
+                function on.paint(gc)
+                    gc:begin()
+                    local 

@@ -1,0 +1,27 @@
+                    local x, y = addressToXY(0x13FF0000)
+                    drawByteString(gc, x, y, s)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
+                    drawXCenteredString(gc, &quot;Ndless for OS 4.2.0&quot;, 30)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
+
+                    if ndless then
+                        gc:drawString(&quot;Ndless is already installed!&quot;, 5, 60, &quot;top&quot;)
+                        gc:drawString(&quot;To reinstall, press &quot;, 5, 75, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W!&quot;, 110, 75, &quot;top&quot;)
+                    else
+                        gc:drawString(&quot;To install, press &quot;, 5, 60, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W&quot;, 100, 60, &quot;top&quot;)
+                    end
+
+                    gc:setColorRGB(0, 0, 0)
+                    gc:fillRect(0, 100, platform.window:width(), 2)
+                end
+
+            </sc:script>
+        </wdgt>
+    </card>
+</prob>

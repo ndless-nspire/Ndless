@@ -36,7 +36,8 @@ static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924
 						0x1000A810, 0x1000A7D0, 0x0, 0x0,
 						0x0, 0x0, 0x1000A79C, 0x1000A78C,
 						0x1000A7B0, 0x1000A7AC,
-						0x1000A868, 0x1000A864};
+						0x1000A868, 0x1000A864,
+						0x1000AA64, 0x1000AA60};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -50,7 +51,8 @@ static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC,
 						0x0, 0x0, 0x0, 0x0,
 						0x0, 0x0, 0x0, 0x0,
 						0x10012420, 0x100123CC,
-						0x100124F4, 0x100124A0};
+						0x100124F4, 0x100124A0,
+						0x10012740, 0x100126EC};
 
 // OS-specific
 // get_res_string + 0xC8
@@ -59,7 +61,8 @@ static unsigned const error_msg_patch_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 						0x10111778, 0x10111574, 0x0, 0x0,
 						0x0, 0x0, 0x1011193C, 0x10111768,
 						0x10112DC4, 0x10112C14,
-						0x1011811C, 0x10117F6C};
+						0x1011811C, 0x10117F6C,
+						0x1011BFB8, 0x1011BE10};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -100,14 +103,14 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
-		// 3.9 and 4.0.3 don't need to be rebooted
+		// 3.9, 4.0.3 and 4.2.0 don't need to be rebooted
 		if(ut_os_version_index < 10)
 		{
 			// Startup programs cannot be run safely there, as stage1 is being executed in unregistered memory. Run them asynchronously in another hook.
 			if(end_of_init_addrs[ut_os_version_index] != 0)
 				HOOK_INSTALL(end_of_init_addrs[ut_os_version_index], plh_startup_hook);
 		}
-		else // 3.9 and 4.0.3
+		else // 3.9, 4.0.3 and 4.2.0
 		{
 			// Run startup programs (and successmsg hook installation) now
 			plh_startup();
@@ -164,7 +167,8 @@ const unsigned ins_successmsg_hook_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 						0x1002E2C0, 0x1002E224, 0x0, 0x0,
 						0x0, 0x0, 0x1002D804, 0x1002D798,
 						0x1002D818, 0x1002D7C0,
-						0x1002F4EC, 0x1002F494};
+						0x1002F4EC, 0x1002F494,
+						0x1002F92C, 0x1002F8D4};
 
 void ins_install_successmsg_hook(void) {
 	if(ins_successmsg_hook_addrs[ut_os_version_index] == 0)
