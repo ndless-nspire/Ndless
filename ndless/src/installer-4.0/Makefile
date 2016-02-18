@@ -4,7 +4,6 @@ AS := nspire-as
 LD := "$(shell (which arm-elf-ld arm-none-eabi-ld arm-linux-gnueabi-ld | head -1) 2>/dev/null)"
 OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 
-CXXFLAGS := -std=c++11
 GCCFLAGS := -Os -Wall -Wextra -nostdlib -fPIE -DSTAGE1 -D NDLESS_403
 GXXFLAGS := $(GCCFLAGS) -std=c++11 -fno-exceptions -fno-rtti
 LFLAGS := -nostdlib -Tldscript
@@ -31,8 +30,8 @@ all: ndless_installer_4.0.3_cx.tns ndless_installer_4.0.3_cascx.tns
 ndless_installer.elf: stage0.o stage1.o utils.o
 	$(LD) $(LFLAGS) stage1.o utils.o -o $@
 
-Problem1_mid.xml: luabin ndless_installer.bin
-	./$^ $@
+Problem1_mid.xml: ndless_installer.bin
+	../tools/LuaBin/luabin $^ $@
 
 Problem1.xml: Problem1_top.xml Problem1_mid.xml Problem1_bot.xml
 	cat $^ > $@
@@ -46,6 +45,6 @@ test: ndless_installer_4.0.3_cascx.tns
 	firebird-send $^ ndless
 
 clean:
-	rm -f luabin Problem1.xml Problem2.xml Problem1_mid.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.0.3_cx.tns $(DISTDIR)/ndless_installer_4.0.3_cascx.tns
+	rm -f Problem1.xml Problem2.xml Problem1_mid.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.0.3_cx.tns $(DISTDIR)/ndless_installer_4.0.3_cascx.tns
 
 .PHONY: test clean

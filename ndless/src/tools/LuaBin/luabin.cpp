@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 {
 	if(argc != 3)
 	{
-		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml [--391]" << std::endl;
+		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml" << std::endl;
 		return 1;
 	}
 
