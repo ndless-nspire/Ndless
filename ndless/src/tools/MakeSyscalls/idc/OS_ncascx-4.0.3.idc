@@ -7,9 +7,12 @@ static main(void)
 	MakeName	(0X10005C1C,	"cursor_show");
 	MakeName	(0X10005D30,	"gui_gc_getGC");
 	MakeName	(0X10005D9C,	"get_documents_dir");
+	MakeName	(0X10006864,	"TI_TM_IsExamMode");
 	MakeName	(0X100075B0,	"Exitptt");
 	MakeName	(0X10008D24,	"file_exists");
 	MakeName	(0X10009A94,	"aDoLocalRawgetS");
+	MakeName	(0X1000A670,	"ndless_ploader_hook_func");
+	MakeName	(0X1000A868,	"ndless_ploader_hook");
 	MakeName	(0X1000B58C,	"_gui_gc_blit_buffer");
 	MakeName	(0X1000B72C,	"_gui_gc_getIconSize");
 	MakeName	(0X1000B7F0,	"_gui_gc_setColorRGB");
@@ -33,6 +36,7 @@ static main(void)
 	MakeName	(0X1000DAA4,	"_gui_gc_finish");
 	MakeName	(0X1000DB20,	"_gui_gc_begin");
 	MakeName	(0X1000DC98,	"_gui_gc_new");
+	MakeName	(0X100124F4,	"ndless_end_of_init");
 	MakeName	(0X10015590,	"currentdoc_open");
 	MakeName	(0X10015834,	"currentdoc_save");
 	MakeName	(0X1001B668,	"OS_InitNavNet");
@@ -187,6 +191,7 @@ static main(void)
 	MakeName	(0X10118054,	"get_res_string");
 	MakeName	(0X101181A0,	"get_res_string_sys");
 	MakeName	(0X1013333C,	"luaL_openlibs");
+	MakeName	(0X101333BC,	"lua_interp_startup");
 	MakeName	(0X1013CB00,	"errfile");
 	MakeName	(0X1013FBD4,	"lua_clipboard_getText");
 	MakeName	(0X10140828,	"gc_lua_fillArc");
@@ -220,6 +225,7 @@ static main(void)
 	MakeName	(0X10229910,	"touchpad_read");
 	MakeName	(0X1022A60C,	"screenCallback");
 	MakeName	(0X1029AC60,	"get_event");
+	MakeName	(0X1029AEA0,	"after_ndless_end_of_init");
 	MakeName	(0X1029B5E0,	"documents_subdir_exists");
 	MakeName	(0X1029C664,	"string_len");
 	MakeName	(0X1029C66C,	"string_charAt");
@@ -270,6 +276,8 @@ static main(void)
 	MakeName	(0X10305A70,	"inflateInit2_");
 	MakeName	(0X10305BA8,	"inflateEnd");
 	MakeName	(0X103061DC,	"inflate");
+	MakeName	(0X1030C9A0,	"zlibVersion");
+	MakeName	(0X1030C9AC,	"zlibCompileFlags");
 	MakeName	(0X1030C9D8,	"adler32");
 	MakeName	(0X1030D8E4,	"CSC_Place_On_List");
 	MakeName	(0X1030D914,	"CSC_Priority_Place_On_List");
@@ -589,8 +597,6 @@ static main(void)
 	MakeName	(0X10625420,	"__OS_drawProgramEditor");
 	MakeName	(0X10686818,	"luaB_collectgarbage");
 	MakeName	(0X1075BE18,	"TI_NN_NH_RegisterNotifyCallback");
-	MakeName	(0X107DDA94,	"zlibVersion");
-	MakeName	(0X107DF130,	"zlibCompileFlags");
 	MakeName	(0X1081C8AC,	"getcurrenv");
 	MakeName	(0X1081C8F8,	"lua_xmove");
 	MakeName	(0X1081C9B4,	"lua_setlevel");
@@ -767,6 +773,7 @@ static main(void)
 	MakeName	(0X10828E0C,	"preinit_state");
 	MakeName	(0X10828EA4,	"close_state");
 	MakeName	(0X10828F24,	"lua_close");
+	MakeName	(0X10828F28,	"lua_interp_shutdown");
 	MakeName	(0X10828F98,	"lua_newstate");
 	MakeName	(0X108290BC,	"stack_init");
 	MakeName	(0X10829198,	"callallgcTM");
@@ -808,7 +815,6 @@ static main(void)
 	MakeName	(0X109CDD18,	"aSysEvg");
 	MakeName	(0X109CF124,	"aPacketSize");
 	MakeName	(0X109CF130,	"aDataLength");
-	MakeName	(0X109D4B34,	"aL_0");
 	MakeName	(0X109DA86C,	"aD_D_D_D_2");
 	MakeName	(0X109DA89C,	"aManifest_sig");
 	MakeName	(0X109DA8CC,	"aManifest_cer");
@@ -817,16 +823,7 @@ static main(void)
 	MakeName	(0X10A07AF0,	"aFailme___");
 	MakeName	(0X10A07DA8,	"aInvalidImage");
 	MakeName	(0X10A0824C,	"aHw");
-	MakeName	(0X10A08B8C,	"aUrn");
-	MakeName	(0X10A09A84,	"aInvalidYtype");
-	MakeName	(0X10A09BA0,	"aNeedSymexpr");
-	MakeName	(0X10A09BB0,	"aInternalError");
 	MakeName	(0X10A1AFF8,	"odd_parity");
-	MakeName	(0X10A500B8,	"aHM_0");
-	MakeName	(0X10A500C0,	"aHMS");
-	MakeName	(0X10A500CC,	"a1d");
-	MakeName	(0X10A500D0,	"aABDY");
-	MakeName	(0X10A500DC,	"aHMSZ");
 	MakeName	(0X10A50F64,	"aVbfCreationFailedStatusLx");
 	MakeName	(0X10A57AA0,	"aEditorSettin_0");
 	MakeName	(0X10A5CC5C,	"aArg1Null");
@@ -842,8 +839,6 @@ static main(void)
 	MakeName	(0X10A9DF2C,	"aA1");
 	MakeName	(0X10AC9C6C,	"aNoValue");
 	MakeName	(0X10ACD370,	"aEmiNormal_0");
-	MakeName	(0X10AE014C,	"aT_11");
-	MakeName	(0X10AE0150,	"aTT");
 	MakeName	(0X10FE5716,	"keypad_type");
 	MakeName	(0X1109CF1C,	"gui_gc_global_GC_ptr");
 	MakeName	(0X1109F320,	"aNodeinfoSUnableToAllocateDB");

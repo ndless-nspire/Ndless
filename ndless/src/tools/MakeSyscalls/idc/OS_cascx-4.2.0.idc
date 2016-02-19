@@ -358,6 +358,8 @@ static main(void)
 	MakeName	(0X10316500,	"inflateInit2_");
 	MakeName	(0X10316638,	"inflateEnd");
 	MakeName	(0X10316C6C,	"inflate");
+	MakeName	(0X1031D430,	"zlibVersion");
+	MakeName	(0X1031D43C,	"zlibCompileFlags");
 	MakeName	(0X1031D468,	"adler32");
 	MakeName	(0X1031E3A4,	"CSC_Priority_Place_On_List");
 	MakeName	(0X1031E41C,	"CSC_Remove_From_List");
@@ -730,8 +732,6 @@ static main(void)
 	MakeName	(0X107304D0,	"INT_Target_Initialize");
 	MakeName	(0X1079AD18,	"TMT_Read_Timer");
 	MakeName	(0X107B3B5C,	"TMT_Enable_Timer");
-	MakeName	(0X107D1A48,	"zlibVersion");
-	MakeName	(0X107D1B40,	"zlibCompileFlags");
 	MakeName	(0X1084263C,	"getcurrenv");
 	MakeName	(0X10842688,	"lua_xmove");
 	MakeName	(0X10842744,	"lua_setlevel");
@@ -976,10 +976,6 @@ static main(void)
 	MakeName	(0X10ADBE7C,	"aDlgAfwProblemNameTooLong");
 	MakeName	(0X10AEB0B4,	"aAr6001Idle");
 	MakeName	(0X10AFE3E8,	"a__GeographerDmtkGraphSrcD_0");
-	MakeName	(0X10B00FB8,	"aHMS");
-	MakeName	(0X10B00FC4,	"a1d");
-	MakeName	(0X10B00FC8,	"aABDY");
-	MakeName	(0X10B00FD4,	"aHMSZ");
 	MakeName	(0X10B08A10,	"aEditorSettin_0");
 	MakeName	(0X10B0DBF8,	"aArg1Null");
 	MakeName	(0X10B0DE28,	"aPeditorCursor_nodeNull");
@@ -1000,8 +996,6 @@ static main(void)
 	MakeName	(0X10B7FE3C,	"TI_ME_F16_EPS");
 	MakeName	(0X10B8A21C,	"aTi_cpslidejoint");
 	MakeName	(0X10B8C510,	"aTi_cpdampedrotaryspring");
-	MakeName	(0X10B92918,	"aT_11");
-	MakeName	(0X10B9291C,	"aTT");
 	MakeName	(0X1109854C,	"aSMsg_findremoteserverReturn");
 	MakeName	(0X11098670,	"keypad_type");
 	MakeName	(0X11150F1C,	"gui_gc_global_GC_ptr");

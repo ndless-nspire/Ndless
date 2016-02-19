@@ -251,8 +251,9 @@ static main(void)
 	MakeName	(0X102AD634,	"string_sprintf_utf16");
 	MakeName	(0X102AD6C8,	"string_formatInteger");
 	MakeName	(0X102CAC94,	"TI_Assert");
+	MakeName	(0X102D0C28,	"MemSet");
 	MakeName	(0X102D0C34,	"unknown_TI_AllocateBlock__0");
-	MakeName	(0X102D0DF0,	"unknown_TI_AllocateBlock_");
+	MakeName	(0X102D0DF0,	"MemAlloc");
 	MakeName	(0X102D10B4,	"utf162ascii");
 	MakeName	(0X102D3C8C,	"ascii2utf16");
 	MakeName	(0X102DE094,	"refresh_homescr");
@@ -276,6 +277,8 @@ static main(void)
 	MakeName	(0X10315F80,	"inflateInit2_");
 	MakeName	(0X103160B8,	"inflateEnd");
 	MakeName	(0X103166EC,	"inflate");
+	MakeName	(0X1031CEB0,	"zlibVersion");
+	MakeName	(0X1031CEBC,	"zlibCompileFlags");
 	MakeName	(0X1031CEE8,	"adler32");
 	MakeName	(0X1031DDF4,	"CSC_Place_On_List");
 	MakeName	(0X1031DE24,	"CSC_Priority_Place_On_List");
@@ -764,8 +767,6 @@ static main(void)
 	MakeName	(0X10848ED4,	"luaF_close");
 	MakeName	(0X108498A0,	"luaC_separateudata");
 	MakeName	(0X1084A76C,	"luaopen_math");
-	MakeName	(0X1084A84C,	"zlibVersion");
-	MakeName	(0X1084A880,	"zlibCompileFlags");
 	MakeName	(0X1084B2C0,	"luaM_realloc_");
 	MakeName	(0X1084B470,	"luaO_rawequalObj");
 	MakeName	(0X1084B4F8,	"luaO_chunkid");

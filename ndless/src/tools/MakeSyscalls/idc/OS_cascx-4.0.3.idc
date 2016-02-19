@@ -224,6 +224,7 @@ static main(void)
 	MakeName	(0X100CF9FC,	"aErrorCreatin_0");
 	MakeName	(0X100CFA00,	"aErrnoD_0");
 	MakeName	(0X100D0300,	"disp_str");
+	MakeName	(0X100D2A94,	"read_adc");
 	MakeName	(0X100D67C4,	"ti_pm_register_dma");
 	MakeName	(0X100D9404,	"reboot");
 	MakeName	(0X10117C58,	"read_unaligned");
@@ -356,6 +357,8 @@ static main(void)
 	MakeName	(0X10305FAC,	"inflateInit2_");
 	MakeName	(0X103060E4,	"inflateEnd");
 	MakeName	(0X10306718,	"inflate");
+	MakeName	(0X1030CEDC,	"zlibVersion");
+	MakeName	(0X1030CEE8,	"zlibCompileFlags");
 	MakeName	(0X1030CF14,	"adler32");
 	MakeName	(0X1030DE50,	"CSC_Priority_Place_On_List");
 	MakeName	(0X1030DEC8,	"CSC_Remove_From_List");
@@ -724,8 +727,6 @@ static main(void)
 	MakeName	(0X10725144,	"INT_Target_Initialize");
 	MakeName	(0X1075DA60,	"TMT_Read_Timer");
 	MakeName	(0X10776454,	"TMT_Enable_Timer");
-	MakeName	(0X10795354,	"zlibVersion");
-	MakeName	(0X1079536C,	"zlibCompileFlags");
 	MakeName	(0X1081B600,	"usbd_pipe2device_handle");
 	MakeName	(0X1081B740,	"usbd_get_quirks");
 	MakeName	(0X1081CE64,	"getcurrenv");
@@ -953,7 +954,6 @@ static main(void)
 	MakeName	(0X10A2FD80,	"aSysEvg");
 	MakeName	(0X10A3118C,	"aPacketSize");
 	MakeName	(0X10A31198,	"aDataLength");
-	MakeName	(0X10A36B9C,	"aL_0");
 	MakeName	(0X10A3C8D4,	"aD_D_D_D_2");
 	MakeName	(0X10A3C904,	"aManifest_sig_0");
 	MakeName	(0X10A3C934,	"aManifest_cer_0");
@@ -963,10 +963,6 @@ static main(void)
 	MakeName	(0X10A6A188,	"aInvalidImage");
 	MakeName	(0X10A6A260,	"mathext_meths");
 	MakeName	(0X10A6A61C,	"aHw");
-	MakeName	(0X10A6AF5C,	"aUrn");
-	MakeName	(0X10A6BE54,	"aInvalidYtype");
-	MakeName	(0X10A6BF70,	"aNeedSymexpr");
-	MakeName	(0X10A6BF80,	"aInternalError");
 	MakeName	(0X10A7D410,	"odd_parity");
 	MakeName	(0X10A83830,	"menutimer_vtbl");
 	MakeName	(0X10A8620C,	"aOs_extInstallComplete0x04_0");
@@ -976,11 +972,6 @@ static main(void)
 	MakeName	(0X10A9C620,	"aAr6001Idle");
 	MakeName	(0X10AA3808,	"a1_2_3");
 	MakeName	(0X10AB1380,	"aFailedToInitRsna");
-	MakeName	(0X10AB2518,	"aHM_0");
-	MakeName	(0X10AB2520,	"aHMS");
-	MakeName	(0X10AB252C,	"a1d");
-	MakeName	(0X10AB2530,	"aABDY");
-	MakeName	(0X10AB253C,	"aHMSZ");
 	MakeName	(0X10AB9F00,	"aEditorSettin_0");
 	MakeName	(0X10ABF0BC,	"aArg1Null");
 	MakeName	(0X10ABF2EC,	"aPeditorCursor_nodeNull");
@@ -1000,8 +991,6 @@ static main(void)
 	MakeName	(0X10B2D7E0,	"aSNearS");
 	MakeName	(0X10B2F970,	"aEmiNormal_0");
 	MakeName	(0X10B2FC10,	"TI_ME_F16_EPS");
-	MakeName	(0X10B4248C,	"aT_11");
-	MakeName	(0X10B42490,	"aTT");
 	MakeName	(0X11047930,	"aSMsg_findremoteserverReturn");
 	MakeName	(0X11047A54,	"keypad_type");
 	MakeName	(0X11100F1C,	"gui_gc_global_GC_ptr");
