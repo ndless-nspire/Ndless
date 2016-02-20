@@ -236,7 +236,6 @@ static main(void)
 	MakeName	(0X10133540,	"lua_interp_startup");
 	MakeName	(0X1013B788,	"lua_d2editor_newRichText");
 	MakeName	(0X1013CC84,	"errfile");
-	MakeName	(0X1013EDC0,	"image_height");
 	MakeName	(0X1013FD58,	"lua_clipboard_getText");
 	MakeName	(0X1013FDA4,	"lua_clipboard_addText");
 	MakeName	(0X101409AC,	"gc_lua_fillArc");
@@ -657,9 +656,12 @@ static main(void)
 	MakeName	(0X1048D274,	"usbd_get_device_descriptor");
 	MakeName	(0X1048D27C,	"usbd_interface2endpoint_descriptor");
 	MakeName	(0X1048D298,	"usbd_abort_pipe");
+	MakeName	(0X1048D2F8,	"usbd_interface_count");
 	MakeName	(0X1048D314,	"usbd_interface2device_handle");
 	MakeName	(0X1048D320,	"usbd_device2interface_handle");
+	MakeName	(0X1048D350,	"usbd_pipe2device_handle");
 	MakeName	(0X1048D358,	"usbd_get_endpoint_descriptor");
+	MakeName	(0X1048D51C,	"usbd_get_quirks");
 	MakeName	(0X1048D5C0,	"wakeup");
 	MakeName	(0X1048D6C0,	"usbd_endpoint_count");
 	MakeName	(0X1048D74C,	"usbd_start_next");
@@ -727,8 +729,6 @@ static main(void)
 	MakeName	(0X10725144,	"INT_Target_Initialize");
 	MakeName	(0X1075DA60,	"TMT_Read_Timer");
 	MakeName	(0X10776454,	"TMT_Enable_Timer");
-	MakeName	(0X1081B600,	"usbd_pipe2device_handle");
-	MakeName	(0X1081B740,	"usbd_get_quirks");
 	MakeName	(0X1081CE64,	"getcurrenv");
 	MakeName	(0X1081CEB0,	"lua_xmove");
 	MakeName	(0X1081CF6C,	"lua_setlevel");
@@ -851,7 +851,7 @@ static main(void)
 	MakeName	(0X1081FCC4,	"luaB_pairs");
 	MakeName	(0X1081FD04,	"luaB_error");
 	MakeName	(0X1081FD74,	"luaB_unpack");
-	MakeName	(0X1081FEB4,	"luaB_type");
+	MakeName	(0X1081FE98,	"luaB_type");
 	MakeName	(0X1081FED4,	"luaB_tostring");
 	MakeName	(0X1081FFF0,	"luaB_tonumber");
 	MakeName	(0X1082010C,	"luaB_setmetatable");
@@ -932,7 +932,6 @@ static main(void)
 	MakeName	(0X10834448,	"load_lua_libs");
 	MakeName	(0X1088B3C8,	"estack_to_float");
 	MakeName	(0X10899DBC,	"push_difference");
-	MakeName	(0X108E95D0,	"usbd_interface_count");
 	MakeName	(0X1090F6F4,	"uint32_MulAndThrowErrOnOvrFlw");
 	MakeName	(0X1091BADC,	"divide_top");
 	MakeName	(0X10953B4C,	"TVM_Add_Combo");
@@ -948,7 +947,6 @@ static main(void)
 	MakeName	(0X109B8F8C,	"isprint");
 	MakeName	(0X109CD928,	"gui_gc_setPen");
 	MakeName	(0X109FD88C,	"lua_math__evalexpr");
-	MakeName	(0X10A0A214,	"TI_NN_NH_Init");
 	MakeName	(0X10A2147C,	"aD_16");
 	MakeName	(0X10A2FD78,	"aSysMon");
 	MakeName	(0X10A2FD80,	"aSysEvg");

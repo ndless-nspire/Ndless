@@ -96,6 +96,7 @@ static main(void)
 	MakeName	(0X1008BA1C,	"TI_NN_GetNodeMaxPktSize");
 	MakeName	(0X1008BB9C,	"TI_NN_Disconnect");
 	MakeName	(0X1008BBA0,	"TI_NN_Connect");
+	MakeName	(0X1008BC10,	"TI_NN_LoadConnectors");
 	MakeName	(0X1008BD8C,	"LoadNavstack");
 	MakeName	(0X1008BEF0,	"TI_NN_Init");
 	MakeName	(0X1008C05C,	"TI_NN_NodeEnumDone");
@@ -145,6 +146,7 @@ static main(void)
 	MakeName	(0X1009B5B4,	"TI_NN_DirEnumDone");
 	MakeName	(0X1009B6D8,	"TI_NN_DirEnumNext");
 	MakeName	(0X1009B95C,	"TI_NN_DirEnumInit");
+	MakeName	(0X1009BCC8,	"TI_NN_GetFile");
 	MakeName	(0X1009C4F8,	"TI_NS_BufferWrite");
 	MakeName	(0X1009C9A4,	"TI_NN_CH_Write");
 	MakeName	(0X1009CAA0,	"TI_NN_CH_Read");
@@ -170,7 +172,6 @@ static main(void)
 	MakeName	(0X100A9C40,	"send_remote_packet");
 	MakeName	(0X100A9F50,	"q_pkt_n_wait_for_ack");
 	MakeName	(0X100AAE54,	"process_received_pckt");
-	MakeName	(0X100AC964,	"TI_NN_LoadConnectors");
 	MakeName	(0X100ACF9C,	"create_pkt_list");
 	MakeName	(0X100AD1F8,	"TI_NS_Write");
 	MakeName	(0X100C8A94,	"get_battery_door_detection_mode");
@@ -183,11 +184,9 @@ static main(void)
 	MakeName	(0X100D33FC,	"aTmpManifest_img");
 	MakeName	(0X100D3400,	"aTmp_1");
 	MakeName	(0X100D3404,	"aTmpManifest_res_0");
-	MakeName	(0X100D37E0,	"TI_NN_GetFile");
 	MakeName	(0X100D441C,	"disp_str");
 	MakeName	(0X100DA67C,	"ti_pm_register_dma");
 	MakeName	(0X100DD2BC,	"reboot");
-	MakeName	(0X10111870,	"luaL_gsub");
 	MakeName	(0X1011BCA4,	"read_unaligned");
 	MakeName	(0X1011BEF0,	"get_res_string");
 	MakeName	(0X1011C03C,	"get_res_string_sys");
@@ -542,6 +541,7 @@ static main(void)
 	MakeName	(0X1049D464,	"usbd_get_device_descriptor");
 	MakeName	(0X1049D46C,	"usbd_interface2endpoint_descriptor");
 	MakeName	(0X1049D488,	"usbd_abort_pipe");
+	MakeName	(0X1049D4E8,	"usbd_interface_count");
 	MakeName	(0X1049D504,	"usbd_interface2device_handle");
 	MakeName	(0X1049D510,	"usbd_device2interface_handle");
 	MakeName	(0X1049D548,	"usbd_get_endpoint_descriptor");
@@ -564,6 +564,7 @@ static main(void)
 	MakeName	(0X1049E7B0,	"usbd_open_pipe");
 	MakeName	(0X1049E7CC,	"usbd_intr_transfer");
 	MakeName	(0X1049E884,	"usbd_bulk_transfer");
+	MakeName	(0X1049E944,	"usbd_intr_transfer_cb");
 	MakeName	(0X1049E954,	"usbd_bulk_transfer_cb");
 	MakeName	(0X1049E9B0,	"usbd_set_port_feature");
 	MakeName	(0X1049EA00,	"usbd_clear_port_feature");
@@ -679,6 +680,7 @@ static main(void)
 	MakeName	(0X10843D84,	"luaL_addstring");
 	MakeName	(0X10843DA4,	"luaL_pushresult");
 	MakeName	(0X10843DC8,	"luaL_findtable");
+	MakeName	(0X10843ED4,	"luaL_gsub");
 	MakeName	(0X10843F90,	"luaL_newmetatable");
 	MakeName	(0X10844004,	"luaL_getmetafield");
 	MakeName	(0X10844070,	"luaL_callmeta");
@@ -794,7 +796,6 @@ static main(void)
 	MakeName	(0X10854DF8,	"tonumber");
 	MakeName	(0X10859580,	"luaX_init");
 	MakeName	(0X10859658,	"load_lua_libs");
-	MakeName	(0X108C3950,	"usbd_interface_count");
 	MakeName	(0X1091B8F8,	"usbd_pipe2device_handle");
 	MakeName	(0X1091D7D0,	"usbd_get_quirks");
 	MakeName	(0X109330CC,	"_show_msgUserInput");
@@ -804,7 +805,6 @@ static main(void)
 	MakeName	(0X10965040,	"image_height");
 	MakeName	(0X10965274,	"image_width");
 	MakeName	(0X10970820,	"TI_NN_LoginServiceStop");
-	MakeName	(0X1097D02C,	"usbd_intr_transfer_cb");
 	MakeName	(0X10985240,	"luaB_print");
 	MakeName	(0X1098A570,	"isprint");
 	MakeName	(0X1099EF40,	"gui_gc_setPen");

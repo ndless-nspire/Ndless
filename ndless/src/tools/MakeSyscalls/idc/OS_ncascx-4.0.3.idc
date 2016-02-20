@@ -541,6 +541,7 @@ static main(void)
 	MakeName	(0X1048CD34,	"usbd_get_device_descriptor");
 	MakeName	(0X1048CD3C,	"usbd_interface2endpoint_descriptor");
 	MakeName	(0X1048CD58,	"usbd_abort_pipe");
+	MakeName	(0X1048CDB8,	"usbd_interface_count");
 	MakeName	(0X1048CDD4,	"usbd_interface2device_handle");
 	MakeName	(0X1048CDE0,	"usbd_device2interface_handle");
 	MakeName	(0X1048CE18,	"usbd_get_endpoint_descriptor");
@@ -563,6 +564,7 @@ static main(void)
 	MakeName	(0X1048E080,	"usbd_open_pipe");
 	MakeName	(0X1048E09C,	"usbd_intr_transfer");
 	MakeName	(0X1048E154,	"usbd_bulk_transfer");
+	MakeName	(0X1048E214,	"usbd_intr_transfer_cb");
 	MakeName	(0X1048E224,	"usbd_bulk_transfer_cb");
 	MakeName	(0X1048E280,	"usbd_set_port_feature");
 	MakeName	(0X1048E2D0,	"usbd_clear_port_feature");
@@ -796,14 +798,12 @@ static main(void)
 	MakeName	(0X10833E90,	"load_lua_libs");
 	MakeName	(0X1086666C,	"usbd_pipe2device_handle");
 	MakeName	(0X108667F8,	"usbd_get_quirks");
-	MakeName	(0X1089C554,	"usbd_interface_count");
 	MakeName	(0X10900414,	"_show_msgUserInput");
 	MakeName	(0X10905A5C,	"lua_var_recall");
 	MakeName	(0X1090ABEC,	"gui_gc_fillPoly");
 	MakeName	(0X1090AC0C,	"gui_gc_getFontHeight");
 	MakeName	(0X109321C8,	"image_width");
 	MakeName	(0X1093222C,	"image_height");
-	MakeName	(0X1093ABDC,	"usbd_intr_transfer_cb");
 	MakeName	(0X1093D9A0,	"TI_NN_LoginServiceStop");
 	MakeName	(0X109521D4,	"luaB_print");
 	MakeName	(0X109576F0,	"isprint");

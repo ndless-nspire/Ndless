@@ -50,7 +50,6 @@ static main(void)
 	MakeName	(0X10024E64,	"_show_msgbox_2b");
 	MakeName	(0X1002515C,	"mymsgOK_helper");
 	MakeName	(0X100255F4,	"show_dialog_box2_");
-	MakeName	(0X10028678,	"log_system_vaarg");
 	MakeName	(0X1002BF38,	"TI_DF_GetNumDigitsVal");
 	MakeName	(0X1002C500,	"TI_DF_GetLocalCopyOfDocContext");
 	MakeName	(0X1002D954,	"TI_PCL_SetCurrentMenu");
@@ -185,6 +184,7 @@ static main(void)
 	MakeName	(0X1009DC84,	"TI_NN_SS_StartService");
 	MakeName	(0X1009DF00,	"TI_NN_SS_Destroy");
 	MakeName	(0X1009DF60,	"TI_NN_SS_Init");
+	MakeName	(0X1009F994,	"log_system_vaarg");
 	MakeName	(0X100A0A1C,	"TI_NS_random8");
 	MakeName	(0X100A4DF4,	"find_connection");
 	MakeName	(0X100A92FC,	"TI_NS_WritePacketToRemoteStream");
@@ -227,7 +227,6 @@ static main(void)
 	MakeName	(0X100D6774,	"read_adc");
 	MakeName	(0X100DA498,	"ti_pm_register_dma");
 	MakeName	(0X100DD0D8,	"reboot");
-	MakeName	(0X101079E0,	"luaL_gsub");
 	MakeName	(0X1011BAFC,	"read_unaligned");
 	MakeName	(0X1011BD48,	"get_res_string");
 	MakeName	(0X1011BE94,	"get_res_string_sys");
@@ -236,7 +235,6 @@ static main(void)
 	MakeName	(0X10137C4C,	"luaL_openlibs");
 	MakeName	(0X10137CCC,	"lua_interp_startup");
 	MakeName	(0X1013FFF8,	"lua_d2editor_newRichText");
-	MakeName	(0X101416E8,	"luaB_rawset");
 	MakeName	(0X10142E6C,	"errfile");
 	MakeName	(0X10144820,	"lua_clipboard_getText");
 	MakeName	(0X1014486C,	"lua_clipboard_addText");
@@ -253,7 +251,6 @@ static main(void)
 	MakeName	(0X10148188,	"lua_platform_isDeviceModeRendering");
 	MakeName	(0X101481A8,	"lua_platform_gc");
 	MakeName	(0X10148598,	"ScriptResources_readMetaData");
-	MakeName	(0X10148F20,	"image_height");
 	MakeName	(0X1014AEEC,	"lua_toolpalette_enable");
 	MakeName	(0X1014E1B8,	"os_monitor_thread");
 	MakeName	(0X1014FAA4,	"log_rs232");
@@ -415,6 +412,7 @@ static main(void)
 	MakeName	(0X103FEB20,	"btiosc_handler4");
 	MakeName	(0X103FEBEC,	"btiosc_handler1");
 	MakeName	(0X103FEEA0,	"get_usb_info");
+	MakeName	(0X103FEF44,	"driver_jbtio");
 	MakeName	(0X103FF738,	"device_get_ivars");
 	MakeName	(0X103FF748,	"USBDEVNAME");
 	MakeName	(0X103FF778,	"device_get_softc");
@@ -424,6 +422,8 @@ static main(void)
 	MakeName	(0X103FFA9C,	"register_drivers");
 	MakeName	(0X103FFAE4,	"_usb_match");
 	MakeName	(0X1040015C,	"usbd_errstr");
+	MakeName	(0X10400BA4,	"driver_tdi_4x_otg");
+	MakeName	(0X1040342C,	"driver_tdi_4x");
 	MakeName	(0X10404374,	"dcd_free_pipe");
 	MakeName	(0X10404650,	"build_single_td");
 	MakeName	(0X10409BB8,	"EOREAD4");
@@ -633,8 +633,11 @@ static main(void)
 	MakeName	(0X1047A524,	"aRlimap_c_0");
 	MakeName	(0X1047AB50,	"aRlimapcm_c_0");
 	MakeName	(0X1047E5D0,	"SHA1_Update");
+	MakeName	(0X10498E68,	"driver_ehci_local");
 	MakeName	(0X10499060,	"ehci_unknownvendor_attach");
+	MakeName	(0X10499254,	"driver_ucompdev");
 	MakeName	(0X104995E0,	"unknown_match2");
+	MakeName	(0X10499A70,	"driver_uhub");
 	MakeName	(0X10499FBC,	"uhub_explore");
 	MakeName	(0X1049A6DC,	"bus_generic_resume");
 	MakeName	(0X1049A714,	"bus_generic_shutdown");
@@ -658,9 +661,12 @@ static main(void)
 	MakeName	(0X1049D9E4,	"usbd_get_device_descriptor");
 	MakeName	(0X1049D9EC,	"usbd_interface2endpoint_descriptor");
 	MakeName	(0X1049DA08,	"usbd_abort_pipe");
+	MakeName	(0X1049DA68,	"usbd_interface_count");
 	MakeName	(0X1049DA84,	"usbd_interface2device_handle");
 	MakeName	(0X1049DA90,	"usbd_device2interface_handle");
+	MakeName	(0X1049DAC0,	"usbd_pipe2device_handle");
 	MakeName	(0X1049DAC8,	"usbd_get_endpoint_descriptor");
+	MakeName	(0X1049DC8C,	"usbd_get_quirks");
 	MakeName	(0X1049DD30,	"wakeup");
 	MakeName	(0X1049DE30,	"usbd_endpoint_count");
 	MakeName	(0X1049DEBC,	"usbd_start_next");
@@ -692,8 +698,14 @@ static main(void)
 	MakeName	(0X104A27CC,	"ehci_abort_xfer");
 	MakeName	(0X104A2DCC,	"ehci_open");
 	MakeName	(0X104A31F0,	"bsd_free");
-	MakeName	(0X104A5478,	"jhid_attach");
-	MakeName	(0X104A5758,	"jhid_match");
+	MakeName	(0X104A3C6C,	"driver_jcdc");
+	MakeName	(0X104A41A0,	"driver_cdc_detach");
+	MakeName	(0X104A4290,	"driver_cdc_match");
+	MakeName	(0X104A42E8,	"driver_cdc_attach");
+	MakeName	(0X104A4A64,	"driver_jnav");
+	MakeName	(0X104A506C,	"driver_jhid_general");
+	MakeName	(0X104A5410,	"driver_jhid_attach");
+	MakeName	(0X104A5758,	"driver_jhid_match");
 	MakeName	(0X104A750C,	"dma_alloc");
 	MakeName	(0X104A80F0,	"utf16_strlen");
 	MakeName	(0X104A8F1C,	"setjmp");
@@ -708,7 +720,6 @@ static main(void)
 	MakeName	(0X104D0F1C,	"FormatManager_destroy");
 	MakeName	(0X104D0F48,	"FormatManager_create");
 	MakeName	(0X10595948,	"registerNotifyCb");
-	MakeName	(0X10596CCC,	"TVM_Wizard_open");
 	MakeName	(0X105974F4,	"create_ar6k_cmdline_task");
 	MakeName	(0X1059F93C,	"gui_gc_getFont");
 	MakeName	(0X105AD4E8,	"MenuItem_allocName");
@@ -728,7 +739,6 @@ static main(void)
 	MakeName	(0X106A2AF8,	"luaB_collectgarbage");
 	MakeName	(0X106BD508,	"usbd_get_interface");
 	MakeName	(0X106FFB48,	"usbd_setup_isoc_xfer");
-	MakeName	(0X107151F4,	"lua_toolpalette_register");
 	MakeName	(0X107304D0,	"INT_Target_Initialize");
 	MakeName	(0X1079AD18,	"TMT_Read_Timer");
 	MakeName	(0X107B3B5C,	"TMT_Enable_Timer");
@@ -814,6 +824,7 @@ static main(void)
 	MakeName	(0X10844360,	"luaL_addstring");
 	MakeName	(0X10844380,	"luaL_pushresult");
 	MakeName	(0X108443A4,	"luaL_findtable");
+	MakeName	(0X108444B0,	"luaL_gsub");
 	MakeName	(0X1084456C,	"luaL_newmetatable");
 	MakeName	(0X108445E0,	"luaL_getmetafield");
 	MakeName	(0X1084464C,	"luaL_callmeta");
@@ -853,6 +864,7 @@ static main(void)
 	MakeName	(0X1084549C,	"luaB_pairs");
 	MakeName	(0X108454DC,	"luaB_error");
 	MakeName	(0X1084554C,	"luaB_unpack");
+	MakeName	(0X10845670,	"luaB_type");
 	MakeName	(0X108456AC,	"luaB_tostring");
 	MakeName	(0X108457C8,	"luaB_tonumber");
 	MakeName	(0X108458E4,	"luaB_setmetatable");
@@ -860,6 +872,7 @@ static main(void)
 	MakeName	(0X10845B90,	"luaB_select");
 	MakeName	(0X10845C34,	"ipairsaux");
 	MakeName	(0X10845C94,	"luaB_ipairs");
+	MakeName	(0X10845CFC,	"luaB_rawset");
 	MakeName	(0X10845D24,	"luaB_rawget");
 	MakeName	(0X10845D64,	"luaB_rawequal");
 	MakeName	(0X10845DA4,	"luaB_assert");
@@ -919,9 +932,7 @@ static main(void)
 	MakeName	(0X1084F0B0,	"luaS_resize");
 	MakeName	(0X1084F2A8,	"l_setbit");
 	MakeName	(0X10850108,	"lua_toboolean");
-	MakeName	(0X10850E38,	"usbd_pipe2device_handle");
 	MakeName	(0X108516AC,	"luaopen_string");
-	MakeName	(0X108516C8,	"usbd_get_quirks");
 	MakeName	(0X10852908,	"sethvalue");
 	MakeName	(0X1085298C,	"luaopen_table");
 	MakeName	(0X1085363C,	"luaT_init");
@@ -934,7 +945,6 @@ static main(void)
 	MakeName	(0X10859C34,	"load_lua_libs");
 	MakeName	(0X108ADC2C,	"estack_to_float");
 	MakeName	(0X108BC8C0,	"push_difference");
-	MakeName	(0X1090DAF8,	"usbd_interface_count");
 	MakeName	(0X10932C58,	"uint32_MulAndThrowErrOnOvrFlw");
 	MakeName	(0X1093F95C,	"divide_top");
 	MakeName	(0X10973364,	"TI_NN_NH_Init");
@@ -949,7 +959,6 @@ static main(void)
 	MakeName	(0X109D35C8,	"TI_NN_LoginServiceStop");
 	MakeName	(0X109ED318,	"isprint");
 	MakeName	(0X10A01CE8,	"gui_gc_setPen");
-	MakeName	(0X10A32704,	"luaB_type");
 	MakeName	(0X10A47A84,	"lua_math__evalexpr");
 	MakeName	(0X10A6DCBC,	"aD_16");
 	MakeName	(0X10A7CD20,	"aSysMon");
