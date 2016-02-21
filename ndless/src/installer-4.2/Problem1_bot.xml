@@ -1,6 +1,3 @@
-                    local x, y = addressToXY(0x13FF0000)
-                    drawByteString(gc, x, y, s)
-
                     gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
                     drawXCenteredString(gc, &quot;Ndless for OS 4.2.0&quot;, 30)
 
@@ -19,6 +16,12 @@
 
                     gc:setColorRGB(0, 0, 0)
                     gc:fillRect(0, 100, platform.window:width(), 2)
+
+                    local x, y = addressToXY_W(0x13FF0000)
+                    drawByteString_W(gc, x, y, s)
+
+                    x, y = addressToXY(0x13FF0000)
+                    drawByteString(gc, x, y, s)
                 end
 
             </sc:script>

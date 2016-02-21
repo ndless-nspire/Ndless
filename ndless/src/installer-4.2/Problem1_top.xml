@@ -52,6 +52,16 @@
                     return r8, g8, b8
                 end
                 
+                function addressToXY(address)
+                    local offset = math.floor((address - 0x13FDA800) / 2)
+                    return offset % 320, math.floor(offset / 320)
+                end
+
+                function addressToXY_W(address)
+                    local offset = math.floor((address - 0x13FDA800) / 2)
+                    return offset % 240, math.floor(offset / 240)
+                end
+
                 function drawByteString(gc, x, y, byteString)
                     local width = 320
                 
@@ -68,12 +78,23 @@
                         gc:fillRect(xx, yy, 1, 1)
                     end
                 end
-                
-                function addressToXY(address)
-                    local offset = math.floor((address - 0x13FDA800) / 2)
-                    return offset % 320, math.floor(offset / 320)
-                end
 
+                function drawByteString_W(gc, x, y, byteString)
+                    local width = 240
+                
+                    if #byteString % 2 == 1 then
+                        byteString = byteString .. &quot;\0&quot;
+                    end
+                
+                    for i=0, #byteString-1, 2 do
+                        local r, g, b = bytes2color(byteString:byte(i+1, i+2))
+                        gc:setColorRGB(r, g, b)
+                        local xx, yy = addressToXY_W(0x13ff0000 + i)
+                
+                        gc:fillRect(yy, xx, 1, 1)
+                    end
+                end
+                
                 local function drawXCenteredString(gc, str, y)
                     gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, "top")
                 end

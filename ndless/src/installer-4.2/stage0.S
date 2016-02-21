@@ -13,9 +13,23 @@ b start
 .word 0x0
 .word 0x0
 start:
-
 push {r4, r5, lr}
 
+@ On HW-W+, we need to jump into a LCD buffer mirror
+@ CAS or non-CAS?
+ldr r4, =0x1041F1C8 @ CASCX
+cmp lr, r4
+ldreq r4, =0x111516D4 @ lcd_mirror_ptr on CAS CX
+ldrne r4, =0x110ED6D4 @ and on CX
+ldr r4, [r4] @ Address of LCD mirror
+cmp r4, #0
+beq bootstrapped @ Not HW-W+
+add r4, r4, #(bootstrapped-_start) @ Calculate address
+add r4, r4, #(0x13ff0000-0x13fda800) @ of bootstrapped in mirror
+mov pc, r4 @ and jump to it
+.ltorg
+
+bootstrapped:
 @ CAS or non-CAS?
 ldr r4, =0x1041F1C8 @ CASCX
 cmp lr, r4
