@@ -27,11 +27,13 @@
 #include <ngc.h>
 
 #include "calchook.h"
+#include "lcd_compat.h"
 #include "ndless.h"
 
 // OS-specific
 // Call to the dialog box display telling that the format isn't recognized.
-static unsigned const ploader_hook_addrs[] = {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
+static unsigned const ploader_hook_addrs[NDLESS_MAX_OSID+1] =
+					       {0x10009984, 0x1000995C, 0x10009924, 0x10009924, 0x100098CC, 0x100098CC,
 						0x1000A988, 0x1000A95C, 0x1000A920, 0x1000A924,
 						0x1000A810, 0x1000A7D0, 0x0, 0x0,
 						0x0, 0x0, 0x1000A79C, 0x1000A78C,
@@ -46,7 +48,8 @@ BOOL ins_loaded_by_3rd_party_loader(void) {
 	return loaded_by_3rd_party_loader;
 }
 
-static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC, 0x1001046C, 0x1000ED30, 0x1000ECE0,
+static unsigned const end_of_init_addrs[NDLESS_MAX_OSID+1] =
+					       {0x100104F0, 0x10010478, 0x100104BC, 0x1001046C, 0x1000ED30, 0x1000ECE0,
 						0x1001264C, 0x100125D0, 0x10012470, 0x10012424,
 						0x0, 0x0, 0x0, 0x0,
 						0x0, 0x0, 0x0, 0x0,
@@ -56,7 +59,8 @@ static unsigned const end_of_init_addrs[] = {0x100104F0, 0x10010478, 0x100104BC,
 
 // OS-specific
 // get_res_string + 0xC8
-static unsigned const error_msg_patch_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
+					       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 						0x0, 0x0, 0x0, 0x0,
 						0x10111778, 0x10111574, 0x0, 0x0,
 						0x0, 0x0, 0x1011193C, 0x10111768,
@@ -77,16 +81,6 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	ut_debug_trace(INSTTR_INS_ENTER);
 	ut_read_os_version_index();
 	BOOL installed = FALSE;
-// useless if non persistent and won't work since stage1 set it up
-#if 0
-	struct next_descriptor *installed_next_descriptor = ut_get_next_descriptor();
-	if (installed_next_descriptor) {
-		if (*(unsigned*)installed_next_descriptor->ext_name == 0x534C444E) // 'NDLS'
-			installed = TRUE;
-		else
-			ut_panic("unknown N-ext");
-	}
-#endif
 
 	if (!argv[0] || argv[0][0] == 'L') // not opened from the Documents screen
 		ints_setup_handlers();
@@ -103,6 +97,9 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		return 0; // do nothing
 
 	if (!installed) {
+		// Load is_hww
+		lcd_compat_load_hwrev();
+
 		// 3.9, 4.0.3 and 4.2.0 don't need to be rebooted
 		if(ut_os_version_index < 10)
 		{

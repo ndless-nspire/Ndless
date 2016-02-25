@@ -60,6 +60,12 @@ typedef struct {
 	unsigned char arrow; /* area of the pad currently touched. see tpad_arrow_t. */
 } touchpad_report_t;
 
+typedef enum {
+        SCR_320x240_565=0,
+        SCR_240x320_565=1,
+        SCR_TYPE_COUNT=2
+} scr_type_t;
+
 /* for set_cpu_speed() */
 #define CPU_SPEED_150MHZ 0x00000002
 #define CPU_SPEED_120MHZ 0x000A1002
@@ -101,6 +107,8 @@ char *cfg_get(const char *key);
 void cfg_register_fileext(const char *ext, const char *prgm);
 void cfg_register_fileext_file(const char *fielpath, const char *ext, const char *prgm);
 #define nl_hassyscall(x) _nl_hassyscall(e_##x)
+/* lcd_blit.cpp */
+void lcd_blit(void *buffer, scr_type_t buffer_type);
 
 BOOL _is_touchpad(void);
 #define is_touchpad _is_touchpad()

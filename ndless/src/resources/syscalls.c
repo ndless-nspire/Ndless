@@ -21,8 +21,11 @@
  * Contributor(s): 
  ****************************************************************************/
 
+#include <libndls.h>
 #include <os.h>
 #include <syscall-list.h>
+
+#include "lcd_compat.h"
 #include "ndless.h"
 
 /* Ndless extensions exposed as syscalls. See os.h for documentation. */
@@ -98,9 +101,58 @@ int sc_nl_exec(const char *prgm_path, int argsn, char *args[]) {
 	return ld_exec_with_args(prgm_path, argsn, args, NULL);
 }
 
+typedef void (*lcd_blit_func)(void *buffer);
+
+static void lcd_blit_simple(void *buffer)
+{
+    memcpy(SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
+}
+
+static void lcd_blit_320x240_240x320(void *buffer)
+{
+    uint16_t *out = SCREEN_BASE_ADDRESS, *in = buffer;
+    for (int col = 0; col < 240; ++col)
+    {
+            uint16_t *outcol = out + col;
+            for(int row = 0; row < 320; ++row, outcol += 240)
+                    *outcol = *in++;
+    }
+}
+
+static void lcd_blit_240x320_320x240(void *buffer)
+{
+    uint16_t *out = SCREEN_BASE_ADDRESS, *in = buffer;
+    for (int col = 0; col < 320; ++col)
+    {
+            uint16_t *outcol = out + col;
+            for(int row = 0; row < 240; ++row, outcol += 320)
+                    *outcol = *in++;
+    }
+}
+
+lcd_blit_func sc_nl_lcd_blit(scr_type_t buffer_type)
+{
+       if (buffer_type == SCR_320x240_565)
+       {
+            if(!is_hww)
+                return lcd_blit_simple;
+            else
+                return lcd_blit_320x240_240x320;
+       }
+       else if(buffer_type == SCR_240x320_565)
+       {
+            if(is_hww)
+                return lcd_blit_simple;
+            else
+                return lcd_blit_240x320_320x240;
+       }
+       else
+           return 0;
+}
+
 unsigned const sc_syscall_num = __SYSCALLS_LAST;
 
-BOOL sc_nl_hassyscall(unsigned syscall_id) {
+bool sc_nl_hassyscall(unsigned syscall_id) {
 	return syscall_id <= sc_syscall_num && sc_addrs_ptr[syscall_id];
 }
 
@@ -110,5 +162,5 @@ unsigned sc_ext_table[] = {
 	(unsigned)sc_nl_osvalue, (unsigned)sc_ext_relocdatab, (unsigned)sc_nl_hwtype, (unsigned)sc_nl_isstartup,
 	(unsigned)luaext_getstate, (unsigned)ld_set_resident, (unsigned)sc_nl_ndless_rev, (unsigned)sc_nl_no_scr_redraw,
 	(unsigned)ins_loaded_by_3rd_party_loader, (unsigned)sc_nl_hwsubtype, (unsigned)sc_nl_exec, (unsigned)sc_nl_osid,
-	(unsigned)sc_nl_hassyscall,
+	(unsigned)sc_nl_hassyscall, (unsigned)sc_nl_lcd_blit,
 };

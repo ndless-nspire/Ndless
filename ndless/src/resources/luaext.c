@@ -71,7 +71,8 @@ static const luaL_reg ndlesslib[] = {
 
 // At the end of luaL_openlibs
 // OS-specific
-static unsigned const interp_startup_addrs[] = {0x101003CC, 0x101009F0, 0x100FFEE0, 0x1010052C, 0x100FC700, 0x100FCD4C,
+static unsigned const interp_startup_addrs[NDLESS_MAX_OSID+1] =
+					       {0x101003CC, 0x101009F0, 0x100FFEE0, 0x1010052C, 0x100FC700, 0x100FCD4C,
 						0x10125F30, 0x10126558, 0x10125974, 0x10125FCC,
 						0x1012C3E4, 0x1012C510, 0x0, 0x0,
 						0x0, 0x0, 0x1012C5A8, 0x1012C704,
@@ -81,7 +82,8 @@ static unsigned const interp_startup_addrs[] = {0x101003CC, 0x101009F0, 0x100FFE
 
 // At the beginning of lua_close
 // OS-specific
-static unsigned const interp_shutdown_addrs[] = {0x106D14B0, 0x106B59A4, 0x106B249C, 0x106B2C38, 0x106AA5B4, 0x106AAD50,
+static unsigned const interp_shutdown_addrs[NDLESS_MAX_OSID+1] =
+					       {0x106D14B0, 0x106B59A4, 0x106B249C, 0x106B2C38, 0x106AA5B4, 0x106AAD50,
 						0x10825B10, 0x1080A35C, 0x108072FC, 0x10807DB8,
 						0x1083391C, 0x10817C2C, 0x0, 0x0,
 						0x0, 0x0, 0x10815638, 0x10815BB8,
