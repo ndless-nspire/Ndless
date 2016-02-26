@@ -96,7 +96,7 @@ asm(
 " str	r3, [r2], #4 \n" // Update the recursion level, and point to saved_lr(2)
 " ldr	lr, [r2] \n" // Read from saved_lr(2)
 " and	r1, #0xFFFFFF3F \n" // Remove the mask
-" and	r0, #0xC0 \n" // Keep the mask
+" and	r0, #0x80 \n" // Keep the IRQ mask (FIQ always enabled for lcd_compat)
 " orr	r1, r0 \n" // Keep the new mask
 " msr	cpsr, r1 \n" // swi *must* restore cpsr. GCC may optimize with a cmp just after the swi for instance
 " ldmfd	sp!, {r0-r3} \n"

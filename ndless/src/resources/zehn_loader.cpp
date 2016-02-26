@@ -10,6 +10,7 @@
 
 #include "ndless.h"
 #include "ndless_version.h"
+#include "zehn_loader.h"
 
 // Lighter alternative to std::vector (DON'T ASSIGN)
 template <typename T> class Storage
@@ -55,7 +56,7 @@ bool zehn_check_string(const uint8_t *extra_data, const Zehn_flag flag, unsigned
 	return true;
 }
 
-extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]))
+extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]), bool *supports_hww)
 {
 	Zehn_header header;
 
@@ -211,6 +212,9 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 				msgbox("Error", "The application %s requires more than 32MB of RAM!", application_name);
 				return 2;
 			}
+			break;
+                case Zehn_flag_type::RUNS_ON_HWW:
+                        *supports_hww = f.data;
 			break;
 		default:
 			break;

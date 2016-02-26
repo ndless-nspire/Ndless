@@ -26,14 +26,15 @@
 #include <os.h>
 #include <sys/stat.h>
 
-#include "ndless.h"
 #include "bflt.h"
+#include "lcd_compat.h"
+#include "ndless.h"
 #include "zehn_loader.h"
 
 struct assoc_file_each_cb_ctx {
 	const char *prgm_name;
 	char *prgm_path;
-	BOOL *isassoc;
+	bool *isassoc;
 };
 
 int assoc_file_each_cb(const char *path, void *context) {
@@ -49,7 +50,7 @@ int assoc_file_each_cb(const char *path, void *context) {
 	return 0;
 }
 
-static BOOL is_current_prgm_resident;
+static bool is_current_prgm_resident;
 
 // Can be called through a builtin function by the running program
 void ld_set_resident(void) {
@@ -58,7 +59,7 @@ void ld_set_resident(void) {
 
 enum e_ld_bin_format ld_bin_format = LD_ERROR_BIN;
 
-static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int (**entry_address_ptr)(int, char*[]))
+static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int (**entry_address_ptr)(int, char*[]), bool *supports_hww)
 {
 	struct nuc_stat docstat;
 	if (nuc_stat(docpath, &docstat)) {
@@ -66,7 +67,7 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		return 1;
 	}
 
-	void *docptr;
+	uint8_t *docptr;
 	if(emu_debug_alloc_ptr)
 	{
 		if(emu_debug_alloc_size < docstat.st_size)
@@ -92,14 +93,14 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 	}
 
 	// Scan the first 20KiB (5120 32bit values) for an embedded Zehn file
-	uint32_t *ptr32 = docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 5120 ? (docstat.st_size / 4) : 5120);
+	uint32_t *ptr32 = (uint32_t*) docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 5120 ? (docstat.st_size / 4) : 5120);
 	while(ptr32 < ptr32_end - 1)
 	{
 		// Found an embedded Zehn file
 		if(*ptr32 == 0x6e68655a && *(ptr32 + 1) == 1)
 		{
 			nuc_fseek(docfile, (uint8_t*)(ptr32) - (uint8_t*)(docptr), SEEK_SET);
-			int ret = zehn_load(docfile, base, entry_address_ptr);
+			int ret = zehn_load(docfile, base, entry_address_ptr, supports_hww);
 			switch(ret)
 			{
 			case 0: // Execute as Zehn
@@ -136,7 +137,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	char **argvptr;
 	int argc;
 	int ret;
-	BOOL isassoc = FALSE;
+	bool isassoc = false, supports_hww = false;
 	strcpy(doc_path, path);
 	strcpy(prgm_path, path); // may deffer if using file association
 
@@ -195,7 +196,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	switch(signature)
 	{
 	case 0x00475250: //"PRG\0"
-		if((ret = ndless_load(prgm_path, prgm, &base, &entry)) == 0)
+		if((ret = ndless_load(prgm_path, prgm, &base, &entry, &supports_hww)) == 0)
 		{
 			nuc_fclose(prgm);
 			ld_bin_format = LD_PRG_BIN;
@@ -215,7 +216,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		nuc_fclose(prgm);
 		return 0xDEAD;
 	case 0x6e68655a: //"Zehn"
-		if((ret = zehn_load(prgm, &base, &entry)) == 0)
+		if((ret = zehn_load(prgm, &base, &entry, &supports_hww)) == 0)
 		{
 			nuc_fclose(prgm);
 			ld_bin_format = LD_ZEHN_BIN;
@@ -233,13 +234,18 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 
 	int intmask = TCT_Local_Control_Interrupts(-1); /* TODO workaround: disable the interrupts to avoid the clock on the screen */
 	wait_no_key_pressed(); // let the user release the Enter key, to avoid being read by the program
-	void *savedscr = malloc(SCREEN_BYTES_SIZE);
-	if (!savedscr) {
-		puts("ld_exec: can't malloc savedscr");
-		ret = 0xDEAD;
-		goto ld_exec_with_args_quit;
+	void *savedscr = NULL;
+
+	if(!is_hww || supports_hww) {
+		savedscr = malloc(SCREEN_BYTES_SIZE);
+		if (!savedscr) {
+			puts("ld_exec: can't malloc savedscr");
+			ret = 0xDEAD;
+			goto ld_exec_with_args_quit;
+		}
+
+		memcpy(savedscr, (void*) SCREEN_BASE_ADDRESS, SCREEN_BYTES_SIZE);
 	}
-	memcpy(savedscr, (void*) SCREEN_BASE_ADDRESS, SCREEN_BYTES_SIZE);
 	
 	argc = 1 + argsn;
 	if (isassoc)
@@ -268,14 +274,20 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 			*palette++ = ((i * 2 + 1) << (1 + 16)) | ((i * 2 + 1) << (6 + 16)) | ((i * 2 + 1) << (11 + 16)) | ((i * 2) << 1) | ((i * 2) << 6) | ((i * 2) << 11); // set the grayscale palette
 		ut_disable_watchdog(); // seems to be sometimes renabled by the OS
 	}
+
+        if(!supports_hww)
+		lcd_compat_enable(savedscr);
 	
-	is_current_prgm_resident = FALSE;
+	is_current_prgm_resident = false;
 	clear_cache();
 	ret = entry(argc, argv); /* run the program */
 	if (has_colors)
 		lcd_incolor(); // in case not restored by the program
 
-	if (!plh_noscrredraw)
+        if(!supports_hww)
+		lcd_compat_disable();
+
+	if(savedscr && !plh_noscrredraw)
 		memcpy((void*) SCREEN_BASE_ADDRESS, savedscr, SCREEN_BYTES_SIZE);
 	
 ld_exec_with_args_quit:

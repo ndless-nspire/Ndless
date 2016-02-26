@@ -64,7 +64,8 @@ enum class Zehn_flag_type : uint8_t
     EXECUTABLE_NAME, //Data contains offset into extra data which points to a 0-terminated string
     EXECUTABLE_AUTHOR, //Also as string
     EXECUTABLE_VERSION, //Integer for easier comparision
-    EXECUTABLE_NOTICE //May contain anything as string
+    EXECUTABLE_NOTICE, //May contain anything as string
+    RUNS_ON_HWW //Whether the executable uses the new screen API for HW-W compat
 };
 
 struct Zehn_flag

@@ -8,7 +8,7 @@ extern bool is_hww;
 
 void lcd_compat_load_hwrev();
 
-void lcd_compat_enable(void *savedscr);
-void lcd_compat_disable(void *savedscr);
+bool lcd_compat_enable();
+void lcd_compat_disable();
 
 #endif /* LCD_COMPAT_H */
