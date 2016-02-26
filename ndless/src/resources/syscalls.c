@@ -103,9 +103,14 @@ int sc_nl_exec(const char *prgm_path, int argsn, char *args[]) {
 
 typedef void (*lcd_blit_func)(void *buffer);
 
-static void lcd_blit_simple(void *buffer)
+static void lcd_blit_simple_565(void *buffer)
 {
     memcpy(SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
+}
+
+static void lcd_blit_simple_4(void *buffer)
+{
+    memcpy(SCREEN_BASE_ADDRESS, buffer, 320 * 240 / 2);
 }
 
 static void lcd_blit_320x240_240x320(void *buffer)
@@ -132,22 +137,30 @@ static void lcd_blit_240x320_320x240(void *buffer)
 
 lcd_blit_func sc_nl_lcd_blit(scr_type_t buffer_type)
 {
-       if (buffer_type == SCR_320x240_565)
-       {
-            if(!is_hww)
-                return lcd_blit_simple;
+        if (sc_nl_hwtype() == 0)
+        {
+            if (buffer_type == SCR_320x240_4)
+                return lcd_blit_simple_4;
             else
-                return lcd_blit_320x240_240x320;
-       }
-       else if(buffer_type == SCR_240x320_565)
-       {
-            if(is_hww)
-                return lcd_blit_simple;
-            else
-                return lcd_blit_240x320_320x240;
-       }
-       else
-           return 0;
+                return 0;
+        }
+
+        if (buffer_type == SCR_320x240_565)
+        {
+             if(!is_hww)
+                 return lcd_blit_simple_565;
+             else
+                 return lcd_blit_320x240_240x320;
+        }
+        else if(buffer_type == SCR_240x320_565)
+        {
+             if(is_hww)
+                 return lcd_blit_simple_565;
+             else
+                 return lcd_blit_240x320_320x240;
+        }
+        else
+            return 0;
 }
 
 unsigned const sc_syscall_num = __SYSCALLS_LAST;

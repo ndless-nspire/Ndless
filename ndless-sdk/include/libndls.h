@@ -62,8 +62,9 @@ typedef struct {
 
 typedef enum {
         SCR_320x240_565=0,
-        SCR_240x320_565=1,
-        SCR_TYPE_COUNT=2
+        SCR_320x240_4=1,
+        SCR_240x320_565=2,
+        SCR_TYPE_COUNT=3
 } scr_type_t;
 
 /* for set_cpu_speed() */
