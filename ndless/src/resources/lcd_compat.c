@@ -23,10 +23,11 @@ static uint16_t *lcd_mirror = 0x0, *current_lcd_mirror = 0x0;
 static uint32_t old_timer_load = 0, old_timer_control = 0,
                 old_timer_bgload = 0;
 
-static volatile uint32_t *timer_load = (uint32_t*) 0x900D0000,
-                         *timer_control = (uint32_t*) 0x900D0008,
-                         *timer_intclear = (uint32_t*) 0x900D000C,
-                         *timer_bgload = (uint32_t*) 0x900D0018;
+// Using the first timer here, as the second one is used by gbc4nspire.
+static volatile uint32_t *timer_load = (uint32_t*) 0x900C0000,
+                         *timer_control = (uint32_t*) 0x900C0008,
+                         *timer_intclear = (uint32_t*) 0x900C000C,
+                         *timer_bgload = (uint32_t*) 0x900C0018;
 
 static bool lcd_timer_enabled = false;
 
@@ -53,13 +54,35 @@ static __attribute__ ((interrupt("FIQ"))) void lcd_compat_fiq()
     }
 }
 
-// Handler for data aborts
-asm("lcd_compat_abort_handler:\n"
+// sp and lr are special, they are banked and thus not easily accessible.
+extern uint32_t sp_svc, lr_svc;
+
+/* Handler for data aborts:
+ * After storing all registers (r0-r12 + lr) on the stack
+ * and storing the values of the banked registers sp_svc and lr_svc
+ * in the globals, call lcd_compat_abort with the register array as first arg.
+ * Restore sp_svc and lr_svc and jump back to the aborting instruction. */
+asm(
+"sp_svc: .word 0\n"
+"lr_svc: .word 0\n"
+"lcd_compat_abort_handler:\n"
 "sub sp, sp, #8\n" // Somehow the OS uses this...
-"push {r0-r12, lr}\n"
-"mov r0, sp\n"
-"bl lcd_compat_abort\n"
-"pop {r0-r12, lr}\n"
+    "push {r0-r12, lr}\n"
+        "mrs r0, spsr\n"
+        "orr r0, r0, #0xc0\n"
+        "msr cpsr_c, r0\n" // To SVC mode
+            "str sp, sp_svc\n" // Save sp_svc
+            "str lr, lr_svc\n" // Save lr_svc
+        "msr cpsr_c, #0xd7\n" // Back to ABT mode
+        "mov r0, sp\n" // First arg, array of r0-12, lr
+        "bl lcd_compat_abort\n"
+        "mrs r0, spsr\n"
+        "orr r0, r0, #0xc0\n"
+        "msr cpsr_c, r0\n" // To SVC mode
+            "ldr sp, sp_svc\n" // Restore sp_svc
+            "ldr lr, lr_svc\n" // Restore lr_svc
+        "msr cpsr_c, #0xd7\n" // Back to ABT mode
+    "pop {r0-r12, lr}\n"
 "add sp, sp, #8\n"
 "subs pc, lr, #4");
 
@@ -73,14 +96,17 @@ static void lcd_timer_enable()
     // Enable timer for conversion
     *timer_control = 0; // Disable first
     *timer_intclear = 1;
+    *timer_load = 32768 / 30; // 30 Hz
     *timer_bgload = 32768 / 30; // 30 Hz
     *timer_control = (1 << 7) | (1 << 6) | (1 << 5) | (1 << 1); // Enable ints, 32-bit load and periodic mode
 
     // Install FIQ handler
     *(volatile uint32_t*)0x3C = (uint32_t) lcd_compat_fiq;
 
-    // Set second timer interrupt as FIQ
-    *(volatile uint32_t*) 0xDC00000C = 1 << 19;
+    // Set first timer interrupt as FIQ
+    *(volatile uint32_t*) 0xDC00000C = 1 << 18;
+    // Activate timer IRQ
+    *(volatile uint32_t*) 0xDC000010 = 1 << 18;
 
     // Enable FIQs
     asm volatile("msr spsr_c, #0x93");
@@ -112,7 +138,7 @@ void lcd_compat_abort(uint32_t *regs)
     // Get rd and type (store, load) of instruction
     if((inst & 0xC000000) != 0x4000000) // Not ldr or str?
     {
-        /*if(inst == 0xE88C07F8) // Used by gbc4nspire (stmia r12, {r3-r10})
+        if(inst == 0xE88C07F8) // Used by gbc4nspire (stmia r12, {r3-r10})
         {
             *translated_addr++ = regs[3];
             *translated_addr++ = regs[4];
@@ -123,7 +149,7 @@ void lcd_compat_abort(uint32_t *regs)
             *translated_addr++ = regs[9];
             *translated_addr++ = regs[10];
         }
-        else*/
+        else
              asm volatile("bkpt #0"); // For debugging
     }
     else
@@ -132,13 +158,23 @@ void lcd_compat_abort(uint32_t *regs)
             asm volatile("bkpt #1");
 
         if((inst & (1 << 22))) // Byte
-            asm volatile("bkpt #1");
+            asm volatile("bkpt #2");
 
         int rd = (inst >> 12) & 0xF;
+	uint32_t *reg = 0;
+        if(rd <= 12) // Not a banked register?
+            reg = regs + rd;
+        else if(rd == 13)
+            reg = &sp_svc;
+        else if(rd == 14)
+            reg = &lr_svc;
+        else // PC?
+            asm volatile("bkpt #3");
+
         if(inst & (1 << 20)) // Load
-            regs[rd] = *translated_addr;
+            *reg = *translated_addr;
         else
-            *translated_addr = regs[rd];
+            *translated_addr = *reg;
     }
 
     if(!lcd_timer_enabled)
@@ -197,7 +233,9 @@ void lcd_compat_disable()
     if(lcd_timer_enabled)
     {
         // Set second timer interrupt as IRQ again
-        *(volatile uint32_t*) 0xDC00000C &= ~(1 << 19);
+        *(volatile uint32_t*) 0xDC00000C &= ~(1 << 18);
+        // Deactivate timer IRQ
+        *(volatile uint32_t*) 0xDC000014 = 1 << 18;
 
         *timer_control = 0;
         *timer_intclear = 1;
