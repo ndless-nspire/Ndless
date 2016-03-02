@@ -20,14 +20,12 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
 static uint16_t *lcd_mirror = 0x0, *current_lcd_mirror = 0x0;
 
-static uint32_t old_timer_load = 0, old_timer_control = 0,
-                old_timer_bgload = 0;
-
-// Using the first timer here, as the second one is used by gbc4nspire.
-static volatile uint32_t *timer_load = (uint32_t*) 0x900C0000,
-                         *timer_control = (uint32_t*) 0x900C0008,
-                         *timer_intclear = (uint32_t*) 0x900C000C,
-                         *timer_bgload = (uint32_t*) 0x900C0018;
+// Using the watchdog here as the second timer is used by gbc4nspire
+// and the first one does not emit interrupts...
+static volatile uint32_t *watchdog_load = (uint32_t*) 0x90060000,
+                         *watchdog_control = (uint32_t*) 0x90060008,
+                         *watchdog_intclear = (uint32_t*) 0x9006000C,
+                         *watchdog_lock = (uint32_t*) 0x90060C00;
 
 static bool lcd_timer_enabled = false;
 
@@ -42,7 +40,8 @@ void lcd_compat_load_hwrev()
 static __attribute__ ((interrupt("FIQ"))) void lcd_compat_fiq()
 {
     // Acknowledge interrupt
-    *timer_intclear = 1;
+    *watchdog_lock = 0x1ACCE551;
+    *watchdog_intclear = 1;
 
     // Convert the framebuffer
     uint16_t *out = (uint16_t*) real_lcdc[4], *in = (uint16_t*) current_lcd_mirror;
@@ -88,25 +87,18 @@ asm(
 
 static void lcd_timer_enable()
 {
-    // Save old timer state
-    old_timer_load = *timer_load;
-    old_timer_control = *timer_control;
-    old_timer_bgload = *timer_bgload;
-
     // Enable timer for conversion
-    *timer_control = 0; // Disable first
-    *timer_intclear = 1;
-    *timer_load = 32768 / 30; // 30 Hz
-    *timer_bgload = 32768 / 30; // 30 Hz
-    *timer_control = (1 << 7) | (1 << 6) | (1 << 5) | (1 << 1); // Enable ints, 32-bit load and periodic mode
+    *watchdog_lock = 0x1ACCE551;
+    *watchdog_load = 33000000 / 15; // 15 Hz
+    *watchdog_control = 1;
 
     // Install FIQ handler
     *(volatile uint32_t*)0x3C = (uint32_t) lcd_compat_fiq;
 
-    // Set first timer interrupt as FIQ
-    *(volatile uint32_t*) 0xDC00000C = 1 << 18;
-    // Activate timer IRQ
-    *(volatile uint32_t*) 0xDC000010 = 1 << 18;
+    // Set first watchdog interrupt as FIQ
+    *(volatile uint32_t*) 0xDC00000C = 1 << 3;
+    // Activate watchdog IRQ
+    *(volatile uint32_t*) 0xDC000010 = 1 << 3;
 
     // Enable FIQs
     asm volatile("msr spsr_c, #0x93");
@@ -232,16 +224,13 @@ void lcd_compat_disable()
     // Reset timers (if used)
     if(lcd_timer_enabled)
     {
-        // Set second timer interrupt as IRQ again
-        *(volatile uint32_t*) 0xDC00000C &= ~(1 << 18);
-        // Deactivate timer IRQ
-        *(volatile uint32_t*) 0xDC000014 = 1 << 18;
+        // Set watchdog interrupt as IRQ again
+        *(volatile uint32_t*) 0xDC00000C &= ~(1 << 3);
+        // Deactivate watchdog IRQ
+        *(volatile uint32_t*) 0xDC000014 = 1 << 3;
 
-        *timer_control = 0;
-        *timer_intclear = 1;
-        *timer_bgload = old_timer_bgload;
-        *timer_control = old_timer_control;
-        *timer_load = old_timer_load;
+        *watchdog_lock = 0x1ACCE551;
+        *watchdog_control = 0;
 
         lcd_timer_enabled = false;
     }
