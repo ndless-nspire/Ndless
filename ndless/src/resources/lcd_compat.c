@@ -48,8 +48,8 @@ static __attribute__ ((interrupt("FIQ"))) void lcd_compat_fiq()
     for (int col = 0; col < 240; ++col)
     {
         uint16_t *outcol = out + col;
-            for(int row = 0; row < 320; ++row, outcol += 240)
-                *outcol = *in++;
+        for(int row = 0; row < 320; ++row, outcol += 240)
+            *outcol = col;
     }
 }
 
@@ -165,7 +165,7 @@ void lcd_compat_abort(uint32_t *regs)
 
         if(inst & (1 << 20)) // Load
             *reg = *translated_addr;
-        else
+        else if(fault_addr > 0xC000000C) // Don't change the LCD timings
             *translated_addr = *reg;
     }
 
@@ -181,7 +181,7 @@ bool lcd_compat_enable()
 
     if(!lcd_mirror)
     {
-       lcd_mirror = calloc(sizeof(uint16_t), 320*240);
+        lcd_mirror = calloc(sizeof(uint16_t), 320*240);
         if(!lcd_mirror)
             return false;
     }
