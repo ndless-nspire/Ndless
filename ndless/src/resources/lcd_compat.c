@@ -49,7 +49,7 @@ static __attribute__ ((interrupt("FIQ"))) void lcd_compat_fiq()
     {
         uint16_t *outcol = out + col;
         for(int row = 0; row < 320; ++row, outcol += 240)
-            *outcol = col;
+            *outcol = *in++;
     }
 }
 
