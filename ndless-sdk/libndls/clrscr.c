@@ -22,5 +22,5 @@
 #include <os.h>
 
 void clrscr(void) {
-	memset((void*) SCREEN_BASE_ADDRESS, 0xFF, SCREEN_BYTES_SIZE);
+	memset((void*) REAL_SCREEN_BASE_ADDRESS, 0xFF, REAL_SCREEN_BYTES_SIZE);
 }

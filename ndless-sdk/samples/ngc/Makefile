@@ -6,7 +6,7 @@ GXX = nspire-g++
 LD  = nspire-ld
 GENZEHN = genzehn
 
-GCCFLAGS = -Wall -W -marm
+GCCFLAGS = -Wall -W -marm -D OLD_SCREEN_API
 LDFLAGS =
 ZEHNFLAGS = --name "ngc_demo"
 

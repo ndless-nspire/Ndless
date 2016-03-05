@@ -65,7 +65,8 @@ enum class Zehn_flag_type : uint8_t
     EXECUTABLE_AUTHOR, //Also as string
     EXECUTABLE_VERSION, //Integer for easier comparision
     EXECUTABLE_NOTICE, //May contain anything as string
-    RUNS_ON_HWW //Whether the executable uses the new screen API for HW-W compat
+    RUNS_ON_HWW, //Whether the executable support the 90° rotated 240x320 LCD on HW-W
+    USES_LCD_BLIT, //Whether the executable uses the new screen API (lcd_blit)
 };
 
 struct Zehn_flag

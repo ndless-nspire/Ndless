@@ -15,7 +15,7 @@
 #include "gen_font_droid.h"
 
 /* origin is the upper left corner */
-volatile unsigned char *screen;
+static unsigned char *screen;
 
 void
 set_pixel( FT_Int         x,
@@ -27,11 +27,11 @@ set_pixel( FT_Int         x,
   if (x < 0 || y < 0 || x >= SCREEN_WIDTH || y >= SCREEN_HEIGHT)
     return;
   int pos = y * SCREEN_WIDTH + x;
-  if (lcd_isincolor() && pos * 2 + 1 < SCREEN_BYTES_SIZE)
+  if (lcd_isincolor())
     ((volatile unsigned short*)screen)[pos] = ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
-  else if (pos % 2 == 0 && pos < 2 * SCREEN_BYTES_SIZE)
+  else if (pos % 2 == 0)
     screen[pos / 2] = (screen[pos / 2] & 0x0F) | ((((r + g + b) / 3) >> 4) << 4);
-  else if (pos < 2 * SCREEN_BYTES_SIZE)
+  else
     screen[pos / 2] = (screen[pos / 2] & 0xF0) | (((r + g + b) / 3) >> 4);
 }
 
@@ -86,9 +86,9 @@ main( int     argc,
   num_chars     = strlen( text );
   angle         = ( 25.0 / 360 ) * M_PI * 2;         /* use 25 degrees     */
   target_height = SCREEN_HEIGHT;
-  screen = (volatile unsigned char*) SCREEN_BASE_ADDRESS;                      /* address of the screen buffer */
-
-  clrscr();                                          /* clear the screen   */
+  screen        = malloc(320*240*sizeof(uint16_t));
+  
+  memset(screen, 0xFF, 320*240*sizeof(uint16_t));    /* clear screen       */
 
   error = FT_Init_FreeType( &library );              /* initialize library */
   /* error handling omitted */
@@ -136,6 +136,11 @@ main( int     argc,
 
   FT_Done_Face    ( face );
   FT_Done_FreeType( library );
+
+  if(lcd_type() == SCR_320x240_4)
+      lcd_blit(screen, SCR_320x240_4);
+  else
+      lcd_blit(screen, SCR_320x240_565);
 
   wait_key_pressed();           /* don't exit until a key is pressed */
 

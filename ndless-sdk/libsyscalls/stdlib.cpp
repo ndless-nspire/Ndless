@@ -55,7 +55,7 @@ static void* saved_screen_buffer; //In case the program changes the buffer
 // Called at startup (even before c++ constructors are run)
 void initialise_monitor_handles()
 {
-	saved_screen_buffer = SCREEN_BASE_ADDRESS;
+	saved_screen_buffer = REAL_SCREEN_BASE_ADDRESS;
 	openfiles[0] = syscall<e_stdin | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[1] = syscall<e_stdout | __SYSCALLS_ISVAR, NUC_FILE*>();
 	openfiles[2] = syscall<e_stderr | __SYSCALLS_ISVAR, NUC_FILE*>();
@@ -213,7 +213,7 @@ void abort()
 			lcd_incolor();
 		else
 			lcd_ingray();
-		SCREEN_BASE_ADDRESS = saved_screen_buffer;
+		REAL_SCREEN_BASE_ADDRESS = saved_screen_buffer;
 
 		if(&__cxa_demangle == 0)
 			goto nocpp;

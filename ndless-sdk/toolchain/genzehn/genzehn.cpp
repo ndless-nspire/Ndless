@@ -61,7 +61,9 @@ int main(int argc, char **argv)
             ("color-support", opt::value<bool>()->default_value(true), "Whether CX and CM are supported")
             ("clickpad-support", opt::value<bool>()->default_value(true), "Whether clickpads are supported")
             ("touchpad-support", opt::value<bool>()->default_value(true), "Whether touchpads (classic) are supported")
-            ("32MB-support", opt::value<bool>()->default_value(true), "Whether 32MB SDRAM is supported");
+            ("32MB-support", opt::value<bool>()->default_value(true), "Whether 32MB SDRAM is supported")
+            ("240x320-support", opt::value<bool>()->default_value(false), "Whether a 240x320x16 LCD (HW-W) is supported")
+            ("uses-lcd-blit", opt::value<bool>(), "Whether the new lcd_blit API is being used");
 
     opt::options_description all("All options");
     all.add(required).add(additional);
@@ -183,6 +185,14 @@ int main(int argc, char **argv)
             case Zehn_flag_type::RUNS_ON_TOUCHPAD:
                 //TODO
                 break;
+            case Zehn_flag_type::RUNS_ON_HWW:
+                if(flag.data)
+                    std::cout << "This executable supports the HW-W 240x320 LCD." << std::endl;
+                break;
+            case Zehn_flag_type::USES_LCD_BLIT:
+                if(flag.data)
+                    std::cout << "This executable uses the new lcd_blit API." << std::endl;
+                break;
 
             default:
                 std::cout << "Unknown flag type " << static_cast<int>(flag.type) << std::endl;
@@ -267,6 +277,9 @@ int main(int argc, char **argv)
     flag_table.push_back({Zehn_flag_type::RUNS_ON_TOUCHPAD, args["touchpad-support"].as<bool>()});
     flag_table.push_back({Zehn_flag_type::RUNS_ON_32MB, args["32MB-support"].as<bool>()});
 
+    // libndls.h places markers into the .data section
+    bool using_old_lcd_api = false, using_new_lcd_api = false;
+
     //Now the important stuff, go through every section with ALLOC attribute and find all undefined symbols
     for(unsigned int i = 0; i < input_reader.sections.size(); ++i)
     {
@@ -283,7 +296,16 @@ int main(int argc, char **argv)
             {
                 Elf_Half section; std::string name; unsigned char bind, type;
                 Elf64_Addr u1; Elf_Xword u2; unsigned char u3; //Unused
-                if(ssa.get_symbol(i, name, u1, u2, bind, type, section, u3) && section == SHN_UNDEF)
+                if(!ssa.get_symbol(i, name, u1, u2, bind, type, section, u3))
+                    continue;
+
+                // Markers that were placed into the .elf by libndls.h
+                if(name == "_genzehn_new_lcd_api")
+                    using_new_lcd_api = true;
+                else if(name == "_genzehn_old_lcd_api")
+                    using_old_lcd_api = true;
+
+                if(section == SHN_UNDEF)
                 {
                     if(bind != STB_WEAK && type != STT_NOTYPE)
                     {
@@ -352,6 +374,31 @@ int main(int argc, char **argv)
         exec_data.resize(exec_data.size() + s->get_size());
         std::copy(s->get_data(), s->get_data() + s->get_size(), exec_data.data() + s->get_address());
     }
+
+    bool uses_lcd_blit = true, hww_compat = true;
+    if(args.count("uses-lcd-blit"))
+        uses_lcd_blit = args["uses-lcd-blit"].as<bool>();
+    else
+    {
+        if(using_old_lcd_api == true && using_new_lcd_api == true)
+        {
+            std::cerr << "Warning: Using both the old (SCREEN_BASE_ADDRESS) and new (lcd_blit) API!" << std::endl
+                    << "Assuming '--uses-lcd-blit false'!" << std::endl;
+            uses_lcd_blit = false;
+        }
+        else if(using_old_lcd_api)
+            uses_lcd_blit = false;
+    }
+
+    if(!uses_lcd_blit)
+        hww_compat = args["240x320-support"].as<bool>();
+
+    if(!hww_compat)
+        std::cerr << "Warning: Your application does not appear to support HW-W!" << std::endl
+                  << "If it does, override with '--hww-support true'." << std::endl;
+
+    flag_table.push_back({Zehn_flag_type::RUNS_ON_HWW, hww_compat});
+    flag_table.push_back({Zehn_flag_type::USES_LCD_BLIT, uses_lcd_blit});
 
     //Find all relocations that have to be made at startup
     for(unsigned int i = 0; i < input_reader.sections.size(); ++i)

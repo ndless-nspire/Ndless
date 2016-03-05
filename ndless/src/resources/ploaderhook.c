@@ -21,6 +21,7 @@
  * Contributor(s):
  *                 Geoffrey ANNEHEIM <geoffrey.anneheim@gmail.com>
  *                 Daniel TANG <dt.tangr@gmail.com>
+ *                 Fabian Vogt <fabian@ritter-vogt.de>
  ****************************************************************************/
 
 #include <os.h>
@@ -237,14 +238,14 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	void *savedscr = NULL;
 
 	if(!is_hww || supports_hww) {
-		savedscr = malloc(SCREEN_BYTES_SIZE);
+		savedscr = malloc(REAL_SCREEN_BYTES_SIZE);
 		if (!savedscr) {
 			puts("ld_exec: can't malloc savedscr");
 			ret = 0xDEAD;
 			goto ld_exec_with_args_quit;
 		}
 
-		memcpy(savedscr, (void*) SCREEN_BASE_ADDRESS, SCREEN_BYTES_SIZE);
+		memcpy(savedscr, (void*) REAL_SCREEN_BASE_ADDRESS, REAL_SCREEN_BYTES_SIZE);
 	}
 	
 	argc = 1 + argsn;
@@ -288,7 +289,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		lcd_compat_disable();
 
 	if(savedscr && !plh_noscrredraw)
-		memcpy((void*) SCREEN_BASE_ADDRESS, savedscr, SCREEN_BYTES_SIZE);
+		memcpy((void*) REAL_SCREEN_BASE_ADDRESS, savedscr, REAL_SCREEN_BYTES_SIZE);
 	
 ld_exec_with_args_quit:
 	free(savedscr);

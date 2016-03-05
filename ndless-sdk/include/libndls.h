@@ -61,6 +61,7 @@ typedef struct {
 } touchpad_report_t;
 
 typedef enum {
+        SCR_TYPE_INVALID=-1,
         SCR_320x240_565=0,
         SCR_320x240_4=1,
         SCR_240x320_565=2,
@@ -75,7 +76,6 @@ typedef enum {
 void assert_ndless_rev(unsigned required_rev);
 BOOL any_key_pressed(void);
 void clear_cache(void);
-void clrscr(void);
 int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
@@ -108,8 +108,14 @@ char *cfg_get(const char *key);
 void cfg_register_fileext(const char *ext, const char *prgm);
 void cfg_register_fileext_file(const char *fielpath, const char *ext, const char *prgm);
 #define nl_hassyscall(x) _nl_hassyscall(e_##x)
+#ifdef OLD_SCREEN_API
+/* clrscr.c */
+void clrscr(void);
+#else
 /* lcd_blit.cpp */
 void lcd_blit(void *buffer, scr_type_t buffer_type);
+scr_type_t lcd_type();
+#endif
 
 BOOL _is_touchpad(void);
 #define is_touchpad _is_touchpad()
@@ -135,14 +141,24 @@ unsigned hwtype(void);
 #define is_cm (nl_hwsubtype() == 1)
 #define has_colors (!is_classic)
 #define IO_LCD_CONTROL IO(0xC000001C, 0xC0000018)
-#define SCREEN_BYTES_SIZE       ((int)(_scrsize()))
+#define REAL_SCREEN_BYTES_SIZE       ((int)(_scrsize()))
 #define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])
 
 #ifndef __cplusplus
-#define SCREEN_BASE_ADDRESS     (*(void**)0xC0000010)
+#define REAL_SCREEN_BASE_ADDRESS     (*(void**)0xC0000010)
 #else
-#define SCREEN_BASE_ADDRESS     (*reinterpret_cast<void**>(0xC0000010))
+#define REAL_SCREEN_BASE_ADDRESS     (*reinterpret_cast<void**>(0xC0000010))
 #endif
+
+#ifdef OLD_SCREEN_API
+	#define SCREEN_BASE_ADDRESS REAL_SCREEN_BASE_ADDRESS
+	#define SCREEN_BYTES_SIZE REAL_SCREEN_BYTES_SIZE
+	__asm__(".section genzehn\n_genzehn_old_lcd_api: .weak genzehn_old_lcd_api\n.text");
+#else
+	#define SCREEN_BASE_ADDRESS ({"SCREEN_BASE_ADDRESS got removed in favor of the lcd_blit API."})
+	__asm__(".section genzehn\n_genzehn_new_lcd_api: .weak genzehn_new_lcd_api\n.text");
+#endif
+
 
 #ifdef __cplusplus
 }

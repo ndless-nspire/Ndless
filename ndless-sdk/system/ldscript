@@ -19,6 +19,7 @@ SECTIONS {
 	.data : {
 		*(.rodata*)
 		*(.data*)
+                KEEP(*(.genzehn))
 	}
 
 	.ARM.extab   : { KEEP(*(.ARM.extab* .gnu.linkonce.armextab.*)) }

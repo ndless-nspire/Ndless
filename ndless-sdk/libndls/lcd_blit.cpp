@@ -28,12 +28,12 @@ typedef void (*lcd_blit_func)(void *buffer);
 // We only provide non-HW-W here, as ndless without nl_lcd_blit won't run on HW-W anyway
 static void lcd_blit_320x240_320x240_565(void *buffer)
 {
-    memcpy(SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
+    memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
 }
 
 static void lcd_blit_320x240_320x240_4(void *buffer)
 {
-    memcpy(SCREEN_BASE_ADDRESS, buffer, (320 * 240) / 2);
+    memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, (320 * 240) / 2);
 }
 
 void lcd_blit(void *buffer, scr_type_t buffer_type)
@@ -53,4 +53,21 @@ void lcd_blit(void *buffer, scr_type_t buffer_type)
     if (lcd_blit_cache[buffer_type])
         return lcd_blit_cache[buffer_type](buffer);
     /* else what? */
+}
+
+scr_type_t lcd_type()
+{
+    scr_type_t ret = SCR_TYPE_INVALID;
+
+    if (nl_ndless_rev() >= 2004)
+    {
+        ret = syscall<e_nl_lcd_type, scr_type_t>();
+        return ret > SCR_TYPE_COUNT ? SCR_TYPE_INVALID : ret;
+    }
+
+    /* Pre Ndless 4.2 here, so only classic calcs and CX < HW-W. */
+    if (has_colors)
+        return SCR_320x240_565;
+    else
+        return SCR_320x240_4;
 }
