@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 #include <keys.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
 #include <usbdi.h>
@@ -65,7 +66,9 @@ typedef enum {
         SCR_320x240_565=0,
         SCR_320x240_4=1,
         SCR_240x320_565=2,
-        SCR_TYPE_COUNT=3
+        SCR_320x240_16=3,
+        SCR_320x240_8=4,
+        SCR_TYPE_COUNT=5
 } scr_type_t;
 
 /* for set_cpu_speed() */
@@ -79,13 +82,9 @@ void clear_cache(void);
 int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
-BOOL lcd_isincolor(void);
-void lcd_incolor(void);
-void lcd_ingray(void);
 int locate(const char *filename, char *dst_path, size_t dst_path_size);
 BOOL on_key_pressed(void);
 void refresh_osscr(void);
-unsigned _scrsize(void);
 unsigned set_cpu_speed(unsigned speed);
 unsigned _show_msgbox(const char *title, const char *msg, unsigned button_num, ...);
 int show_msg_user_input(const char * title, const char * msg, char * defaultvalue, char ** value_ref);
@@ -111,8 +110,13 @@ void cfg_register_fileext_file(const char *fielpath, const char *ext, const char
 #ifdef OLD_SCREEN_API
 /* clrscr.c */
 void clrscr(void);
+BOOL lcd_isincolor(void);
+void lcd_incolor(void);
+void lcd_ingray(void);
+unsigned _scrsize(void);
 #else
 /* lcd_blit.cpp */
+bool lcd_init(scr_type_t type);
 void lcd_blit(void *buffer, scr_type_t buffer_type);
 scr_type_t lcd_type();
 #endif

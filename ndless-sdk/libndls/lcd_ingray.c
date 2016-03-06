@@ -22,7 +22,7 @@
 #include <os.h>
 
 void lcd_ingray(void) {
-	volatile unsigned *lcd_control = IO_LCD_CONTROL;
-	unsigned 	mode = *lcd_control & ~0b1110;
-  *lcd_control = mode | 0b010000000100; // 4bpp + pixels within each byte read as big-endian
+    volatile unsigned *lcd_control = IO_LCD_CONTROL;
+    unsigned mode = *lcd_control & ~0b1110;
+    *lcd_control = mode | 0b010000000100; // 4bpp + pixels within each byte read as big-endian
 }

@@ -108,12 +108,28 @@ static void lcd_blit_simple_565(void *buffer)
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
 }
 
+static void lcd_blit_simple_8(void *buffer)
+{
+    memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint8_t));
+}
+
 static void lcd_blit_simple_4(void *buffer)
 {
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 / 2);
 }
 
-static void lcd_blit_320x240_240x320(void *buffer)
+static void lcd_blit_320x240_240x320_8(void *buffer)
+{
+    uint8_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
+    for (int col = 0; col < 240; ++col)
+    {
+        uint8_t *outcol = out + col;
+        for(int row = 0; row < 320; ++row, outcol += 240)
+            *outcol = *in++;
+    }
+}
+
+static void lcd_blit_320x240_240x320_565(void *buffer)
 {
     uint16_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
     for (int col = 0; col < 240; ++col)
@@ -124,7 +140,7 @@ static void lcd_blit_320x240_240x320(void *buffer)
     }
 }
 
-static void lcd_blit_240x320_320x240(void *buffer)
+static void lcd_blit_240x320_320x240_565(void *buffer)
 {
     uint16_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
     for (int col = 0; col < 320; ++col)
@@ -137,30 +153,28 @@ static void lcd_blit_240x320_320x240(void *buffer)
 
 lcd_blit_func sc_nl_lcd_blit(scr_type_t buffer_type)
 {
-    if (sc_nl_hwtype() == 0)
+    switch(buffer_type)
     {
-        if (buffer_type == SCR_320x240_4)
-            return lcd_blit_simple_4;
-        else
-            return 0;
-    }
-
-    if (buffer_type == SCR_320x240_565)
-    {
-        if(!is_hww)
+    case SCR_320x240_4:
+        if (is_hww)
+            return NULL; // Not implemented on HW-W
+        return lcd_blit_simple_4;
+    case SCR_320x240_8:
+        if (is_hww)
+            return lcd_blit_320x240_240x320_8;
+        return lcd_blit_simple_8;
+    case SCR_320x240_16:
+    case SCR_320x240_565:
+        if (is_hww)
+            return lcd_blit_320x240_240x320_565;
+        return lcd_blit_simple_565;
+    case SCR_240x320_565:
+        if (is_hww)
             return lcd_blit_simple_565;
-        else
-            return lcd_blit_320x240_240x320;
+        return lcd_blit_240x320_320x240_565;
+    default:
+        return NULL;
     }
-    else if(buffer_type == SCR_240x320_565)
-    {
-        if(is_hww)
-            return lcd_blit_simple_565;
-        else
-            return lcd_blit_240x320_320x240;
-    }
-    else
-        return 0;
 }
 
 scr_type_t sc_nl_lcd_type()
@@ -171,6 +185,81 @@ scr_type_t sc_nl_lcd_type()
         return SCR_320x240_565;
     else
         return SCR_240x320_565;
+}
+
+static void set_lcd_mode(unsigned int mode)
+{
+    uint32_t control = *IO_LCD_CONTROL;
+    control &= ~0b1110;
+    control |= mode << 1;
+    *IO_LCD_CONTROL = control;
+}
+
+bool sc_nl_lcd_init(scr_type_t type)
+{
+    static void *old_buffer = NULL;
+
+    // Switch to orginal buffer first to free the allocated space
+    if(old_buffer && type != SCR_TYPE_INVALID)
+        lcd_init(SCR_TYPE_INVALID);
+
+    switch(type)
+    {
+    case SCR_TYPE_INVALID:
+        if(old_buffer)
+        {
+            void *new_buffer = REAL_SCREEN_BASE_ADDRESS;
+            REAL_SCREEN_BASE_ADDRESS = old_buffer;
+            old_buffer = NULL;
+            free(new_buffer);
+        }
+        if(has_colors)
+            set_lcd_mode(6);
+        else
+            set_lcd_mode(2);
+        return true;
+    case SCR_320x240_4:
+        // No need to allocate a new buffer
+        set_lcd_mode(2);
+        return true;
+    case SCR_320x240_8:
+    {
+        if (!has_colors)
+        {
+            // Need more space
+            old_buffer = REAL_SCREEN_BASE_ADDRESS;
+            void *new_buffer = calloc(320*240, sizeof(uint8_t));
+            if(!new_buffer)
+                return old_buffer = NULL, false;
+            REAL_SCREEN_BASE_ADDRESS = new_buffer;
+        }
+
+        set_lcd_mode(3);
+        return true;
+    }
+    case SCR_320x240_16:
+    case SCR_320x240_565:
+    case SCR_240x320_565:
+    {
+        if (!has_colors)
+        {
+            // Need more space
+            old_buffer = REAL_SCREEN_BASE_ADDRESS;
+            void *new_buffer = calloc(320*240, sizeof(uint16_t));
+            if(!new_buffer)
+                return old_buffer = NULL, false;
+            REAL_SCREEN_BASE_ADDRESS = new_buffer;
+
+            set_lcd_mode(4);
+        }
+        else
+            set_lcd_mode(6);
+
+        return true;
+    }
+    default:
+        return false;
+    }
 }
 
 unsigned const sc_syscall_num = __SYSCALLS_LAST;
@@ -185,5 +274,5 @@ unsigned sc_ext_table[] = {
     (unsigned)sc_nl_osvalue, (unsigned)sc_ext_relocdatab, (unsigned)sc_nl_hwtype, (unsigned)sc_nl_isstartup,
     (unsigned)luaext_getstate, (unsigned)ld_set_resident, (unsigned)sc_nl_ndless_rev, (unsigned)sc_nl_no_scr_redraw,
     (unsigned)ins_loaded_by_3rd_party_loader, (unsigned)sc_nl_hwsubtype, (unsigned)sc_nl_exec, (unsigned)sc_nl_osid,
-    (unsigned)sc_nl_hassyscall, (unsigned)sc_nl_lcd_blit, (unsigned)sc_nl_lcd_type
+    (unsigned)sc_nl_hassyscall, (unsigned)sc_nl_lcd_blit, (unsigned)sc_nl_lcd_type, (unsigned)sc_nl_lcd_init
 };

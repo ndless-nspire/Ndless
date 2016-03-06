@@ -24,32 +24,28 @@ DISTDIR = .
 vpath %.tns $(DISTDIR)
 vpath %.elf $(DISTDIR)
 
-all: $(EXE).prg.tns
+all: $(EXE).tns
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -c $<
+	$(GCC) $(GCCFLAGS) -c $< -o $@
 
-gen_font_droid.h: droid/DroidSans.ttf
-	xxd -i $< > $@
+%.o: %.cpp
+	$(GXX) $(GCCFLAGS) -c $< -o $@
+	
+%.o: %.S
+	$(AS) -c $< -o $@
 
 freetype_demo.o: freetype_demo.c gen_font_droid.h
 	$(GCC) $(GCCFLAGS) -c $<
 
-%.o: %.cpp
-	$(GXX) $(GCCFLAGS) -c $<
-	
-%.o: %.S
-	$(AS) -c $<
-
 $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
-	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
+	$(LD) $^ -o $@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
-
-$(EXE).prg.tns: $(EXE).tns
-	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
+	$(GENZEHN) --input $^ --output $@.zehn $(ZEHNFLAGS)
+	make-prg $@.zehn $@
+	rm $@.zehn
 
 clean:
-	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
+	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn
