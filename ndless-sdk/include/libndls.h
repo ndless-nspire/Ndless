@@ -145,7 +145,6 @@ unsigned hwtype(void);
 #define is_cm (nl_hwsubtype() == 1)
 #define has_colors (!is_classic)
 #define IO_LCD_CONTROL IO(0xC000001C, 0xC0000018)
-#define REAL_SCREEN_BYTES_SIZE       ((int)(_scrsize()))
 #define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])
 
 #ifndef __cplusplus
@@ -156,11 +155,10 @@ unsigned hwtype(void);
 
 #ifdef OLD_SCREEN_API
 	#define SCREEN_BASE_ADDRESS REAL_SCREEN_BASE_ADDRESS
-	#define SCREEN_BYTES_SIZE REAL_SCREEN_BYTES_SIZE
+	#define SCREEN_BYTES_SIZE   ((int)(_scrsize()))
 	__asm__(".section genzehn\n_genzehn_old_lcd_api: .weak genzehn_old_lcd_api\n.text");
 #else
 	#define SCREEN_BASE_ADDRESS ({"SCREEN_BASE_ADDRESS got removed in favor of the lcd_blit API."})
-	__asm__(".section genzehn\n_genzehn_new_lcd_api: .weak genzehn_new_lcd_api\n.text");
 #endif
 
 

@@ -19,6 +19,9 @@
  * Contributor(s): 
  ****************************************************************************/
 
+/* This is part of the old screen API and uses other parts. */
+#define OLD_SCREEN_API
+
 #include <os.h>
 
 unsigned _scrsize(void) {

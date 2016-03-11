@@ -21,6 +21,11 @@
 
 #include <os.h>
 
+/* This uses parts of the old screen API on older platforms */
+BOOL lcd_isincolor(void);
+void lcd_incolor(void);
+void lcd_ingray(void);
+
 unsigned _show_msgbox(const char *title, const char *msg, unsigned button_num, ...) {
 	__builtin_va_list ap;
 	char title16[(strlen(title) + 1) * 2];

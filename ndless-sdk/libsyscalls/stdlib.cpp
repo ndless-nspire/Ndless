@@ -201,6 +201,12 @@ void _exit(int ret)
 std::type_info* __cxa_current_exception_type() __attribute__((weak));
 char* __attribute((weak)) __cxa_demangle(const char *, int, int, int*);
 
+/* Depending on whether the new screen API is being used,
+ * abort() uses either lcd_init or the old API to switch back to the OS mode. */
+bool __attribute((weak)) lcd_init(scr_type_t);
+void lcd_incolor();
+void lcd_ingray();
+
 static bool aborting = false;
 void abort()
 {
@@ -209,11 +215,16 @@ void abort()
 	{
 		aborting = true;
 
-		if(has_colors)
-			lcd_incolor();
+		if(lcd_init)
+			lcd_init(SCR_TYPE_INVALID);
 		else
-			lcd_ingray();
-		REAL_SCREEN_BASE_ADDRESS = saved_screen_buffer;
+		{
+			if(has_colors)
+				lcd_incolor();
+			else
+				lcd_ingray();
+			REAL_SCREEN_BASE_ADDRESS = saved_screen_buffer;
+		}
 
 		if(&__cxa_demangle == 0)
 			goto nocpp;

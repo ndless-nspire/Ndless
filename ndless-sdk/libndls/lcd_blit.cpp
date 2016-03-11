@@ -41,6 +41,9 @@ static void lcd_blit_320x240_320x240_4(void *buffer)
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, (320 * 240) / 2);
 }
 
+// Marker for genzehn
+__asm__(".section genzehn\n_genzehn_new_lcd_api: .weak _genzehn_new_lcd_api\n.text");
+
 void lcd_blit(void *buffer, scr_type_t buffer_type)
 {
     static lcd_blit_func lcd_blit_cache[SCR_TYPE_COUNT] = {0};

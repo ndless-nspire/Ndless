@@ -14,6 +14,8 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#include <stdbool.h>
+
 typedef struct {
   int x, y, w, h;
 } t_rect;
@@ -21,8 +23,6 @@ typedef struct {
 typedef struct {
   float x, y;
 } t_point;
-
-typedef enum {false, true} bool;
 
 extern bool rect_intersect(const t_rect* r1, const t_rect* r2);
 extern void clearScreen();

@@ -18,13 +18,16 @@
  * Contributor(s): lkj
  ****************************************************************************/
 
+/* This uses the old screen API. */
+#define OLD_SCREEN_API
+
 #include <ngc.h>
 
 void gui_gc_blit_to_screen(Gc gc)
 {
     /* TODO: This is not portable! */
     char * off_screen = (((((char *****)gc)[9])[0])[0x8])[0];
-    memcpy((void*) REAL_SCREEN_BASE_ADDRESS, off_screen, REAL_SCREEN_BYTES_SIZE);
+    memcpy((void*) SCREEN_BASE_ADDRESS, off_screen, SCREEN_BYTES_SIZE);
 }
 
 void gui_gc_blit_to_screen_region(Gc gc, unsigned x, unsigned y, unsigned w, unsigned h)
@@ -32,7 +35,7 @@ void gui_gc_blit_to_screen_region(Gc gc, unsigned x, unsigned y, unsigned w, uns
     /* TODO: This is totally broken on HW-W! */
     unsigned W = SCREEN_WIDTH;
     char ** off_buff = ((((char *****)gc)[9])[0])[0x8];
-    char * buff = (char*) REAL_SCREEN_BASE_ADDRESS;
+    char * buff = (char*) SCREEN_BASE_ADDRESS;
 
     h += y;
 	if(h > SCREEN_HEIGHT)

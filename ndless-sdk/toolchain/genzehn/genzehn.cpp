@@ -62,7 +62,7 @@ int main(int argc, char **argv)
             ("clickpad-support", opt::value<bool>()->default_value(true), "Whether clickpads are supported")
             ("touchpad-support", opt::value<bool>()->default_value(true), "Whether touchpads (classic) are supported")
             ("32MB-support", opt::value<bool>()->default_value(true), "Whether 32MB SDRAM is supported")
-            ("240x320-support", opt::value<bool>()->default_value(false), "Whether a 240x320x16 LCD (HW-W) is supported")
+            ("240x320-support", opt::value<bool>(), "Whether a 240x320x16 LCD (HW-W) is supported")
             ("uses-lcd-blit", opt::value<bool>(), "Whether the new lcd_blit API is being used");
 
     opt::options_description all("All options");
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << "genzehn 1.3.1 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.4.1 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
@@ -375,7 +375,7 @@ int main(int argc, char **argv)
         std::copy(s->get_data(), s->get_data() + s->get_size(), exec_data.data() + s->get_address());
     }
 
-    bool uses_lcd_blit = true, hww_compat = true;
+    bool uses_lcd_blit = false;
     if(args.count("uses-lcd-blit"))
         uses_lcd_blit = args["uses-lcd-blit"].as<bool>();
     else
@@ -383,22 +383,28 @@ int main(int argc, char **argv)
         if(using_old_lcd_api == true && using_new_lcd_api == true)
         {
             std::cerr << "Warning: Using both the old (SCREEN_BASE_ADDRESS) and new (lcd_blit) API!" << std::endl
-                    << "Assuming '--uses-lcd-blit false'!" << std::endl;
-            uses_lcd_blit = false;
+                      << "Assuming '--uses-lcd-blit false'!" << std::endl;
         }
-        else if(using_old_lcd_api)
-            uses_lcd_blit = false;
+        else if(using_old_lcd_api == false && using_new_lcd_api == false)
+        {
+            std::cerr << "Warning: Using neither old (SCREEN_BASE_ADDRESS) nor new (lcd_blit) API!" << std::endl
+                      << "Assuming '--uses-lcd-blit false'!" << std::endl;
+        }
+        else if(using_new_lcd_api)
+            uses_lcd_blit = true;
     }
 
-    if(!uses_lcd_blit)
+    flag_table.push_back({Zehn_flag_type::USES_LCD_BLIT, uses_lcd_blit});
+
+    bool hww_compat = uses_lcd_blit;
+    if(args.count("240x320-support"))
         hww_compat = args["240x320-support"].as<bool>();
 
     if(!hww_compat)
-        std::cerr << "Warning: Your application does not appear to support HW-W!" << std::endl
-                  << "If it does, override with '--hww-support true'." << std::endl;
+        std::cerr << "Warning: Your application does not appear to support 240x320px displays!" << std::endl
+                  << "If it does, override with '--240x320-support true'." << std::endl;
 
     flag_table.push_back({Zehn_flag_type::RUNS_ON_HWW, hww_compat});
-    flag_table.push_back({Zehn_flag_type::USES_LCD_BLIT, uses_lcd_blit});
 
     //Find all relocations that have to be made at startup
     for(unsigned int i = 0; i < input_reader.sections.size(); ++i)

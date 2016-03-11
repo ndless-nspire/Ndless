@@ -21,6 +21,9 @@
 
 #include <os.h>
 
+/* This is part of the old screen API and uses other parts. */
+unsigned _scrsize(void);
+
 void clrscr(void) {
-	memset((void*) REAL_SCREEN_BASE_ADDRESS, 0xFF, REAL_SCREEN_BYTES_SIZE);
+	memset((void*) REAL_SCREEN_BASE_ADDRESS, 0xFF, _scrsize());
 }
