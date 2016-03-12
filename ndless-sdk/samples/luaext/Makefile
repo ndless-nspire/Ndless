@@ -9,7 +9,7 @@ GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -marm
 LDFLAGS =
-ZEHNFLAGS = --name "luaextdemo"
+ZEHNFLAGS = --name "luaextdemo" --240x320-support true
 
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
