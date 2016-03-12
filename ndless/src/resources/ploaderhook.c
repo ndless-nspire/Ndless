@@ -32,6 +32,10 @@
 #include "ndless.h"
 #include "zehn_loader.h"
 
+/* This file uses parts of the old screen API on older platforms. */
+void lcd_incolor(void);
+unsigned _scrsize(void);
+
 struct assoc_file_each_cb_ctx {
 	const char *prgm_name;
 	char *prgm_path;
@@ -238,14 +242,14 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	void *savedscr = NULL;
 
 	if(!is_hww || supports_hww) {
-		savedscr = malloc(REAL_SCREEN_BYTES_SIZE);
+		savedscr = malloc(_scrsize());
 		if (!savedscr) {
 			puts("ld_exec: can't malloc savedscr");
 			ret = 0xDEAD;
 			goto ld_exec_with_args_quit;
 		}
 
-		memcpy(savedscr, (void*) REAL_SCREEN_BASE_ADDRESS, REAL_SCREEN_BYTES_SIZE);
+		memcpy(savedscr, (void*) REAL_SCREEN_BASE_ADDRESS, _scrsize());
 	}
 	
 	argc = 1 + argsn;
@@ -289,7 +293,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		lcd_compat_disable();
 
 	if(savedscr && !plh_noscrredraw)
-		memcpy((void*) REAL_SCREEN_BASE_ADDRESS, savedscr, REAL_SCREEN_BYTES_SIZE);
+		memcpy((void*) REAL_SCREEN_BASE_ADDRESS, savedscr, _scrsize());
 	
 ld_exec_with_args_quit:
 	free(savedscr);
