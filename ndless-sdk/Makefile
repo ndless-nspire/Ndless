@@ -1,17 +1,24 @@
-SUBDIRS = libsyscalls libndls thirdparty tools samples
+SUBDIRS = libsyscalls libndls thirdparty tools samples system
 
-all:
-	@for i in $(SUBDIRS); do \
-	echo "make all in $$i..."; \
-	(cd $$i; make all) || exit 1; done
-  
-clean:
-	@for i in $(SUBDIRS); do \
-	echo "Clearing in $$i..."; \
-	(cd $$i; make clean) || exit 1; done
+all: $(patsubst %, build-%, $(SUBDIRS))
+clean: $(patsubst %, clean-%, $(SUBDIRS))
+
+build-libndls: build-libsyscalls
+build-tools: build-thirdparty
+build-samples: build-libndls build-tools build-thirdparty build-system
+
+.PHONY: all clean
+
+build-thirdparty: thirdparty
+	$(MAKE) -j1 -C $<
+
+build-%: %
+	+$(MAKE) -C $<
+
+clean-%: %
+	+$(MAKE) -C $< clean
 
 docker: docker-arm-gcc docker-ndless-sdk
-
 
 docker-arm-gcc:Dockerfile.arm-gcc
 	@# works around https://github.com/docker/docker/issues/2112

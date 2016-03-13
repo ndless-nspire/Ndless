@@ -36,6 +36,9 @@ Problem1_mid.xml: ndless_installer.bin
 Problem1.xml: Problem1_top.xml Problem1_mid.xml Problem1_bot.xml
 	cat $^ > $@
 
+# Those can't be built simultaneously due to using "Problem2.xml" as filename
+ndless_installer_4.2.0_cascx.tns: ndless_installer_4.2.0_cx.tns
+
 ndless_installer_4.2.0_%.tns: Problem2_%.xml Document.xml Problem1.xml
 	ln -sf $< Problem2.xml
 	mkdir -p $(DISTDIR)

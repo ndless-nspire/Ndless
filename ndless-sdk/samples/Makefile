@@ -6,12 +6,13 @@ ifneq ($(OS),Windows_NT)
 	SUBDIRS += $(LINUX_SUBDIRS)
 endif
 
-all:
-	@for i in $(SUBDIRS); do \
-	echo "make all in $$i..."; \
-  (cd $$i; make all) || exit 1; done
+all: $(patsubst %, build-%, $(SUBDIRS))
+clean: $(patsubst %, clean-%, $(SUBDIRS))
 
-clean:
-	@for i in $(SUBDIRS); do \
-	echo "Clearing in $$i..."; \
-	(cd $$i; make clean) || exit 1; done
+.PHONY: all clean
+
+build-%: %
+	+$(MAKE) -C $<
+
+clean-%: %
+	+$(MAKE) -C $< clean

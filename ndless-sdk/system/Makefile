@@ -5,7 +5,7 @@ AS = nspire-as
 all: crt0.o crti.o crtn.o
 	
 %.o: %.S
-	$(AS) $(GCCFLAGS) -c $<
+	$(AS) -c $<
 
 clean:
 	rm -f *.o

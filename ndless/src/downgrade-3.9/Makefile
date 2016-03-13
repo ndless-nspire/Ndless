@@ -42,6 +42,10 @@ downgradefix_%.elf: stage2_%.o utils_%.o | stage1.o
 stage0.bin: stage0.o
 	$(OBJCOPY) -O binary $< $@
 
+# Those can't be built simultaneously due to using "Problem1.xml" as filename
+downgradefix_3.9.1.tns: downgradefix_3.9.0.tns
+downgradefix_3.9.0.tns: downgradefix_3.9.0_classic.tns
+
 downgradefix_%.tns: Problem1_%.xml
 	cat Problem1_pre.xml $< Problem1_mid.xml $< Problem1_post.xml > Problem1.xml
 	mkdir -p $(DISTDIR)

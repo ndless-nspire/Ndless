@@ -1,12 +1,15 @@
 SUBDIRS = tools resources installer-3.6 installer-3.9 downgrade-3.9 installer-4.0 installer-4.2
 
-all:
-	@for i in $(SUBDIRS); do \
-	echo "make all in $$i..."; \
-	(cd $$i; make all) || exit 1; done
-  
-clean:
-	@for i in $(SUBDIRS); do \
-	echo "Clearing in $$i..."; \
-	(cd $$i; make clean) || exit 1; done
-	
+all: $(patsubst %, build-%, $(SUBDIRS))
+clean: $(patsubst %, clean-%, $(SUBDIRS))
+
+.PHONY: all clean
+
+build-tools: tools
+	+$(MAKE) -C $<
+
+build-%: % build-tools
+	+$(MAKE) -C $<
+
+clean-%: %
+	+$(MAKE) -C $< clean
