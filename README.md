@@ -1,7 +1,7 @@
 Ndless v4.2 r2004 for TI-Nspire OS v4.2.0
 =============================================
 
-Installing Ndless on your calculator makes it possible to assembly programs.
+Installing Ndless on your calculator makes it possible to run assembly programs.
 
 Ndless combines an executable loader and utilities to open the TI-Nspire to 
 third-party C and assembly development.
