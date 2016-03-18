@@ -19,6 +19,7 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
 
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
 static uint16_t *lcd_mirror = 0x0, *current_lcd_mirror = 0x0;
+static volatile uint32_t lcd_control = 0;
 
 // Using the watchdog here as the second timer is used by gbc4nspire
 // and the first one does not emit interrupts...
@@ -44,12 +45,38 @@ static __attribute__ ((interrupt("FIQ"))) void lcd_compat_fiq()
     *watchdog_intclear = 1;
 
     // Convert the framebuffer
-    uint16_t *out = (uint16_t*) real_lcdc[4], *in = (uint16_t*) current_lcd_mirror;
-    for (int col = 0; col < 240; ++col)
+    int mode = (lcd_control & 0xE) >> 1;
+    if(mode == 2) // 4bpp
     {
-        uint16_t *outcol = out + col;
-        for(int row = 0; row < 320; ++row, outcol += 240)
-            *outcol = *in++;
+        uint8_t *out = (uint8_t*) real_lcdc[4], *in = (uint8_t*) current_lcd_mirror;
+        for (int x = 0; x < 320; x++)
+        {
+            for (int y = 0; y < 240; y += 2)
+                *out++ = (in[y * 320/2 + x/2] & 0xF0) | (in[y * 320/2 + x/2 + 320/2] >> 4);
+            x++;
+            for (int y = 0; y < 240; y += 2)
+                *out++ = (in[y * 320/2 + x/2] << 4) | (in[y * 320/2 + x/2 + 320/2] & 0x0F);
+        }
+    }
+    else if(mode == 3) // 8bpp
+    {
+        uint8_t *out = (uint8_t*) real_lcdc[4], *in = (uint8_t*) current_lcd_mirror;
+        for (int col = 0; col < 240; ++col)
+        {
+            uint8_t *outcol = out + col;
+            for(int row = 0; row < 320; ++row, outcol += 240)
+                *outcol = *in++;
+        }
+    }
+    else // Hopefully 16bpp...
+    {
+        uint16_t *out = (uint16_t*) real_lcdc[4], *in = (uint16_t*) current_lcd_mirror;
+        for (int col = 0; col < 240; ++col)
+        {
+            uint16_t *outcol = out + col;
+            for(int row = 0; row < 320; ++row, outcol += 240)
+                *outcol = *in++;
+        }
     }
 }
 
@@ -165,6 +192,8 @@ void lcd_compat_abort(uint32_t *regs)
 
         if(inst & (1 << 20)) // Load
             *reg = *translated_addr;
+        else if(fault_addr == 0xC0000018) // LCD control (mode etc.)
+            lcd_control = *translated_addr = *reg;
         else if(fault_addr > 0xC000000C) // Don't change the LCD timings
             *translated_addr = *reg;
     }
@@ -208,6 +237,9 @@ bool lcd_compat_enable()
     // Flush TLB for 0xC0000000 and real_lcdc
     asm volatile("mcr p15, 0, %[base], c8, c7, 1" :: [base] "r" (0xC0000000));
     asm volatile("mcr p15, 0, %[base], c8, c7, 1" :: [base] "r" (real_lcdc));
+
+    // Load current lcd_control value
+    lcd_control = real_lcdc[6];
 
     // Install data abort handler
     void lcd_compat_abort_handler();
