@@ -35,6 +35,9 @@ all: $(EXE).tns
 %.o: %.S
 	$(AS) -c $< -o $@
 
+gen_font_droid.h: droid/DroidSans.ttf
+	xxd -i $< > $@
+
 freetype_demo.o: freetype_demo.c gen_font_droid.h
 	$(GCC) $(GCCFLAGS) -c $<
 
