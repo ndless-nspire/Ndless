@@ -9,9 +9,6 @@ build-samples: build-libndls build-tools build-thirdparty build-system
 
 .PHONY: all clean
 
-build-thirdparty: thirdparty
-	$(MAKE) -j1 -C $<
-
 build-%: %
 	+$(MAKE) -C $<
 
