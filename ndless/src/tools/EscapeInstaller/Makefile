@@ -9,4 +9,4 @@ EscapeInst$(EXEEXT): EscapeInstaller.c
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	 rm -f EscapeInst$(EXEEXT)
+	rm -f EscapeInst$(EXEEXT)

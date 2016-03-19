@@ -9,4 +9,4 @@ MakeLuaInst$(EXEEXT): MakeLuaInst.c
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	 rm -f MakeLuaInst$(EXEEXT)
+	rm -f MakeLuaInst$(EXEEXT)

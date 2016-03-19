@@ -6,10 +6,10 @@ clean: $(patsubst %, clean-%, $(SUBDIRS))
 .PHONY: all clean
 
 build-tools: tools
-	+$(MAKE) -C $<
+	$(MAKE) -C $<
 
 build-%: % build-tools
-	+$(MAKE) -C $<
+	$(MAKE) -C $<
 
 clean-%: %
-	+$(MAKE) -C $< clean
+	$(MAKE) -C $< clean

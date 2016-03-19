@@ -9,4 +9,4 @@ MakeHotRebootPtch$(EXEEXT): main.c
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	 rm -f MakeHotRebootPtch$(EXEEXT)
+	rm -f MakeHotRebootPtch$(EXEEXT)

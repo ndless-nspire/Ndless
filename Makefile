@@ -15,7 +15,7 @@ build-ndless: build-ndless-sdk
 .PHONY: all clean
 
 build-%: %
-	+$(MAKE) -C $<
+	$(MAKE) -C $<
 
 clean-%: %
-	+$(MAKE) -C $< clean
+	$(MAKE) -C $< clean
