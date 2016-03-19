@@ -10,6 +10,7 @@ NSPIREIO_H = $(INCDIR)/nspireio2.h \
 
 ZLIB_A = $(LIBDIR)/libz.a
 ZLIB_H = $(INCDIR)/zlib.h $(INCDIR)/zconf.h
+ZLIB_CFLAGS = -O3 -c
 
 FREETYPE_A = $(LIBDIR)/libfreetype.a
 FREETYPE_H := \
@@ -20,27 +21,30 @@ FREETYPE_H := \
 FREETYPE_CFLAGS = -O2 -Wall -Wextra -DFT_CONFIG_OPTION_SYSTEM_ZLIB -c
 FREETYPE_CONFIG_MK = freetype2/config.mk
 
-all: nspireio $(NSPIREIO_A) $(NSPIREIO_H) zlib $(ZLIB_A) $(ZLIB_H) freetype $(FREETYPE_A) $(FREETYPE_H)
+all: nspireio zlib freetype
 
 nspireio:
-	make -C nspire-io lib
+	$(MAKE) -C nspire-io lib
+	$(MAKE) $(NSPIREIO_A) $(NSPIREIO_H)
 
 $(NSPIREIO_A): nspire-io/lib/libnspireio.a
 
 $(NSPIREIO_H): $(INCDIR)/%: nspire-io/include/% | $(INCDIR)/nspireio
 
 zlib:
-	cd zlib && (make libz.a || (CC=$(GCC) CHOST=$(CHOST) ./configure --static && make libz.a))
+	cd zlib && ($(MAKE) libz.a || (CC=$(GCC) CHOST=$(CHOST) CFLAGS="$(ZLIB_CFLAGS)" ./configure --static && $(MAKE) libz.a))
+	$(MAKE) $(ZLIB_A) $(ZLIB_H)
 
 $(ZLIB_A): zlib/libz.a
 
 $(ZLIB_H): $(INCDIR)/%.h: zlib/%.h
 
-freetype: $(FREETYPE_CONFIG_MK) $(ZLIB_H)
-	make -C freetype2 CC=$(GCC) CFLAGS="$(FREETYPE_CFLAGS)" AR=$(AR) SYSTEM_ZLIB=yes library
+freetype: $(FREETYPE_CONFIG_MK) zlib
+	$(MAKE) -C freetype2 CC=$(GCC) CFLAGS="$(FREETYPE_CFLAGS)" AR=$(AR) SYSTEM_ZLIB=yes library
+	$(MAKE) $(FREETYPE_A) $(FREETYPE_H)
 
 $(FREETYPE_CONFIG_MK):
-	make -C freetype2 CC=$(GCC) setup ansi
+	$(MAKE) -C freetype2 CC=$(GCC) setup ansi
 
 $(FREETYPE_A): freetype2/objs/libfreetype.a
 
@@ -55,9 +59,9 @@ $(NSPIREIO_A) $(NSPIREIO_H) $(ZLIB_A) $(ZLIB_H) $(FREETYPE_A) $(FREETYPE_H):
 	cp $< $@
 
 clean:
-	-make -C nspire-io clean
-	-make -C zlib clean
-	-make -C freetype2 clean
+	-$(MAKE) -C nspire-io clean
+	-$(MAKE) -C zlib clean
+	-$(MAKE) -C freetype2 clean
 	rm -rf $(NSPIREIO_A) $(INCDIR)/nspireio2.h $(INCDIR)/nspireio $(ZLIB_A) $(ZLIB_H) $(FREETYPE_A) $(INCDIR)/freetype2
 
 .PHONY: all clean nspireio zlib freetype
