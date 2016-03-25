@@ -46,7 +46,6 @@ if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) de
 #TODO: This test fails on openSUSE
 #if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (termcap/libtinfo-dev) dependency seems to be missing!'; fi
 if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python-devel/python2.7-dev) dependency seems to be missing!'; fi
-if ! gcc -lboost_program_options-mt test.c -o test > /dev/null 2>&1 && ! gcc -lboost_program_options test.c -o test; then error=1; echo 'boost (libboost-program-options-dev/boost-devel) dependency seems to be missing!'; fi
 rm -f test test.c
 if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (texinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
@@ -80,10 +79,6 @@ echo "Building GCC (step 2)..."
 # Section 5: GDB.
 echo "Building GDB..."
 [ -f .built_gdb ] || (cd build && rm -rf * && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
- 
-# Section 6: genzehn.
-echo "Building genzehn..."
-[ -f .built_genzehn ] || (cd genzehn && make clean && make && make install PREFIX=$PREFIX && cd .. && rm -rf build/* && touch .built_genzehn) || exit 1;
 
 echo "Done!"
 echo "Don't forget to add '$PREFIX/bin' to your \$PATH along with $SCRIPTPATH/../bin."
