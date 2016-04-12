@@ -54,12 +54,9 @@ int show_msg_user_input(const char * title, const char * msg, char * defaultvalu
 	string_free(s_msg);
 
 	if(no_error && request_value->len > 0) {
-		char * t = string_to_ascii(request_value);
-		size_t len_out = strlen(t);
-		*value_ref = malloc(len_out+1);
-		strcpy(*value_ref, t);
+		*value_ref = strdup(string_to_ascii(request_value));
 		string_free(request_value);
-		return len_out;
+		return strlen(*value_ref);
 	}
 	else {
 		string_free(request_value);
