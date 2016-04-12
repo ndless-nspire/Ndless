@@ -36,7 +36,9 @@
    free(value);
 */
 
-#include <os.h>
+#include <stdlib.h>
+#include <string.h>
+#include <syscall-decls.h>
 
 int show_msg_user_input(const char * title, const char * msg, char * defaultvalue, char ** value_ref) {
 	String request_value = string_new();
@@ -47,21 +49,21 @@ int show_msg_user_input(const char * title, const char * msg, char * defaultvalu
 	string_set_ascii(s_msg, msg);	
 	String request_struct[] = {s_msg, request_value};	
 
+	int len_out = -1;
 	int no_error = _show_msgUserInput(0, request_struct, s_title->str, s_msg->str);
-	unsigned len_out = (no_error) ? request_value->len : 0;	
 	string_free(s_title);	
 	string_free(s_msg);
 
-	if(no_error && len_out > 0) {
-		char * t = string_to_ascii(request_value);
-		*value_ref = malloc(sizeof(char)*(len_out+1));
-		strncpy(*value_ref, t, len_out);
-		(*value_ref)[len_out] = 0;
-		string_free(request_value);
-		return len_out;
+	if (!(no_error && request_value->len > 0)) goto err;
+	char *s = string_to_ascii(request_value);
+	if (!s) goto err;
+
+	if (value_ref) {
+		*value_ref = strdup(s);
 	}
-	else {
-		string_free(request_value);
-		return -1;
-	}
+	len_out = strlen(s);
+
+err:
+	string_free(request_value);
+	return len_out;
 }	
