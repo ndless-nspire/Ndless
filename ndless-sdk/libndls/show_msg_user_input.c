@@ -15,7 +15,7 @@
  * Portions created by the Initial Developer are Copyright (C) 2012
  * the Initial Developer. All Rights Reserved.
  *
- * Contributor(s): 
+ * Contributor(s):
  ****************************************************************************/
 
 /*
@@ -40,18 +40,18 @@
 #include <string.h>
 #include <syscall-decls.h>
 
-int show_msg_user_input(const char * title, const char * msg, char * defaultvalue, char ** value_ref) {
+int show_msg_user_input(const char * title, const char * msg, const char * defaultvalue, char ** value_ref) {
 	String request_value = string_new();
-	String s_title = string_new();	
-	String s_msg = string_new();	
-	string_set_ascii(request_value, defaultvalue);	
-	string_set_ascii(s_title, title);	
-	string_set_ascii(s_msg, msg);	
-	String request_struct[] = {s_msg, request_value};	
+	String s_title = string_new();
+	String s_msg = string_new();
+	string_set_ascii(request_value, defaultvalue);
+	string_set_ascii(s_title, title);
+	string_set_ascii(s_msg, msg);
+	String request_struct[] = {s_msg, request_value};
 
 	int len_out = -1;
 	int no_error = _show_msgUserInput(0, request_struct, s_title->str, s_msg->str);
-	string_free(s_title);	
+	string_free(s_title);
 	string_free(s_msg);
 
 	if (!(no_error && request_value->len > 0)) goto err;
@@ -60,10 +60,11 @@ int show_msg_user_input(const char * title, const char * msg, char * defaultvalu
 
 	if (value_ref) {
 		*value_ref = strdup(s);
+		if (!*value_ref) goto err;
 	}
 	len_out = strlen(s);
 
 err:
 	string_free(request_value);
 	return len_out;
-}	
+}
