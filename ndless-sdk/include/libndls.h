@@ -87,7 +87,7 @@ BOOL on_key_pressed(void);
 void refresh_osscr(void);
 unsigned set_cpu_speed(unsigned speed);
 unsigned _show_msgbox(const char *title, const char *msg, unsigned button_num, ...);
-int show_msg_user_input(const char * title, const char * msg, char * defaultvalue, char ** value_ref);
+int show_msg_user_input(const char * title, const char * msg, const char * defaultvalue, char ** value_ref);
 int show_1numeric_input(const char * title, const char * subtitle, const char * msg, int * value_ref, int min_value, int max_value);
 int show_2numeric_input(const char * title, const char * subtitle, const char * msg1, int * value1_ref, int min_value1, int max_value1, const char * msg2, int * value2_ref, int min_value2, int max_value2);
 touchpad_info_t *touchpad_getinfo(void);
