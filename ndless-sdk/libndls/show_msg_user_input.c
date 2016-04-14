@@ -60,6 +60,7 @@ int show_msg_user_input(const char * title, const char * msg, const char * defau
 
 	if (value_ref) {
 		*value_ref = strdup(s);
+		if (!*value_ref) goto err;
 	}
 	len_out = strlen(s);
 
