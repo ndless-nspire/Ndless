@@ -56,6 +56,18 @@ bool zehn_check_string(const uint8_t *extra_data, const Zehn_flag flag, unsigned
 	return true;
 }
 
+static uint32_t ru32(void *ptr)
+{
+	uint32_t ret;
+	memcpy(&ret, ptr, sizeof(ret));
+	return ret;
+}
+
+static void wu32(void *ptr, uint32_t val)
+{
+	memcpy(ptr, &val, sizeof(val));
+}
+
 extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]), bool *supports_hww)
 {
 	Zehn_header header;
@@ -256,6 +268,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 			return 1;
 		}
 
+		// No alignment guaranteed!
 		uint32_t *place = reinterpret_cast<uint32_t*>(base + r.offset);
 		switch(r.type)
 		{
@@ -263,14 +276,20 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		case Zehn_reloc_type::FILE_COMPRESSED:
 			break;
 		case Zehn_reloc_type::ADD_BASE:
-			*place += reinterpret_cast<uint32_t>(base);
+			wu32(place, ru32(place) + reinterpret_cast<uint32_t>(base));
 			break;
 		case Zehn_reloc_type::ADD_BASE_GOT:
-			while(*place != 0xFFFFFFFF)
-				*place++ += reinterpret_cast<uint32_t>(base);
+		{
+			uint32_t u32;
+			while((u32 = ru32(place)) != 0xFFFFFFFF)
+{
+				wu32(place++, u32 + reinterpret_cast<uint32_t>(base));
+printf("Got %p, wrote %p\n", u32, u32 + reinterpret_cast<uint32_t>(base));
+}
 			break;
+		}
 		case Zehn_reloc_type::SET_ZERO:
-			*place = 0;
+			wu32(place, 0);
 			break;
 		default:
 			printf("[Zehn] Unsupported reloc %d!\n", static_cast<int>(r.type));
