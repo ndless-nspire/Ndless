@@ -282,10 +282,8 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		{
 			uint32_t u32;
 			while((u32 = ru32(place)) != 0xFFFFFFFF)
-{
 				wu32(place++, u32 + reinterpret_cast<uint32_t>(base));
-printf("Got %p, wrote %p\n", u32, u32 + reinterpret_cast<uint32_t>(base));
-}
+
 			break;
 		}
 		case Zehn_reloc_type::SET_ZERO:
