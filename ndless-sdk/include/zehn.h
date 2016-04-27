@@ -36,7 +36,8 @@ enum class Zehn_reloc_type : uint8_t
     ADD_BASE = 0, //Just add the address of the executable start
     ADD_BASE_GOT, //Add the start address until you hit 0xFFFFFFFF
     SET_ZERO, //Set the value to 0, e.g. to undo got relocs for undef. symbols
-    FILE_COMPRESSED //A marker, that the file is compressed. Has to come before other relocs
+    FILE_COMPRESSED, //Marks that the file is compressed. Has to come before other relocs. Offset is the Zehn_compress_type
+    UNALIGNED_RELOC, //If this occurs anywhere in the reloc list, there is at least one unaligned relocation. Offset must be 0.
 };
 
 enum class Zehn_compress_type : uint32_t

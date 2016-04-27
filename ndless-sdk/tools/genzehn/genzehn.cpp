@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << "genzehn 1.4.1 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.5.0 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
@@ -406,6 +406,9 @@ int main(int argc, char **argv)
 
     flag_table.push_back({Zehn_flag_type::RUNS_ON_HWW, hww_compat});
 
+    // Whether there is a relocation at an unaligned address
+    bool unaligned_reloc_found = false;
+
     //Find all relocations that have to be made at startup
     for(unsigned int i = 0; i < input_reader.sections.size(); ++i)
     {
@@ -419,6 +422,12 @@ int main(int argc, char **argv)
             if(*reinterpret_cast<const uint32_t*>(s->get_data() + s->get_size() - 4) != 0xFFFFFFFF)
             {
                 std::cerr << "Error: .got section doesn't end with 0xFFFFFFFF!" << std::endl;
+                return 1;
+            }
+
+            if(s->get_address() & 0b11)
+            {
+                std::cerr << "Error: .got section not aligned to 4-byte boundary!" << std::endl;
                 return 1;
             }
 
@@ -493,6 +502,20 @@ int main(int argc, char **argv)
             case 38: //R_ARM_TARGET1
                 if(verbose)
                     std::cout << "\tNeed Reloc at 0x" << std::hex << entry->r_offset << "." << std::endl;
+
+                if(entry->r_offset & 0b11)
+                {
+                    if(verbose)
+                        std::cout << "\t\tReloc is unaligned." << std::endl;
+
+                    if(!unaligned_reloc_found) //Only add marker if not already added
+                    {
+                        unaligned_reloc_found = true;
+                        reloc_table.push_back({Zehn_reloc_type::UNALIGNED_RELOC, 0});
+                        if(verbose)
+                            std::cout << "\t\tUnaligned marker added." << std::endl;
+                    }
+                }
 
                 reloc_table.push_back({Zehn_reloc_type::ADD_BASE, static_cast<uint32_t>(entry->r_offset)});
                 break;

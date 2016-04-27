@@ -24,6 +24,24 @@ extern uint8_t zehn_start;
 
 typedef int (*Entry)(int,char**);
 
+static uint32_t ru32(void *ptr)
+{
+        if((reinterpret_cast<uintptr_t>(ptr) & 0b11) == 0)
+            return *reinterpret_cast<uint32_t*>(ptr);
+
+	uint32_t ret;
+	syscall<e_memcpy, void*>(&ret, ptr, sizeof(ret));
+	return ret;
+}
+
+static void wu32(void *ptr, uint32_t val)
+{
+        if((reinterpret_cast<uintptr_t>(ptr) & 0b11) == 0)
+            *reinterpret_cast<uint32_t*>(ptr) = val;
+        else
+            syscall<e_memcpy, void*>(ptr, &val, sizeof(val));
+}
+
 int main(int, char**) __attribute__((section(".start")));
 int main(int argc, char **argv)
 {
@@ -89,15 +107,27 @@ int main(int argc, char **argv)
 		{
 		#ifdef ENABLE_ZLIB
 		case Zehn_reloc_type::FILE_COMPRESSED:
-			break;
+                        break;
 		#endif
+                case Zehn_reloc_type::UNALIGNED_RELOC:
+                        if(reloc_table->offset != 0)
+                        {
+				syscall<e_free, void>(mallocd);
+                                return 1;
+                        }
+
+                        break;
 		case Zehn_reloc_type::ADD_BASE:
-			*place += reinterpret_cast<uint32_t>(exec_data);
+			wu32(place, ru32(place) + reinterpret_cast<uint32_t>(exec_data));
 			break;
 		case Zehn_reloc_type::ADD_BASE_GOT:
-			while(*place != 0xFFFFFFFF)
-				*place++ += reinterpret_cast<uint32_t>(exec_data);
+		{
+			uint32_t u32;
+			while((u32 = ru32(place)) != 0xFFFFFFFF)
+				wu32(place++, u32 + reinterpret_cast<uint32_t>(exec_data));
+
 			break;
+		}
 		case Zehn_reloc_type::SET_ZERO:
 			*place = 0;
 			break;

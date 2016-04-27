@@ -58,6 +58,9 @@ bool zehn_check_string(const uint8_t *extra_data, const Zehn_flag flag, unsigned
 
 static uint32_t ru32(void *ptr)
 {
+        if((reinterpret_cast<uintptr_t>(ptr) & 0b11) == 0)
+            return *reinterpret_cast<uint32_t*>(ptr);
+
 	uint32_t ret;
 	memcpy(&ret, ptr, sizeof(ret));
 	return ret;
@@ -65,7 +68,10 @@ static uint32_t ru32(void *ptr)
 
 static void wu32(void *ptr, uint32_t val)
 {
-	memcpy(ptr, &val, sizeof(val));
+        if((reinterpret_cast<uintptr_t>(ptr) & 0b11) == 0)
+            *reinterpret_cast<uint32_t*>(ptr) = val;
+        else
+	    memcpy(ptr, &val, sizeof(val));
 }
 
 extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*[]), bool *supports_hww)
@@ -274,6 +280,14 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		{
 		//Handled above
 		case Zehn_reloc_type::FILE_COMPRESSED:
+                        break;
+                case Zehn_reloc_type::UNALIGNED_RELOC:
+                        if(r.offset != 0)
+                        {
+                            printf("[Zehn] Unexpected UNALIGNED_RELOC value %lu!\n", r.offset);
+                            return 1;
+                        }
+
 			break;
 		case Zehn_reloc_type::ADD_BASE:
 			wu32(place, ru32(place) + reinterpret_cast<uint32_t>(base));
