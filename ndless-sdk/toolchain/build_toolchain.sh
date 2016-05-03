@@ -15,18 +15,18 @@ TARGET=arm-none-eabi
 PREFIX=$PWD/install # or the directory where the toolchain should be installed in
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
-BINUTILS=binutils-2.25 # http://www.gnu.org/software/binutils/
-GCC=gcc-5.3.0 # http://gcc.gnu.org/
-NEWLIB=newlib-2.2.0-1 # http://sourceware.org/newlib/
-GDB=gdb-7.10 # http://www.gnu.org/software/gdb/
+BINUTILS=binutils-2.26 # http://www.gnu.org/software/binutils/
+GCC=gcc-6.1.0 # http://gcc.gnu.org/
+NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
+GDB=gdb-7.11 # http://www.gnu.org/software/gdb/
 
 # For newlib
-export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections"
-export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections"
+export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O2 -funroll-loops"
+export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O2 -funroll-loops"
 export PATH=$PREFIX/bin:$PATH
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
-OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
+OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror"
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
 
@@ -53,11 +53,16 @@ if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (texinfo) dependency 
 mkdir -p build build-binutils download
 
 if [ ! -f .downloaded ]; then
-	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/binutils.tar.bz2 && tar xvjf download/binutils.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2 -O download/gcc.tar.bz2 && tar xvjf download/gcc.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz -O download/gdb.tar.bz2 && tar xvJf download/gdb.tar.bz2 && \
-	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/newlib.tar.gz && tar xvzf download/newlib.tar.gz && \
+	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/$BINUTILS.tar.bz2 && tar xvjf download/$BINUTILS.tar.bz2 && \
+	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2 -O download/$GCC.tar.bz2 && tar xvjf download/$GCC.tar.bz2 && \
+        patch -i gcc_6.1.patch gcc-6.1.0/gcc/config/arm/arm.c && \
+	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz -O download/$GDB.tar.xz && tar xvJf download/$GDB.tar.xz && \
+	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/$NEWLIB.tar.gz && tar xvzf download/$NEWLIB.tar.gz && \
 	touch .downloaded
+	if [ $? -ne 0 ]; then
+		echo "Download failed!"
+		exit 1
+	fi
 fi
 
 # Section 1: GNU Binutils.
@@ -71,6 +76,8 @@ echo "Building GCC (step 1)..."
 # Section 3: Newlib.
 echo "Building Newlib..."
 [ -f .built_newlib ] || (cd build && rm -rf * && ../$NEWLIB/configure $OPTIONS_NEWLIB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_newlib) || exit 1;
+# Workaround for newlib bug
+rm -f "$PREFIX/arm-none-eabi/sys-include/newlib.h"
  
 # Section 4: GCC, step 2. Yes, this is necessary.
 echo "Building GCC (step 2)..."

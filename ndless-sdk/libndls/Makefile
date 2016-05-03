@@ -4,7 +4,7 @@ GXX = nspire-g++
 LD = nspire-ld
 AR := "$(shell (which arm-elf-ar arm-none-eabi-ar arm-linux-gnueabi-ar | head -1) 2>/dev/null)"
 
-GCCFLAGS = -Os -nostdlib -Wall -Werror -Wextra -ffunction-sections -fdata-sections
+GCCFLAGS = -O2 -funroll-loops -nostdlib -Wall -Werror -Wextra -ffunction-sections -fdata-sections
 GXXFLAGS = $(GCCFLAGS) -fno-rtti -fno-exceptions -std=c++11
 LDFLAGS = -nostdlib
 LIB = libndls.a

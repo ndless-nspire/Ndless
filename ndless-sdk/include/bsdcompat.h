@@ -11,6 +11,9 @@ typedef uint8_t u_int8_t;
 typedef uint16_t u_int16_t;
 typedef uint32_t u_int32_t;
 typedef struct device  *device_t;
+typedef unsigned int u_int;
+typedef unsigned char u_char;
+typedef unsigned long u_long;
 
 // BSD's sys/dev/usb/usb_port.h
 #define device_ptr_t device_t

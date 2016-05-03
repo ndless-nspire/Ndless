@@ -523,4 +523,5 @@ clock_t _times(struct tms *ptms)
 
 // Miscellaneous
 void *__dso_handle __attribute__((weak));
+void __sync_synchronize(){}
 }
