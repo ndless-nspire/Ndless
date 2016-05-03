@@ -27,13 +27,20 @@ uint32_t zehn_extra_string(std::string s, std::vector<uint8_t> &extra_data)
     return pos;
 }
 
+size_t strlen_max(const char *s, size_t max_len)
+{
+    size_t i = 0;
+    for(; (i < max_len) && s[i]; ++i);
+    return i;
+}
+
 std::string zehn_get_string(uint32_t pos, std::vector<uint8_t> &extra_data)
 {
     if(pos > extra_data.size() - 1)
         return "<invalid>";
 
     const char *start = reinterpret_cast<const char*>(extra_data.data() + pos);
-    return std::string(start, strnlen(start, extra_data.size() - pos - 1));
+    return std::string(start, strlen_max(start, extra_data.size() - pos - 1));
 }
 
 int main(int argc, char **argv)
@@ -73,7 +80,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << "genzehn 1.5.0 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.5.1 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
@@ -131,7 +138,7 @@ int main(int argc, char **argv)
                      << header.alloc_size << "\tbytes needed to load this file" << std::endl
                      << header.file_size << "\tbytes Zehn executable file" << std::endl;
 
-	std::cout << std::hex << "Entry point:\t" << header.entry_offset << std::endl;
+	std::cout << std::hex << "Entry point:\t0x" << header.entry_offset << std::endl;
 
         std::vector<Zehn_reloc> relocs(header.reloc_count);
         std::vector<Zehn_flag> flags(header.flag_count);
@@ -167,7 +174,7 @@ int main(int argc, char **argv)
                 std::cout << "Application: " << zehn_get_string(flag.data, extra_data) << std::endl;
                 break;
             case Zehn_flag_type::EXECUTABLE_VERSION:
-                std::cout << "Version: " << flag.data << std::endl;
+                std::cout << "Version: " << std::dec << flag.data << std::endl;
                 break;
             case Zehn_flag_type::EXECUTABLE_AUTHOR:
                 std::cout << "Author: " << zehn_get_string(flag.data, extra_data) << std::endl;
