@@ -48,7 +48,7 @@ case "$1" in
 		fi
 		prgmname=`echo "$2" | tr -d ' '`
 		sed -e "s/@@EXENAME@@/$prgmname/" "$DIRNAME/Makefile.tpl" > Makefile
-		echo "Makefile created. You can now build with the 'make' command or Ndless Editor's Tools>Build command."
+		echo "Makefile created."
 		;;
 	main)
 		if [ -f main.c ]; then
