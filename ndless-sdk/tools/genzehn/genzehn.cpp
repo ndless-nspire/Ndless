@@ -67,7 +67,7 @@ int main(int argc, char **argv)
             ("ndless-rev-max", opt::value<uint32_t>(), "max. ndless revision")
             ("color-support", opt::value<bool>()->default_value(true), "Whether CX and CM are supported")
             ("clickpad-support", opt::value<bool>()->default_value(true), "Whether clickpads are supported")
-            ("touchpad-support", opt::value<bool>()->default_value(true), "Whether touchpads (classic) are supported")
+            ("touchpad-support", opt::value<bool>()->default_value(true), "Whether touchpads (classic and CX/CM) are supported")
             ("32MB-support", opt::value<bool>()->default_value(true), "Whether 32MB SDRAM is supported")
             ("240x320-support", opt::value<bool>(), "Whether a 240x320x16 LCD (HW-W) is supported")
             ("uses-lcd-blit", opt::value<bool>(), "Whether the new lcd_blit API is being used");
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 
     if(args.count("help"))
     {
-        std::cout << "genzehn 1.5.1 by Fabian Vogt" << std::endl
+        std::cout << "genzehn 1.5.2 by Fabian Vogt" << std::endl
                   << all << std::endl;
         return 0;
     }
