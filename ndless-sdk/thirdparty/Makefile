@@ -1,6 +1,6 @@
 GCC = nspire-gcc
 AR := "$(shell (which arm-elf-ar arm-none-eabi-ar arm-linux-gnueabi-ar | head -1) 2>/dev/null)"
-CHOST := $(shell (basename $(AR) | head -c -4))
+CHOST := $(shell (echo $(shell basename $(AR)) | sed 's/-ar$$//'))
 LIBDIR = ../lib
 INCDIR = ../include
 
