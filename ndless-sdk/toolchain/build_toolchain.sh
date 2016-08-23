@@ -66,7 +66,7 @@ fi
 
 # Section 1: GNU Binutils.
 echo "Building Binutils..."
-[ -f .built_binutils ] || (cd build && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
+[ -f .built_binutils ] || (cd build && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && rm -rf build/* && touch .built_binutils) || exit 1;
  
 # Section 2: GCC, step 1.
 echo "Building GCC (step 1)..."
