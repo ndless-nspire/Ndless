@@ -15,10 +15,10 @@ TARGET=arm-none-eabi
 PREFIX=$PWD/install # or the directory where the toolchain should be installed in
 PARALLEL="-j8" # or "-j<number of build jobs>"
  
-BINUTILS=binutils-2.26 # http://www.gnu.org/software/binutils/
-GCC=gcc-6.1.0 # http://gcc.gnu.org/
+BINUTILS=binutils-2.27 # http://www.gnu.org/software/binutils/
+GCC=gcc-6.2.0 # http://gcc.gnu.org/
 NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
-GDB=gdb-7.11 # http://www.gnu.org/software/gdb/
+GDB=gdb-7.11.1 # http://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O2 -funroll-loops"
@@ -55,7 +55,6 @@ mkdir -p build build-binutils download
 if [ ! -f .downloaded ]; then
 	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/$BINUTILS.tar.bz2 && tar xvjf download/$BINUTILS.tar.bz2 && \
 	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2 -O download/$GCC.tar.bz2 && tar xvjf download/$GCC.tar.bz2 && \
-        patch -i gcc_6.1.patch gcc-6.1.0/gcc/config/arm/arm.c && \
 	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz -O download/$GDB.tar.xz && tar xvJf download/$GDB.tar.xz && \
 	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/$NEWLIB.tar.gz && tar xvzf download/$NEWLIB.tar.gz && \
 	touch .downloaded
