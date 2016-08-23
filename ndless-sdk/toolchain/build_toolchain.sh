@@ -50,7 +50,7 @@ rm -f test test.c
 if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (texinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
 
-mkdir -p build build-binutils download
+mkdir -p build download
 
 if [ ! -f .downloaded ]; then
 	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/$BINUTILS.tar.bz2 && tar xvjf download/$BINUTILS.tar.bz2 && \
@@ -66,7 +66,7 @@ fi
 
 # Section 1: GNU Binutils.
 echo "Building Binutils..."
-[ -f .built_binutils ] || (cd build-binutils && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
+[ -f .built_binutils ] || (cd build && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && touch .built_binutils) || exit 1;
  
 # Section 2: GCC, step 1.
 echo "Building GCC (step 1)..."
