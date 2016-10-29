@@ -39,7 +39,8 @@ static unsigned const ploader_hook_addrs[NDLESS_MAX_OSID+1] =
 						0x0, 0x0, 0x1000A79C, 0x1000A78C,
 						0x1000A7B0, 0x1000A7AC,
 						0x1000A868, 0x1000A864,
-						0x1000AA64, 0x1000AA60};
+						0x1000AA64, 0x1000AA60,
+						0x1000AC4C, 0x1000AC48};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -55,7 +56,8 @@ static unsigned const end_of_init_addrs[NDLESS_MAX_OSID+1] =
 						0x0, 0x0, 0x0, 0x0,
 						0x10012420, 0x100123CC,
 						0x100124F4, 0x100124A0,
-						0x10012740, 0x100126EC};
+						0x10012740, 0x100126EC,
+						0x10012C78, 0x10012C24};
 
 // OS-specific
 // get_res_string + 0xC8
@@ -66,7 +68,8 @@ static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
 						0x0, 0x0, 0x1011193C, 0x10111768,
 						0x10112DC4, 0x10112C14,
 						0x1011811C, 0x10117F6C,
-						0x1011BFB8, 0x1011BE10};
+						0x1011BFB8, 0x1011BE10,
+						0x10120E84, 0x10120CDC};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -159,13 +162,27 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 
 // OS-specific
 // gui_gc_drawIcon + 4
-const unsigned ins_successmsg_hook_addrs[] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-						0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348,
-						0x1002E2C0, 0x1002E224, 0x0, 0x0,
-						0x0, 0x0, 0x1002D804, 0x1002D798,
-						0x1002D818, 0x1002D7C0,
-						0x1002F4EC, 0x1002F494,
-						0x1002F92C, 0x1002F8D4};
+const unsigned ins_successmsg_hook_addrs[NDLESS_MAX_OSID+1] =
+					{0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					 0x1002DE38, 0x1002DDC8, 0x1002D388, 0x1002D348,
+					 0x1002E2C0, 0x1002E224, 0x0, 0x0,
+					 0x0, 0x0, 0x1002D804, 0x1002D798,
+					 0x1002D818, 0x1002D7C0,
+					 0x1002F4EC, 0x1002F494,
+					 0x1002F92C, 0x1002F8D4,
+					 0x1002FF24, 0x1002FEC0};
+
+// OS-specific
+// number of the HOME icon
+const unsigned ins_successmsg_icon[NDLESS_MAX_OSID+1] =
+					{0x171, 0x171, 0x171, 0x171, 0x171, 0x171,
+					 0x171, 0x171, 0x171, 0x171,
+					 0x171, 0x171, 0x171, 0x171,
+					 0x171, 0x171, 0x171, 0x171,
+					 0x171, 0x171,
+					 0x171, 0x171,
+					 0x171, 0x171,
+					 0x172, 0x172};
 
 void ins_install_successmsg_hook(void) {
 	if(ins_successmsg_hook_addrs[ut_os_version_index] == 0)
@@ -177,7 +194,7 @@ void ins_install_successmsg_hook(void) {
 // chained after the startup programs execution
 HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	// OS-specific: reg number
-	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == 0x171) {
+	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
 		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
 		gui_gc_setFont(gc, SerifRegular9);

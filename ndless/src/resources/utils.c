@@ -127,6 +127,14 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 23;
 			break;
 #endif
+#if !defined(STAGE1) // No installer for this yet :-/
+		case 0x103A3100: // 4.3.0.702 non-CAS CX
+			ut_os_version_index = 24;
+			break;
+		case 0x103A3690: // 4.3.0.702 CAS CX
+			ut_os_version_index = 25;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}
