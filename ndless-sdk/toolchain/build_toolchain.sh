@@ -18,11 +18,11 @@ PARALLEL="-j8" # or "-j<number of build jobs>"
 BINUTILS=binutils-2.27 # http://www.gnu.org/software/binutils/
 GCC=gcc-6.2.0 # http://gcc.gnu.org/
 NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
-GDB=gdb-7.11.1 # http://www.gnu.org/software/gdb/
+GDB=gdb-7.12 # http://www.gnu.org/software/gdb/
 
 # For newlib
-export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O2 -funroll-loops"
-export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O2 -funroll-loops"
+export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -Ofast -funroll-loops"
+export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -Ofast -funroll-loops"
 export PATH=$PREFIX/bin:$PATH
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
