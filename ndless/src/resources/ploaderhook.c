@@ -26,6 +26,7 @@
 
 #include <os.h>
 #include <sys/stat.h>
+#include <stdint.h>
 
 #include "bflt.h"
 #include "lcd_compat.h"
@@ -130,6 +131,89 @@ int ld_exec(const char *path, void **resident_ptr) {
 	return ld_exec_with_args(path, 0, NULL, resident_ptr);
 }
 
+typedef struct NU_Task {
+	char dontcare[36];
+	uintptr_t stack_start;
+	uintptr_t stack_end;
+	char dontcare_either[];
+} NU_Task;
+
+/* OS-specific
+   Address of NU_Task *TCT_Current_Thread() */
+static const uintptr_t tct_current_thread_addrs[NDLESS_MAX_OSID+1] =
+                                               {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                                                0x0, 0x0, 0x0, 0x0,
+                                                0x0, 0x0, 0x0, 0x0,
+                                                0x0, 0x0, 0x0, 0x0,
+                                                0x0, 0x0,
+                                                0x0, 0x0,
+                                                0x1039DAEC, 0x1039E06C,
+                                                0x103A444C, 0x103A49DC};
+
+/* Expand the stack of the currently running Task by 128K */
+static bool expand_stack()
+{
+	static bool already_done = false;
+	if(already_done)
+		return true;
+
+	// Only needed on some OSs
+	if(!tct_current_thread_addrs[ut_os_version_index])
+	{
+		already_done = true;
+		return true;
+	}
+
+	NU_Task *(*TCT_Current_Thread)(void) = (NU_Task *(*)(void))tct_current_thread_addrs[ut_os_version_index];
+
+	// Allocate space for the new stack (+ alignment)
+	void *new_stack = malloc(132 * 1024);
+	if(!new_stack)
+		return false;
+
+	uintptr_t new_stack_aligned = ((uintptr_t)new_stack + 0x1000) & ~0xFFF;
+
+	// Allocate space for the coarse page table (+ alignment)
+	uint32_t *page_table = malloc(256 * 4 + 0x400);
+	if(!page_table)
+	{
+		free(new_stack);
+		return false;
+	}
+
+	page_table = (uint32_t*)(((uintptr_t)page_table + 0x400) & ~0x3FF);
+
+	// Fill page table
+	const unsigned int pages = 128 * 1024 / 4096;
+	for(unsigned int i = 0; i < 256 - pages; ++i)
+		page_table[i] = 0;
+	for(unsigned int i = 256 - pages; i < 256; ++i)
+	{
+		page_table[i] = new_stack_aligned | 0b111111111101;
+		new_stack_aligned += 0x1000;
+	}
+
+	// Get address of translation table
+	uint32_t *tt_base;
+	asm volatile("mrc p15, 0, %[tt_base], c2, c0, 0" : [tt_base] "=r" (tt_base));
+	// Set coarse page table for 0x17F00000
+	tt_base[0x17F] = (uintptr_t)page_table | (0b10001);
+
+	// Flush TLB
+	for(unsigned int i = 0; i < pages; ++i)
+	{
+		new_stack_aligned -= 0x1000;
+		asm volatile("mcr p15, 0, %[base], c8, c7, 1" :: [base] "r" (new_stack_aligned));
+	}
+
+	// Tell it the OS
+	NU_Task *myself = TCT_Current_Thread();
+	myself->stack_start = new_stack_aligned;
+
+	already_done = true;
+	return true;
+}
+
 // Run a program. Returns 0xDEAD if can't run it or 0xBEEF if the error dialog should be skipped. Else returns the program return code.
 // If resident_ptr isn't NULL, the program's memory block isn't freed and is stored in resident_ptr. It may be freed later with ld_free(). 
 // Resident program shouldn't use argv after returning.
@@ -145,6 +229,12 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	bool isassoc = false, supports_hww = false;
 	strcpy(doc_path, path);
 	strcpy(prgm_path, path); // may deffer if using file association
+
+	// Stack expansion
+	if (!expand_stack()) {
+		puts("ld_exec: Could not expand stack");
+		return 0xDEAD;
+	}
 
 	// File association
 	char extbuf[FILENAME_MAX];
