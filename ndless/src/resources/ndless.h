@@ -112,6 +112,7 @@ static inline struct next_descriptor *ut_get_next_descriptor(void) {
 		return NULL;
 	return (struct next_descriptor*)*(*(unsigned**)(OS_BASE_ADDRESS + INTS_SWI_HANDLER_ADDR) - 1);
 }
+extern unsigned int syscall_addrs[NDLESS_MAX_OSID+1][__SYSCALLS_LAST+1];
 
 /* syscalls.c */
 void sc_ext_relocdatab(unsigned *dataptr, unsigned size, void *base);
