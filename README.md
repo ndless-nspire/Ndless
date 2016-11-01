@@ -1,4 +1,4 @@
-Ndless v4.2 r2004 for TI-Nspire OS v4.2.0
+Ndless v4.2 r2006 for TI-Nspire OS v4.2.0
 =============================================
 
 Installing Ndless on your calculator makes it possible to run assembly programs.
