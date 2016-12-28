@@ -244,7 +244,7 @@ std::string luaForOS(int os, std::string installer_filename)
 	}
 
 	//Copy patched struct into the buffer	
-	std::vector<uint8_t> patched_struct(reinterpret_cast<uint8_t*>(orig_struct[os]), reinterpret_cast<uint8_t*>(orig_struct[os] + sizeof(orig_struct[os])));
+	std::vector<uint8_t> patched_struct(reinterpret_cast<uint8_t*>(orig_struct[os]), reinterpret_cast<uint8_t*>(orig_struct[os]) + sizeof(orig_struct[os]));
 	buffer_content.insert(buffer_content.end(), patched_struct.begin(), patched_struct.end());
 
 	//And write the address of the patched struct at the correct position
