@@ -50,12 +50,19 @@ int main(int argc, char *argv[])
     }
 
     BMPHeader *input_header = reinterpret_cast<BMPHeader*>(header.data());
+    bool is_bmp = input_header->magic == 0x4d42,
+         is_v3 = input_header->hdr_size == 40,
+         is_v4 = input_header->hdr_size == 52;
 
-    if(input_header->compress_type == 65543)
+    if(is_bmp && ((is_v3 && input_header->compress_type == 65543) || (is_v4 && input_header->compress_type == 0x3)))
     {
         //Is a TI BMP
         if(input_header->height < 0)
             input_header->height = -input_header->height;
+
+        // Quick hack: Just ignore the bytes that make the difference between v4 and v3
+        if(is_v4)
+            input.read(12);
 
         QImage output(input_header->width, input_header->height, QImage::Format_ARGB32);
         qint64 size = input_header->width * input_header->height * 2;
@@ -66,19 +73,26 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        QByteArray alphadata = input.read(size / 2);
-        if(alphadata.size() != size / 2)
+        QByteArray alphadata;
+        if(input_header->compress_type == 65543)
         {
-            std::cerr << "Couldn't read input file!" << std::endl;
-            return 1;
+            alphadata = input.read(size / 2);
+            if(alphadata.size() != size / 2)
+            {
+                std::cerr << "Couldn't read input file!" << std::endl;
+                return 1;
+            }
         }
+        else // No alpha
+            alphadata = QByteArray(size / 2, 0xFF);
 
         auto alphaptr = reinterpret_cast<const uint8_t *>(alphadata.data());
         auto rgbptr = reinterpret_cast<const uint16_t *>(rgbdata.data());
+        bool flipped = is_v4;
 
         for(unsigned int line = 0; line < static_cast<unsigned int>(input_header->height); ++line)
         {
-            auto outptr = reinterpret_cast<QRgb *>(output.scanLine(line));
+            auto outptr = reinterpret_cast<QRgb *>(output.scanLine(flipped ? (input_header->height - 1 - line) : line));
             for(unsigned int x = 0; x < input_header->width; ++x)
             {
                 uint16_t rgb565 = *rgbptr++;
