@@ -41,7 +41,7 @@ static unsigned const ploader_hook_addrs[NDLESS_MAX_OSID+1] =
 						0x1000A868, 0x1000A864,
 						0x1000AA64, 0x1000AA60,
 						0x1000AC4C, 0x1000AC48,
-						0x0, 0x1000ACD8};
+						0x1000ACD0, 0x1000ACD8};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -59,7 +59,7 @@ static unsigned const end_of_init_addrs[NDLESS_MAX_OSID+1] =
 						0x100124F4, 0x100124A0,
 						0x10012740, 0x100126EC,
 						0x10012C78, 0x10012C24,
-						0x0, 0x10012D14};
+						0x10012D5C, 0x10012D14};
 
 // OS-specific
 // get_res_string + 0xC8
@@ -72,7 +72,7 @@ static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
 						0x1011811C, 0x10117F6C,
 						0x1011BFB8, 0x1011BE10,
 						0x10120E84, 0x10120CDC,
-						0x0, 0x10123B14};
+						0x10123CC8, 0x10123B14};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -176,7 +176,7 @@ const unsigned ins_successmsg_hook_addrs[NDLESS_MAX_OSID+1] =
 					 0x1002F4EC, 0x1002F494,
 					 0x1002F92C, 0x1002F8D4,
 					 0x1002FF24, 0x1002FEC0,
-					 0x0, 0x10031034};
+					 0x1003108C, 0x10031034};
 
 // OS-specific
 // number of the HOME icon

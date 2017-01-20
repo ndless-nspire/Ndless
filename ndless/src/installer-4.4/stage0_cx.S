@@ -7,7 +7,8 @@ _start: .global start
 .org 0x100
 @ 0x13FF0100: Fake malloc chunk
 .word 0x13FF0110
-.word 0x10A91468
+@ Pointer to overwrite. Only difference between stage0_cxcas.S and stage0_cx.S
+.word 0x10A2C624
 .word 0x0
 .word 0x13FF0000
 
@@ -27,7 +28,7 @@ push {r0-r5, lr}
 ldr r4, =0x100303F8 @ CASCX
 cmp lr, r4
 ldreq r4, =0x113996DC @ lcd_mirror_ptr on CAS CX
-ldrne r4, =0xDEADBEEF @ and on CX
+ldrne r4, =0x113356DC @ and on CX
 ldr r4, [r4] @ Address of LCD mirror
 cmp r4, #0
 beq bootstrapped @ Not HW-W+
@@ -47,7 +48,7 @@ mov r0, #0
 cmp r5, r4
 pop {r0-r5, lr}
 ldreq pc, =0x1000E234 @ Jump to overwritten _gui_gc_begin
-ldrne pc, =0xDEADBEEF
+ldrne pc, =0x1000E22C
 
 call_main:
 	stmfd sp!, {r4-r11,lr} @ and never destroy r0 and r1 which are C's argc and argv

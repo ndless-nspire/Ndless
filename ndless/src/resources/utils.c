@@ -136,6 +136,9 @@ void ut_read_os_version_index(void) {
 			break;
 #endif
 #if !defined(STAGE1) || NDLESS_440
+		case 0x103A9F50: // 4.4.0.532 non-CAS CX
+			ut_os_version_index = 26;
+			break;
 		case 0x103AA4E0: // 4.4.0.532 CAS CX
 			ut_os_version_index = 27;
 			break;
