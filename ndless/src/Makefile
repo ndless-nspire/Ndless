@@ -1,4 +1,4 @@
-SUBDIRS = tools resources installer-3.6 installer-3.9 downgrade-3.9 installer-4.0 installer-4.2
+SUBDIRS = tools resources installer-3.6 installer-3.9 downgrade-3.9 installer-4.0 installer-4.2 installer-4.4
 
 all: $(patsubst %, build-%, $(SUBDIRS))
 clean: $(patsubst %, clean-%, $(SUBDIRS))

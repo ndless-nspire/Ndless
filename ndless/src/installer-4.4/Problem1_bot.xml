@@ -1,0 +1,36 @@
+                    local _, caserr = math.eval("solve()")
+                    local payload = cx_s
+                    if caserr == 930 then
+                        payload = cxcas_s
+                    end
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
+                    drawXCenteredString(gc, &quot;Ndless for OS 4.4.0&quot;, 30)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
+
+                    if ndless then
+                        gc:drawString(&quot;Ndless is already installed!&quot;, 5, 60, &quot;top&quot;)
+                        gc:drawString(&quot;To reinstall, press &quot;, 5, 75, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W!&quot;, 110, 75, &quot;top&quot;)
+                    else
+                        gc:drawString(&quot;To install, press &quot;, 5, 60, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W&quot;, 100, 60, &quot;top&quot;)
+                    end
+
+                    gc:setColorRGB(0, 0, 0)
+                    gc:fillRect(0, 100, platform.window:width(), 2)
+
+                    local x, y = addressToXY_W(0x13FF0000)
+                    drawByteString_W(gc, x, y, payload)
+
+                    x, y = addressToXY(0x13FF0000)
+                    drawByteString(gc, x, y, payload)
+                end
+
+            </sc:script>
+        </wdgt>
+    </card>
+</prob>

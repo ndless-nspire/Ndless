@@ -148,7 +148,8 @@ static const uintptr_t tct_current_thread_addrs[NDLESS_MAX_OSID+1] =
                                                 0x0, 0x0,
                                                 0x0, 0x0,
                                                 0x1039DAEC, 0x1039E06C,
-                                                0x103A444C, 0x103A49DC};
+                                                0x103A444C, 0x103A49DC,
+                                                0x0, 0x103AB82C};
 
 /* Expand the stack of the currently running Task by 128K */
 static bool expand_stack()
@@ -408,6 +409,19 @@ void ld_free(void *resident_ptr) {
 }
 
 // When opening a document
+
+HOOK_DEFINE(plh_hook_44) {
+	char *halfpath; // [docfolder/]file.tns
+	char docpath[FILENAME_MAX];
+	halfpath = (char*)(HOOK_SAVED_SP(plh_hook_44)) + 0x784;
+	snprintf(docpath, FILENAME_MAX, "%s%s", get_documents_dir(), halfpath);
+	if (ld_exec(docpath, NULL) == 0xDEAD) {
+		HOOK_SAVED_REGS(plh_hook_44)[3] = HOOK_SAVED_REGS(plh_hook_44)[0]; // 'mov r3, r0' was overwritten by the hook
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_44, -0x7C, 0); // to the error dialog about the unsupported format (we've overwritten a branch with our hook)
+	} else {
+		HOOK_RESTORE_RETURN_SKIP(plh_hook_44, -0x38, 1); // skip the error dialog about the unsupported format
+	}
+}
 
 //Works for 3.9.1 as well
 HOOK_DEFINE(plh_hook_36) {
