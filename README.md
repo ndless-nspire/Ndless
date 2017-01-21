@@ -31,7 +31,7 @@ For more in-depth info, visit the wiki (on a different server for now):
 Quick guide
 ===========
 
-OS 4.4.0 <img src="http://i.imgur.com/DGAuPyc.png" align="right">
+OS 4.4.0 <img src="http://i.imgur.com/mDOg6JG.png" align="right">
 --------
 
 Prerequisites: OS 4.4.0 on CX or CX CAS
