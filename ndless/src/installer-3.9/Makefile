@@ -45,7 +45,7 @@ stage0.bin: stage0.o
 	$(OBJCOPY) -O binary $< $@
 
 # Those can't be built simultaneously due to using "Problem1.xml" as filename
-ndless_installer_4.2.0_cascx.tns: ndless_installer_4.2.0_cx.tns
+ndless_installer_3.9.1.tns: ndless_installer_3.9.0_classic.tns
 
 ndless_installer_%.tns: Problem1_%.xml
 	cat Problem1_pre.xml $< Problem1_mid.xml $< Problem1_post.xml > Problem1.xml
