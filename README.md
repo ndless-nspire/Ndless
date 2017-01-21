@@ -18,7 +18,7 @@ A user guide is available online, make sure to read for more installation instru
 
 ->    http://tiplanet.org/ndless
 
-Developers, here is the guide:
+A guide for Developers can be found here:
 
 ->    http://ndlessly.wordpress.com/ndless-for-developers/
 
@@ -26,7 +26,7 @@ Pull requests and and issues are welcome!
 
 For more in-depth info, visit the wiki (on a different server for now):
 
-->    http://hackspire.snowflake.me
+->    https://hackspire.org
         
 Quick guide
 ===========
@@ -91,17 +91,18 @@ Prerequisites: OS 3.6
 Development team
 ================
 
-Co-creator and lead maintainer:
-  Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
-  
-Co-creator:
+Lead maintainer:
+  Fabian Vogt aka Vogtinator - < vogtinator at ritter dash vogt dot de >
+
+Creators:
   Geoffrey Anneheim aka geogeo - < geoffrey dot anneheim at free dot fr >
+  Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
 
 Contributors: bsl, critor, Excale, Goplat, hoffa, Jim Bauwens, Levak, Lionel Debroux,
 
-lkj, tangrs, Vogtinator, ... and many others.
+lkj, tangrs, ... and many others.
 
-Ndless is brought to you by https://www.omnimaga.org and https://tiplanet.org
+Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org
 
 We will gladly accept PayPal donations for the hardware expenses that were 
 required for the development of Ndless. You can use the e-mail addresses above 
