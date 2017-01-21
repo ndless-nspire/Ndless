@@ -29,10 +29,11 @@ all: $(DISTDIR)/ndless_installer_4.4.0.tns
 ndless_installer_%.elf: stage0_%.o stage1.o utils.o
 	$(LD) $(LFLAGS) $^ -o $@
 
-Problem1_mid_%.xml: ndless_installer_%.bin
-	../tools/LuaBin/luabin $^ $@
+Problem1_mid.xml: ndless_installer_cx.bin ndless_installer_cxcas.bin
+	../tools/LuaBin/luabin ndless_installer_cx.bin - cx_s > $@
+	../tools/LuaBin/luabin ndless_installer_cxcas.bin - cxcas_s >> $@
 
-Problem1.xml: Problem1_top.xml Problem1_mid_cx.xml Problem1_mid.xml Problem1_mid_cxcas.xml Problem1_bot.xml
+Problem1.xml: Problem1_top.xml Problem1_mid.xml Problem1_bot.xml
 	cat $^ > $@
 
 $(DISTDIR)/ndless_installer_4.4.0.tns: Problem1.xml
@@ -43,6 +44,6 @@ test: $(DISTDIR)/ndless_installer_4.4.0.tns
 	firebird-send $^ ndless
 
 clean:
-	rm -f Problem1.xml Problem1_mid_*.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.4.0.tns
+	rm -f Problem1.xml Problem1_mid.xml *.elf *.o *.bin $(DISTDIR)/ndless_installer_4.4.0.tns
 
 .PHONY: test clean

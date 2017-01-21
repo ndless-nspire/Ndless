@@ -133,4 +133,3 @@
 
                 function on.paint(gc)
                     gc:begin()
-                    local cx_
