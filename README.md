@@ -27,7 +27,7 @@ Pull requests and and issues are welcome!
 For more in-depth info, visit the wiki (on a different server for now):
 
 ->    https://hackspire.org
-        
+
 Quick guide
 ===========
 
