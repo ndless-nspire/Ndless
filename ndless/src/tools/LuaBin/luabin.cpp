@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 
-std::string luaForOS(std::string installer_filename)
+std::string luaForOS(std::string installer_filename, std::string varname)
 {
   	//Build the buffer content
 	std::ifstream installer_bin(installer_filename, std::ios::binary);
@@ -21,12 +21,12 @@ std::string luaForOS(std::string installer_filename)
 	//4-byte alignment
 	buffer_content.resize((buffer_content.size() + 4) & ~3);
 
-	std::cout << "Size of buffer: 0x" << std::hex << buffer_content.size() << std::endl;
+	std::cerr << "Size of buffer: 0x" << std::hex << buffer_content.size() << std::endl;
 
 	//Now generate a lua formatted string
 	std::ostringstream ss(std::ios_base::ate);
 	std::ostringstream line(std::ios_base::ate);
-	line.str("s = \"");
+	line.str(varname + " = \"");
 
 	auto i = buffer_content.begin();
 	while(i != buffer_content.end())
@@ -42,13 +42,13 @@ std::string luaForOS(std::string installer_filename)
 		else
 		{
 			ss << line.str() << "\"" << std::endl;
-			line.str("s = s..string.rep(\"\\"); line << (int)*i << "\", " << count << ")..\"";
+			line.str(varname + " = " + varname + "..string.rep(\"\\"); line << (int)*i << "\", " << count << ")..\"";
 		}
 
 		if(line.tellp() >= 15000000 || i + count == buffer_content.end())
 		{
 			ss << line.str() << "\"" << std::endl;
-			line.str("s = s..\"");
+			line.str(varname + " = " + varname + "..\"");
 		}
 
 		i += count;
@@ -59,30 +59,31 @@ std::string luaForOS(std::string installer_filename)
 
 int main(int argc, char **argv)
 {
-	if(argc != 3)
+	if(argc != 3 && argc != 4)
 	{
-		std::cout << "Usage: " << argv[0] << " installer.bin Problem1.xml" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " installer.bin out.lua|- [varname]" << std::endl;
 		return 1;
 	}
 
 	//Write LUA
-	std::ostringstream lua;
-
-	lua << luaForOS(argv[1]) << std::endl;
+	std::string lua = luaForOS(argv[1], argc >= 4 ? argv[3] : "s");
 
 	//XML-Escape LUA
-	std::string lua_escaped = lua.str();
 	size_t pos = 0;
-	while((pos = lua_escaped.find("\"", pos)) != std::string::npos)
+	while((pos = lua.find("\"", pos)) != std::string::npos)
 	{
-		lua_escaped.replace(pos, 1, "&quot;");
+		lua.replace(pos, 1, "&quot;");
 		pos += 5;
 	}
 
 	//Write XML
-	std::ofstream output(argv[2]);
-	
-	output << lua_escaped;
+	if(std::string("-") == argv[2])
+		std::cout << lua;
+	else
+	{
+		std::ofstream output(argv[2]);
+		output << lua;
+	}
 
 	return 0;
 }
