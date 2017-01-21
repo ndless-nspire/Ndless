@@ -21,15 +21,42 @@
             </sc:md>
             <sc:script version="33817092" id="0">
                 platform.apiLevel = &quot;1.0&quot;
-                
+
+                local msgs = {
+                    &quot;Ndless: freeing pointers and Nspires since 2010&quot;,
+                    &quot;Contrary to 42, XML is not the answer&quot;,
+                    &quot;Worst looking installers since 2014&quot;,
+                    &quot;The pointer is in another castle&quot;,
+                    &quot;Exploit explanation inside card 2&quot;,
+                    &quot;Ndless 4.4 codename: 'Ewo=mölk'&quot;,
+                    &quot;dQw4w9WgXcQ&quot;,
+                    &quot;A golden spiral drawn here fits quite well&quot;,
+                    '&quot;Make Nspire great again&quot;',
+                    '&quot;Grab\'em by the pointer!&quot;',
+                    &quot;Boot1.5. What's next, boot1.75?&quot;,
+                    &quot;VHVybnMgb3V0IHN0cmNweV9zYWZlIGlzbid0IHNhZmUgYXQgYWxsLi4u&quot;,
+                    &quot;UGxlYXNlIHJlbW92ZSB0aGUgODQgZW11IGZyb20gQ1ggT1NlcyE=&quot;,
+                    &quot;Isn't bugfixing supposed to fix bugs?&quot;,
+                    '&quot;More overflows than integers!&quot;',
+                    &quot;Yo dawg, I heard you like bugs...&quot;,
+                    &quot;Supporting emoji is of utmost importance for OS 4.5&quot;,
+                    &quot;U2hvdWxkbid0IHlvdSBiZSBmaXhpbmcgZmxhd3MgcmlnaHQgbm93Pw==&quot;,
+                    &quot;At Fosdem 2017? Let's meet and chat!&quot;,
+                    &quot;Nspire, the land of the free() *hint* *hint*&quot;,
+                }
+                local maxmsgs = #msgs
+                math.randomseed(timer.getMilliSecCounter())
+                local msgIdx = math.random(1, #msgs)
+                local msg = msgs[msgIdx]
+
                 local bit_shiftLeft = function(int, n)
                     return int*2^n
                 end
-                
+
                 local bit_shiftRight = function(int, n)
                     return math.floor(int/2^n)
                 end
-                
+
                 local bit_and = function(a, b)
                     local result = 0
                     local d = 256
@@ -43,19 +70,19 @@
                     end
                     return result
                 end
-                
+
                 function bytes2color(byte2, byte1)
                     local r5 = bit_shiftRight(byte1, 3)
                     local g6 = bit_shiftLeft(bit_and(byte1, 7), 3) + bit_shiftRight(byte2, 5)
                     local b5 = bit_and(byte2, 31)
-                
+
                     local r8 = bit_shiftLeft(r5, 3)
                     local g8 = bit_shiftLeft(g6, 2)
                     local b8 = bit_shiftLeft(b5, 3)
-                
+
                     return r8, g8, b8
                 end
-                
+
                 function addressToXY(address)
                     local offset = math.floor((address - 0x13FDA800) / 2)
                     return offset % 320, math.floor(offset / 320)
@@ -68,39 +95,39 @@
 
                 function drawByteString(gc, x, y, byteString)
                     local width = 320
-                
+
                     if #byteString % 2 == 1 then
                         byteString = byteString .. &quot;\0&quot;
                     end
-                
+
                     for i=0, #byteString-1, 2 do
                         local r, g, b = bytes2color(byteString:byte(i+1, i+2))
                         gc:setColorRGB(r, g, b)
                         local xx = (x + i/2) % width
                         local yy = y + math.floor((x + i/2) / width)
-                
+
                         gc:fillRect(xx, yy, 1, 1)
                     end
                 end
 
                 function drawByteString_W(gc, x, y, byteString)
                     local width = 240
-                
+
                     if #byteString % 2 == 1 then
                         byteString = byteString .. &quot;\0&quot;
                     end
-                
+
                     for i=0, #byteString-1, 2 do
                         local r, g, b = bytes2color(byteString:byte(i+1, i+2))
                         gc:setColorRGB(r, g, b)
                         local xx, yy = addressToXY_W(0x13ff0000 + i)
-                
+
                         gc:fillRect(yy, xx, 1, 1)
                     end
                 end
-                
+
                 local function drawXCenteredString(gc, str, y)
-                    gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, "top")
+                    gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, &quot;top&quot;)
                 end
 
 
