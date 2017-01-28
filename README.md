@@ -64,18 +64,29 @@ Prerequisites: OS 4.0.3 on CX or CX CAS
 * Close the installer with Ctrl+W
 * Have fun!
 
-OS 3.9.x <img src="https://i.imgur.com/rT8Ltmy.png" align="right">
+OS 3.9.1 <img src="https://i.imgur.com/rT8Ltmy.png" align="right">
 --------
 
-Prerequisites: OS 3.9.1 on CX and CX CAS or OS 3.9.0 on Clickpad or Clickpad CAS
-
-Touchpad calculators not supported right now :-(
+Prerequisites: OS 3.9.1 on CX and CX CAS
 
 * Transfer the .tns files into a folder named "ndless" (top-level)
 * Disconnect your USB cable
 * Open the appropriate installer for your handheld
 * If you get a message that says "Insufficient memory", reset your calculator and try again!
 * Connect the handheld to your computer!
+* Have fun!
+
+
+OS 3.9.0 <img src="https://i.imgur.com/V9U8RSc.png" align="right">
+--------
+
+Prerequisites: OS 3.9.0 on Clickpad (CAS/non-CAS) or Touchpad (CAS/non-CAS)
+For CX and CX CAS please install 3.9.1.
+
+* Transfer ndless_installer_3.9.0_classic_new.tns into a folder named "ndless" (top-level)
+* Transfer ndless_resources.tns into the same folder
+* Open the installer
+* Close the installer with Ctrl+W
 * Have fun!
 
 OS 3.6 <img src="http://www.mirari.fr/NwM1" align="right">
