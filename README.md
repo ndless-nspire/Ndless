@@ -81,6 +81,7 @@ OS 3.9.0 <img src="https://i.imgur.com/V9U8RSc.png" align="right">
 --------
 
 Prerequisites: OS 3.9.0 on Clickpad (CAS/non-CAS) or Touchpad (CAS/non-CAS)
+
 For CX and CX CAS please install 3.9.1.
 
 * Transfer ndless_installer_3.9.0_classic_new.tns into a folder named "ndless" (top-level)
