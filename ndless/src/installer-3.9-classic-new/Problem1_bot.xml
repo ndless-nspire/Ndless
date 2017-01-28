@@ -1,0 +1,48 @@
+                    local _, caserr = math.eval(&quot;solve()&quot;)
+                    local payload = nothing_s
+                    if caserr == 930 then
+                        payload = cas_s
+                    end
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
+                    drawXCenteredString(gc, &quot;Ndless for OS 3.9.0&quot;, 30)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
+
+                    if ndless then
+                        gc:drawString(&quot;Ndless is already installed!&quot;, 5, 60, &quot;top&quot;)
+                        gc:drawString(&quot;To reinstall, press &quot;, 5, 75, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W!&quot;, 110, 75, &quot;top&quot;)
+                    else
+                        gc:drawString(&quot;To install, press &quot;, 5, 60, &quot;top&quot;)
+                        gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                        gc:drawString(&quot;Ctrl+W&quot;, 100, 60, &quot;top&quot;)
+                    end
+
+                    gc:setColorRGB(0, 0, 0)
+                    gc:fillRect(0, 100, platform.window:width(), 2)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 10)
+                    gc:drawString(&quot;Trivia #&quot; .. msgIdx .. &quot;:&quot;, 4 + 0, platform.window:height() - 33 + 30, &quot;top&quot;)
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 8)
+                    gc:drawString(msg, 3 + 0, platform.window:height() - 15 + 30, &quot;top&quot;)
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 9)
+                    gc:drawString(&quot;(this line is just deco)&quot;, 198 + 0, 53 + 30, &quot;top&quot;)
+                    gc:drawString(&quot;nobody knows why this works&quot;, 4 + 0, 90 + 28, &quot;top&quot;)
+                    gc:drawLine(173 + 0, 104 + 28, 179, 104 + 28)
+                    gc:drawLine(178 + 0, 98 + 28, 179, 104 + 28)
+                    gc:drawLine(170 + 0, 97 + 28, 179, 104 + 28)
+                    gc:drawLine(257 + 0, 117 + 28, 257, 132 + 28)
+                    gc:drawString(&quot;not just glitch art&quot;, 200 + 0, 130 + 30, &quot;top&quot;)
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
+                    gc:drawString(&quot;^&quot;, 255 + 0, 111 + 30, &quot;top&quot;)
+
+                    local x, y = addressToXY(0xa4005500)
+                    drawByteString(gc, x, y, payload)
+                end
+
+            </sc:script>
+        </wdgt>
+    </card>
+</prob>
