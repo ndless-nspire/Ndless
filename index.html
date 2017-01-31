@@ -32,7 +32,7 @@
     <!-- HOME SECTION -->
     <section id="home">
     <!-- NAVBAR -->
-    <div id="navbar" class="navbar navbar-static-top" data-spy="affix">
+    <div id="navbar" class="navbar navbar-static-top" data-spy="affix" data-header>
             <div class="navbar-inner">
             <div class="container">
                     <a class="btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -46,10 +46,10 @@
                     <!-- NAVBAR COLLAPSE -->
                     <div class="nav-collapse collapse">
                     <ul class="nav pull-right">
-                        <li><a class="smoothScroll" href="#icons">Features</a></li>
-                        <li><a class="smoothScroll" href="#features">Get it!</a></li>
-                        <li><a class="smoothScroll" href="#SDK">SDK</a></li>
-                            <li><a class="smoothScroll" href="http://ndlessly.wordpress.com">Blog</a></li>
+                        <li><a data-scroll href="#icons">Features</a></li>
+                        <li><a data-scroll href="#features">Get it!</a></li>
+                        <li><a data-scroll href="#SDK">SDK</a></li>
+                        <li><a data-scroll href="http://ndlessly.wordpress.com">Blog</a></li>
                         <li><a href="#myModal" data-toggle="modal">Contact</a></li>
                     </ul>
                     </div> 
@@ -307,7 +307,7 @@
     <script src="js/modernizr.custom.js"></script>
     <script src="js/classie.js"></script>
     <script src="js/cbpscroller.js"></script>
-    <script src="js/smoothscroll.js"></script>
+    <script src="js/smooth-scroll.js"></script>
     <script src="js/jquery.cbpqtrotator.min.js"></script>
     
     <!-- CUSTOM JAVASCRIPT -->
@@ -337,6 +337,11 @@
 
             $( '#cbp-qtrotator' ).cbpQTRotator();
 
+            var options = {
+                    selectorHeader: '[data-header]',
+            };
+
+            smoothScroll.init(options);
     } );
     </script>
 </body>
