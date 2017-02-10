@@ -1,9 +1,12 @@
-all: syscalls
+ADDRFILE := ../../../../ndless-sdk/include/syscall-addrs.h
+IDCFOLDER := idc
 
-.PHONY: syscalls clean
+all: $(ADDRFILE)
 
-syscalls:
-	php ./mkSyscalls.php idc ../../../../ndless-sdk/include/syscall-addrs.h
+.PHONY: clean
+
+$(ADDRFILE): $(shell find "$(IDCFOLDER)" -name \*.idc)
+	php ./mkSyscalls.php "$(IDCFOLDER)" "$@"
 
 clean:
 	rm -f ../../../../ndless-sdk/include/syscall-addrs.h
