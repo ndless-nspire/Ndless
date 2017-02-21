@@ -203,7 +203,7 @@ bool sc_nl_lcd_init(scr_type_t type)
 
     // Switch to orginal buffer first to free the allocated space
     if(old_buffer && type != SCR_TYPE_INVALID)
-        lcd_init(SCR_TYPE_INVALID);
+        sc_nl_lcd_init(SCR_TYPE_INVALID);
 
     switch(type)
     {
