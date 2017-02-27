@@ -8,15 +8,15 @@
 
 # IMPORTANT NOTE: in order to compile GCC, you need the GMP (libgmp-dev), MPFR (libmpfr-dev) and MPC (libmpc-dev) development libraries.
 # 	For example, if you have installed them yourself in $PREFIX, you'll have to add --with-gmp=$PREFIX --with-mpfr=$PREFIX --with-mpc=$PREFIX.
-# IMPORTANT NOTE #2: GDB needs some python includes for python support. 
+# IMPORTANT NOTE #2: GDB needs some python includes for python support.
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
- 
+
 TARGET=arm-none-eabi
 PREFIX=$PWD/install # or the directory where the toolchain should be installed in
 PARALLEL="-j8" # or "-j<number of build jobs>"
- 
+
 BINUTILS=binutils-2.27 # http://www.gnu.org/software/binutils/
-GCC=gcc-6.2.0 # http://gcc.gnu.org/
+GCC=gcc-6.3.0 # http://gcc.gnu.org/
 NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
 GDB=gdb-7.12 # http://www.gnu.org/software/gdb/
 
@@ -67,21 +67,21 @@ fi
 # Section 1: GNU Binutils.
 echo "Building Binutils..."
 [ -f .built_binutils ] || (cd build && rm -rf * && ../$BINUTILS/configure $OPTIONS_BINUTILS && make $PARALLEL all && make install && cd .. && rm -rf build/* && touch .built_binutils) || exit 1;
- 
+
 # Section 2: GCC, step 1.
 echo "Building GCC (step 1)..."
 [ -f .built_gcc_step1 ] || (cd build && rm -rf * && ../$GCC/configure $OPTIONS_GCC && make $PARALLEL all-gcc && make install-gcc && cd .. && rm -rf build/* && touch .built_gcc_step1) || exit 1;
- 
+
 # Section 3: Newlib.
 echo "Building Newlib..."
 [ -f .built_newlib ] || (cd build && rm -rf * && ../$NEWLIB/configure $OPTIONS_NEWLIB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_newlib) || exit 1;
 # Workaround for newlib bug
 rm -f "$PREFIX/arm-none-eabi/sys-include/newlib.h"
- 
+
 # Section 4: GCC, step 2. Yes, this is necessary.
 echo "Building GCC (step 2)..."
 [ -f .built_gcc_step2 ] || (cd build && ../$GCC/configure $OPTIONS_GCC && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gcc_step2) || exit 1
- 
+
 # Section 5: GDB.
 echo "Building GDB..."
 [ -f .built_gdb ] || (cd build && rm -rf * && ../$GDB/configure $OPTIONS_GDB && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
