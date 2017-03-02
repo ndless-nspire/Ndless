@@ -13,7 +13,7 @@
 
 TARGET=arm-none-eabi
 PREFIX=$PWD/install # or the directory where the toolchain should be installed in
-PARALLEL="-j8" # or "-j<number of build jobs>"
+PARALLEL="-j4" # or "-j<number of build jobs>"
 
 BINUTILS=binutils-2.27 # http://www.gnu.org/software/binutils/
 GCC=gcc-6.3.0 # http://gcc.gnu.org/
@@ -30,6 +30,11 @@ OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multi
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
 
+# When building gcc with clang, the maximum amount of nested brackets has to be increased
+if (gcc -v 2>&1 | grep clang > /dev/null); then
+    export CXXFLAGS="-fbracket-depth=512 -O2"
+fi
+
 echo "Building and installing to '$PREFIX'..."
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -39,24 +44,21 @@ mkdir -p "$PREFIX"
 # Section 0: prerequisites
 echo 'int main() {return 0;}' > test.c
 error=0
-if ! gcc -lgmp test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpfr test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpc test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
-if ! gcc -lz test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
-#TODO: This test fails on openSUSE
-#if ! gcc -ltermcap test.c -o test; then error=1; echo 'termcap (termcap/libtinfo-dev) dependency seems to be missing!'; fi
+if ! gcc -lgmp       test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpfr      test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpc       test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
+if ! gcc -lz         test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
 if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python-devel/python2.7-dev) dependency seems to be missing!'; fi
 rm -f test test.c
-if ! makeinfo -h > /dev/null; then error=1; echo 'makeinfo (texinfo) dependency seems to be missing!'; fi
 [ $error -eq 1 ] && exit 1
 
 mkdir -p build download
 
 if [ ! -f .downloaded ]; then
 	wget -c http://ftp.gnu.org/gnu/binutils/$BINUTILS.tar.bz2 -O download/$BINUTILS.tar.bz2 && tar xvjf download/$BINUTILS.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2 -O download/$GCC.tar.bz2 && tar xvjf download/$GCC.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz -O download/$GDB.tar.xz && tar xvJf download/$GDB.tar.xz && \
-	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz -O download/$NEWLIB.tar.gz && tar xvzf download/$NEWLIB.tar.gz && \
+	wget -c ftp://ftp.gnu.org/gnu/gcc/$GCC/$GCC.tar.bz2       -O download/$GCC.tar.bz2      && tar xvjf download/$GCC.tar.bz2 && \
+	wget -c ftp://ftp.gnu.org/gnu/gdb/$GDB.tar.xz             -O download/$GDB.tar.xz       && tar xvJf download/$GDB.tar.xz && \
+	wget -c ftp://sourceware.org/pub/newlib/$NEWLIB.tar.gz    -O download/$NEWLIB.tar.gz    && tar xvzf download/$NEWLIB.tar.gz && \
 	touch .downloaded
 	if [ $? -ne 0 ]; then
 		echo "Download failed!"
