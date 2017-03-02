@@ -30,7 +30,8 @@ OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multi
 OPTIONS_NEWLIB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --disable-werror --with-python"
 
-if [ ! $(gcc -v 2>&1 | grep clang > /dev/null) ]; then
+# When building gcc with clang, the maximum amount of nested brackets has to be increased
+if (gcc -v 2>&1 | grep clang > /dev/null); then
     export CXXFLAGS="-fbracket-depth=512 -O2"
 fi
 
