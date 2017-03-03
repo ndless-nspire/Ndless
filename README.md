@@ -3,8 +3,7 @@ Ndless v4.4 r2007 for TI-Nspire OS v4.4.0
 
 Installing Ndless on your calculator makes it possible to run assembly programs.
 
-Ndless combines an executable loader and utilities to open the TI-Nspire to 
-third-party C and assembly development.
+Ndless combines an executable loader and utilities to open the TI-Nspire to third-party C and assembly development.
 
 The official website is available on:
 
@@ -110,25 +109,17 @@ Creators:
   Geoffrey Anneheim aka geogeo - < geoffrey dot anneheim at free dot fr >
   Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
 
-Contributors: bsl, critor, Excale, Goplat, hoffa, Jim Bauwens, Levak, Lionel Debroux,
-
-lkj, tangrs, ... and many others.
+Contributors and testers: Adriweb, bsl, critor, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, tangrs... and many others.
 
 Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org
 
-We will gladly accept PayPal donations for the hardware expenses that were 
-required for the development of Ndless. You can use the e-mail addresses above 
-or the following URL:
-
+We will gladly accept PayPal donations for the hardware expenses that were required for the development of Ndless. You can use the e-mail addresses above or the following URL:  
 Thank you for your support! [![Donate via PayPal](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=olivier%2ecalc%40gmail%2ecom&lc=US&item_name=Ndless&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
 
 Legal stuff
 ===========
 
 Most of the work is covered by the Mozilla Public License, version 1.1 (MPL). 
-Please read careful the file "Mozilla-Public-License-v1.1.html" before 
-distributing of any part of Ndless, with or without modification.
+Please read careful the file "Mozilla-Public-License-v1.1.html" before distributing of any part of Ndless, with or without modification.
 
-Some parts are covered by other licenses. Others are in the public domain. These 
-parts are identified by the files LICENSE.txt or LICENSE.html in the sub-
-directory.
+Some parts are covered by other licenses. Others are in the public domain. These parts are identified by the files LICENSE.txt or LICENSE.html in the sub-directory.

@@ -166,13 +166,9 @@ void cfg_register_fileext_file(const char *filepath, const char *ext, const char
 	fclose(file);
 }
 
-#define DEFAULT_CFG_FILE (NDLESS_DIR "/ndless.cfg.tns")
-
 // ext without leading '.'
 void cfg_register_fileext(const char *ext, const char *prgm) {
 	char path[300];
-	if (cfg_locate_cfg_file(path, sizeof(path)))
-		cfg_register_fileext_file(DEFAULT_CFG_FILE, ext, prgm);
-	else
+	if (!cfg_locate_cfg_file(path, sizeof(path)))
 		cfg_register_fileext_file(path, ext, prgm);
 }

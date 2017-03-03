@@ -53,6 +53,8 @@ void clear_cache()
 #define PATCH_SETW(A,B)   *(uint32_t *)(A) = (B)
 #define PATCH_SETZ(A,B,C) memset32((uint32_t *)(A), (C), (B)-(A))
 
+#define RES_PATH_REL "./ndless/ndless_resources.tns"
+
 static void memset32(uint32_t *p, uint32_t value, size_t num) {
 	num = num/4;
 	while(num--) {
@@ -84,12 +86,13 @@ static unsigned const ndless_inst_resident_hook_addrs[] = {0x10012598, 0x1001251
 // Install the resident part
 HOOK_DEFINE(s1_startup_hook) {
 	struct nuc_stat res_stat;
-	const char *res_path = "/documents/ndless/ndless_resources.tns";
 	NUC_FILE *res_file;
 	char *core;
 	char *res_params = NULL;
 
-	if (!(res_file = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb"))) {
+	syscall_local<e_NU_Set_Current_Dir, void>(syscall_local<e_get_documents_dir, const char*>());
+
+	if (!(res_file = syscall_local<e_fopen, NUC_FILE*>(RES_PATH_REL, "rb"))) {
 		int x = 0;
 		syscall_local<e_disp_str, void>("Oops, you've forgotten to transfer                   'ndless_resources.tns'! Ndless won't be installed.", &x, 10);
 		volatile int i;
@@ -97,7 +100,7 @@ HOOK_DEFINE(s1_startup_hook) {
 			;
 		goto s1_startup_hook_return;
 	}
-	syscall_local<e_stat, int>(res_path, &res_stat);
+	syscall_local<e_stat, int>(RES_PATH_REL, &res_stat);
 	core = syscall_local<e_malloc, char*>(res_stat.st_size);
 	syscall_local<e_fread, int>(core, res_stat.st_size, 1, res_file);
 	syscall_local<e_fclose, int>(res_file);
