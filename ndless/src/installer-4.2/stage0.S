@@ -24,6 +24,13 @@ ldrne r4, =0x110ED6D4 @ and on CX
 ldr r4, [r4] @ Address of LCD mirror
 cmp r4, #0
 beq bootstrapped @ Not HW-W+
+@ We need to jump into the OS's internal lcd mirror.
+@ However, it has caching enabled so we need to flush it
+clear_cache:
+mrc p15, 0, r15, c7, c10, 3
+bne clear_cache
+mov r5, #0
+mcr p15, 0, r5, c7, c7, 0
 add r4, r4, #(bootstrapped-_start) @ Calculate address
 add r4, r4, #(0x13ff0000-0x13fda800) @ of bootstrapped in mirror
 mov pc, r4 @ and jump to it
