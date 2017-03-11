@@ -41,8 +41,8 @@ extern "C" {
 #include <nucleus.h>
 #include <syscall-list.h>
 
-// Directory where Ndless files are stored
-#define NDLESS_DIR "/documents/ndless"
+// WARNING: This is only here to trigger a build error.
+#define NDLESS_DIR ({"NDLESS_DIR got removed. Use get_documents_dir() to get the virtual root first."})
 
 typedef struct {
 	uint16_t width;

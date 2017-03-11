@@ -39,7 +39,7 @@ static int file_each_cb(const char *path, void *context) {
 	return 0;
 }
 
-// Search a file in all subdirectories of the /documents directory
+// Search a file in all subdirectories of the virtual root directory
 // dst_path must be dst_path_size long.
 // Returns 0 if found, 1 if not found (i.e. dst_path not filled).
 int locate(const char *filename, char *dst_path, size_t dst_path_size) {
@@ -47,7 +47,7 @@ int locate(const char *filename, char *dst_path, size_t dst_path_size) {
 	ctx.filename = filename;
 	ctx.dst_path = dst_path;
 	ctx.dst_path_size = dst_path_size;
-	if (file_each("/documents", file_each_cb, &ctx)) {
+	if (file_each(get_documents_dir(), file_each_cb, &ctx)) {
 		return 0;
 	}
 	return 1;

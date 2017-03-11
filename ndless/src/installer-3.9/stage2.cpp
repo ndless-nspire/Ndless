@@ -8,6 +8,8 @@ extern "C" int ut_os_version_index;
 
 #define DEREF(x) *reinterpret_cast<unsigned int*>(x)
 
+#define RES_PATH_REL "./ndless/ndless_resources.tns"
+
 int main()
 {
 	ut_read_os_version_index();
@@ -42,13 +44,16 @@ int main()
 		return 0;
 	}
 
-	const char *res_path = "/documents/ndless/ndless_resources.tns";
+	/* We can't use chdir "trick" here, as something gets overwritten during the install
+	 * So, just build the full path with the current virtual root */
+	char res_path[100];
+	syscall_local<e_sprintf, int>(res_path, "%s%s", syscall_local<e_get_documents_dir, const char*>(), RES_PATH_REL);
 
 	NUC_FILE *res_fp = syscall_local<e_fopen, NUC_FILE*>(res_path, "rb");
 	char *res_argv = nullptr;
 	const int x = 0;
 
-        if (!res_fp)
+	if (!res_fp)
 	{
 		syscall_local<e_disp_str, void>("ndless_resources not found.", &x, 0);
 		return 0;

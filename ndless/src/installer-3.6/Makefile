@@ -14,7 +14,7 @@ all: ndless_installer_3.6.tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
-	
+
 %.o: %.cpp
 	$(GPP) $(GPPFLAGS) -c $<
 
@@ -39,9 +39,8 @@ ndless_installer.lua: ndless_installer.bin stage0.bin
 	mv $(<:.bin=-escaped.bin.tmp) $(<:.bin=-escaped.bin)
 	../tools/MakeLuaInst/MakeLuaInst $(<:.bin=-escaped.bin) $(<:.bin=-escaped.lua.tmp)
 	@# skip the UTF-8 BOM marker
-	tail --bytes=+4 ndless_installer.lua.tpl > ndless_installer.lua.nobom.tpl.tmp
-	cat ndless_version.lua ndless_installer.lua.nobom.tpl.tmp $(<:.bin=-escaped.lua.tmp) > $@
-	rm $(<:.bin=-escaped.lua.tmp) $(<:.bin=-escaped.bin) ndless_installer.lua.nobom.tpl.tmp
+	cat ndless_version.lua ndless_installer.lua.tpl $(<:.bin=-escaped.lua.tmp) > $@
+	rm $(<:.bin=-escaped.lua.tmp) $(<:.bin=-escaped.bin)
 
 ndless_installer_3.6.tns: ndless_installer.lua
 	@mkdir -p $(DISTDIR)
