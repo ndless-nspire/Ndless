@@ -45,11 +45,6 @@ static void* saved_screen_buffer; //In case the program changes the buffer
 	#include <nspireio/nspireio.h>
 
 	static nio_console csl;
-
-	// Deinitialization as late as possible - but even this may not be late enough
-	struct Nspireio_deinitialization {
-		public:	~Nspireio_deinitialization() { nio_free(&csl); }
-	} nspireio_deinitialization;
 #endif
 
 // Called at startup (even before c++ constructors are run)
@@ -193,6 +188,15 @@ void  __crt0_exit(int ret); // Declared in crt0.S
 
 void _exit(int ret)
 {
+	#ifdef USE_NSPIREIO
+		// This function is called right before jumping back to the system
+		// (by returning from main() or manually through exit). This makes
+		// it the right place for deinititalizing nspireio, as after this
+		// nothing has access to csl anymore and newlib itself won't flush
+		// its buffers either.
+		nio_free(&csl);
+	#endif
+
 	__crt0_exit(ret);
 	
 	__builtin_unreachable();
