@@ -167,10 +167,12 @@ lcd_blit_func sc_nl_lcd_blit(scr_type_t buffer_type)
         return lcd_blit_simple_8;
     case SCR_320x240_16:
     case SCR_320x240_565:
+    case SCR_320x240_555:
         if (is_hww)
             return lcd_blit_320x240_240x320_565;
         return lcd_blit_simple_565;
     case SCR_240x320_565:
+    case SCR_240x320_555:
         if (is_hww)
             return lcd_blit_simple_565;
         return lcd_blit_240x320_320x240_565;
@@ -242,6 +244,8 @@ bool sc_nl_lcd_init(scr_type_t type)
     case SCR_320x240_16:
     case SCR_320x240_565:
     case SCR_240x320_565:
+    case SCR_320x240_555:
+    case SCR_240x320_555:
     {
         if (!has_colors)
         {
@@ -254,6 +258,8 @@ bool sc_nl_lcd_init(scr_type_t type)
 
             set_lcd_mode(4);
         }
+        else if(type == SCR_320x240_555 || type == SCR_240x320_555)
+            set_lcd_mode(4);
         else
             set_lcd_mode(6);
 

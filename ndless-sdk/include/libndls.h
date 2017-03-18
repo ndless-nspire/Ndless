@@ -68,7 +68,9 @@ typedef enum {
         SCR_240x320_565=2,
         SCR_320x240_16=3,
         SCR_320x240_8=4,
-        SCR_TYPE_COUNT=5
+        SCR_320x240_555=5,
+        SCR_240x320_555=6,
+        SCR_TYPE_COUNT=7
 } scr_type_t;
 
 /* for set_cpu_speed() */
@@ -125,14 +127,14 @@ BOOL _is_touchpad(void);
 #define is_touchpad _is_touchpad()
 
 static inline void halt(void) {
-	__asm volatile("0: b 0b");
+	__asm__ volatile("0: b 0b");
 }
 
 static inline void bkpt(void) {
 #ifdef __thumb__
-	asm(".word 0xBE01");
+	__asm__ volatile(".word 0xBE01");
 #else
-	asm(".long 0xE1212374");
+	__asm__ volatile(".long 0xE1212374");
 #endif
 }
 	
