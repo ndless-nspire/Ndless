@@ -1,4 +1,3 @@
 zehn_loader is used to encapsulate a Zehn binary in a PRG binary to support Ndless without Zehn support.
 There are two versions, one with zlib decompression support (~13k bigger) and one without.
-libz.a is zlib compiled with "-fPIC -ffunction-sections -fdata-sections -DNO_GZIP" to save a few KiB.
-TODO: Somehow it doesn't work if "--gc-sections" is added in the Makefile.
+zlib is compiled with "-Os -fPIE -ffunction-sections -fdata-sections -DNO_GZIP" to save a few KiB.
