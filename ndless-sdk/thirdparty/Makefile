@@ -18,7 +18,7 @@ FREETYPE_H := \
 	$(wildcard freetype2/include/*.h) \
 	$(wildcard freetype2/include/freetype/*.h) \
 	$(wildcard freetype2/include/freetype/config/*.h))
-FREETYPE_CFLAGS = -O2 -Wall -Wextra -DFT_CONFIG_OPTION_SYSTEM_ZLIB -c
+FREETYPE_CFLAGS = -O2 -Wall -Wextra -DFT_CONFIG_OPTION_SYSTEM_ZLIB
 FREETYPE_CONFIG_MK = freetype2/config.mk
 
 all: nspireio zlib freetype
@@ -40,7 +40,7 @@ $(ZLIB_A): zlib/libz.a
 $(ZLIB_H): $(INCDIR)/%.h: zlib/%.h
 
 freetype: $(FREETYPE_CONFIG_MK) zlib
-	$(MAKE) -C freetype2 CC=$(GCC) CFLAGS="$(FREETYPE_CFLAGS)" AR=$(AR) SYSTEM_ZLIB=yes library
+	$(MAKE) -C freetype2 CC=$(GCC) ANSIFLAGS="$(FREETYPE_CFLAGS)" AR=$(AR) SYSTEM_ZLIB=yes library
 	$(MAKE) $(FREETYPE_A) $(FREETYPE_H)
 
 $(FREETYPE_CONFIG_MK):
