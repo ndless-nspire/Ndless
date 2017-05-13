@@ -35,6 +35,7 @@ extern "C" {
 #include <keys.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <sys/types.h>
 #include <usbdi.h>
 #include <os.h>
