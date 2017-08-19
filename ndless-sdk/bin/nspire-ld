@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Kept for backwards-compatibility
 
-nspire-gcc $@
+nspire-gcc "$@"

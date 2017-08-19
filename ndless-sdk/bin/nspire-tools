@@ -7,25 +7,25 @@ function usage() {
 }
 
 
-UNAME=`uname -s | tr '[A-Z]' '[a-z]'`
-DIRNAME=`dirname "$0"`
+UNAME="$(uname -s | tr A-Z a-z)"
+DIRNAME="$(dirname "$0")"
 
 # DIRNAME may not be in the toolchain directory if this script was symlinked.
 # try to find the symlink target	
 which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
-    SYMLINK=`readlink "$0"`
+    SYMLINK="$(readlink "$0")"
     
     # On MacOS X, the readlink command hasn't the same behavior than the others operating systems based on Unix.
     if [ "$UNAME" == "darwin" ]; then
-    	DIRNAME=`dirname "$SYMLINK"`
+    	DIRNAME="$(dirname "$SYMLINK")"
     else
-    	DIRNAME="$SYMLINK"/..
+    	DIRNAME="${SYMLINK}/.."
     fi
 }
 
 # Cygwin owns a dedicated command to find the symlink target
 if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME=`cygpath --path --windows "$DIRNAME"`
+	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
 fi
 
 if [ $# -eq 0 ]; then
@@ -46,8 +46,8 @@ case "$1" in
 				exit 0
 			fi
 		fi
-		prgmname=`echo "$2" | tr -d ' '`
-		sed -e "s/@@EXENAME@@/$prgmname/" "$DIRNAME/Makefile.tpl" > Makefile
+		prgmname="$(echo "$2" | tr -d ' ')"
+		sed -e "s/@@EXENAME@@/${prgmname}/" "${DIRNAME}/Makefile.tpl" > Makefile
 		echo "Makefile created."
 		;;
 	main)
@@ -58,10 +58,10 @@ case "$1" in
 				exit 0
 			fi
 		fi
-		cp "$DIRNAME/main.c.tpl" main.c
+		cp "${DIRNAME}/main.c.tpl" main.c
 		;;
 	path)
-		echo $(dirname "$DIRNAME")/
+		echo "$(dirname "$DIRNAME")/"
 		;;
 	*)
 		usage

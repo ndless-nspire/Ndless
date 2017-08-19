@@ -1,9 +1,9 @@
 #!/bin/sh
 
-prefix=`nspire-tools path`
-exec_prefix=`nspire-tools path`/bin
+prefix="$(nspire-tools path)"
+exec_prefix="$(nspire-tools path)/bin"
 exec_prefix_set=no
-libdir=`nspire-tools path`/lib
+#libdir="$(nspire-tools path)/lib"
 
 usage="\
 Usage: sdl-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--cflags] [--libs]"
@@ -17,7 +17,7 @@ fi
 
 while test $# -gt 0; do
   case "$1" in
-  -*=*) optarg=`echo "$1" | LC_ALL="C" sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  -*=*) optarg="$(echo "$1" | LC_ALL="C" sed 's/[-_a-zA-Z0-9]*=//')" ;;
   *) optarg= ;;
   esac
 
@@ -42,7 +42,7 @@ while test $# -gt 0; do
       echo 1.2.15
       ;;
     --cflags)
-      echo -I"`nspire-tools path`/include/SDL"
+      echo -I"$(nspire-tools path)/include/SDL"
       ;;
     --libs|--static-libs)
       echo -lSDL
