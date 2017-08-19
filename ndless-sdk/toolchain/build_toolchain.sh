@@ -23,7 +23,7 @@ GDB=gdb-7.12.1 # http://www.gnu.org/software/gdb/
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -Ofast -funroll-loops"
 export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -Ofast -funroll-loops"
-export PATH=$PREFIX/bin:$PATH
+export PATH="$PREFIX/bin:$PATH"
 
 OPTIONS_BINUTILS="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
 OPTIONS_GCC="--target=$TARGET --prefix=$PREFIX --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../$NEWLIB/newlib/libc/include --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
