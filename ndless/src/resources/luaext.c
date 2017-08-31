@@ -121,6 +121,7 @@ HOOK_DEFINE(lua_interp_shutdown) {
 	for (i = 0; i < loaded_next_index; i++) {
 		ld_free(loaded[i]);
 	}
+	loaded_next_index = 0;
 	luastate = NULL;
 	HOOK_RESTORE_RETURN(lua_interp_shutdown);
 }
