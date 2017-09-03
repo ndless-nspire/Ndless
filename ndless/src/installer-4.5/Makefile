@@ -33,7 +33,7 @@ ndless_installer.elf: stage0.o stage1.o utils.o
 	$(LD) $(LFLAGS) $^ -o $@
 
 Problem1.xml: Problem1_top.xml payload Problem1_mid.xml Problem1_bot.xml
-	cat Problem1_top.xml payload Problem1_mid.xml payload Problem1_bot.xml > $@
+	cat Problem1_top.xml Problem1_mid.xml payload Problem1_bot.xml > $@
 
 $(DISTDIR)/ndless_installer_4.5.0.tns: Problem1.xml
 	mkdir -p $(DISTDIR)
