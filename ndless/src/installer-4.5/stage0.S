@@ -7,6 +7,7 @@ b start
 .org 0x40
 start:
 push {r0-r6, lr}
+
 @ We're running in not yet flushed memory, so flush it ASAP
 clear_cache:
 mrc p15, 0, r15, c7, c10, 3
@@ -14,16 +15,19 @@ bne clear_cache
 mov r5, #0
 mcr p15, 0, r5, c7, c7, 0
 
-bootstrapped:
-@ CAS or non-CAS?
-mov r5, #0
-ldr r5, [r5, #0x20]
-ldr r4, =0x103B1E60 @ CASCX
 bl call_main
-cmp r5, r4
+
 pop {r0-r6, lr}
-ldreq pc, =0x1015b484 @ Jump to original caller
-ldrne pc, =0xDEADBEEF
+
+# Return to a sane state
+pop {r4-r6, lr}
+# Undo some damage (linked list pop?)
+add r5, r7, #0x14
+ldr r6, [r5]
+str r6, [r4]
+str r4, [r5]
+pop {r4-r8, lr}
+pop {r4-r10, pc}
 
 call_main:
 	stmfd sp!, {r4-r11,lr} @ and never destroy r0 and r1 which are C's argc and argv
