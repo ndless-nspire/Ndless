@@ -3,12 +3,14 @@
 
 static main(void)
 {
+	MakeName	(0X10000000,	"_103B1E60");
 	MakeName	(0X10001920,	"stack_canary_fail");
 	MakeName	(0X10004E0C,	"TI_HAL_IsDeviceModeRendering");
 	MakeName	(0X100051B8,	"TI_HAL_InvalRect");
 	MakeName	(0X1000571C,	"fopen_vararg");
 	MakeName	(0X10005CE4,	"TI_HAL_SetPointerPosition");
 	MakeName	(0X10005D2C,	"TI_HAL_GetPointerPosition");
+	MakeName	(0X10005D7C,	"doc_opened");
 	MakeName	(0X10005EAC,	"cursor_show");
 	MakeName	(0X1000607C,	"TI_HAL_setMousePointerWakeupLevel");
 	MakeName	(0X100060FC,	"gui_gc_getGC");
@@ -18,10 +20,12 @@ static main(void)
 	MakeName	(0X1000926C,	"file_exists");
 	MakeName	(0X1000AC48,	"func_ndless_ploader_hook");
 	MakeName	(0X1000AD8C,	"ndless_ploader_hook");
-	MakeName	(0X1000BD1C,	"_gui_gc_getCharHeight");
+	MakeName	(0X1000B23C,	"close_document");
 	MakeName	(0X1000BD7C,	"_gui_gc_setColorRGB");
 	MakeName	(0X1000BDF0,	"_gui_gc_setFont");
+	MakeName	(0X1000CA5C,	"_gui_gc_getFontHeight");
 	MakeName	(0X1000CB38,	"_gui_gc_getStringWidth");
+	MakeName	(0X1000D2C0,	"_gui_gc_drawString");
 	MakeName	(0X1000D56C,	"_gui_gc_drawImage");
 	MakeName	(0X1000D62C,	"_gui_gc_drawIcon");
 	MakeName	(0X1000D6C8,	"_gui_gc_fillPoly");
@@ -34,6 +38,7 @@ static main(void)
 	MakeName	(0X1001067C,	"getScreenWidth");
 	MakeName	(0X10010D9C,	"getScreenHeight");
 	MakeName	(0X10010DB4,	"getMenuHeight");
+	MakeName	(0X10012E00,	"ndless_end_of_init");
 	MakeName	(0X1001C244,	"OS_InitNavNet");
 	MakeName	(0X10024CCC,	"_show_msgbox_3b");
 	MakeName	(0X100255A0,	"_show_msgbox_2b");
@@ -57,6 +62,8 @@ static main(void)
 	MakeName	(0X10030D88,	"gui_gc_getCharWidth");
 	MakeName	(0X10030DD0,	"gui_gc_getStringWidth");
 	MakeName	(0X10030E2C,	"gui_gc_getStringHeight");
+	MakeName	(0X10030E88,	"gui_gc_fillPoly");
+	MakeName	(0X10030ECC,	"gui_gc_getFontHeight");
 	MakeName	(0X10030F68,	"gui_gc_drawString");
 	MakeName	(0X10030FC0,	"gui_gc_drawSprite");
 	MakeName	(0X100310A0,	"gui_gc_drawIcon");
@@ -74,6 +81,7 @@ static main(void)
 	MakeName	(0X100317B8,	"gui_gc_setRegion");
 	MakeName	(0X1003192C,	"gui_gc_copy");
 	MakeName	(0X10038614,	"inflateInit");
+	MakeName	(0X10039B60,	"open_document");
 	MakeName	(0X1003A348,	"popup_callback_0");
 	MakeName	(0X1003A3A4,	"ItemData_create");
 	MakeName	(0X1003B644,	"TI_DF_GetCurrentCard");
@@ -208,6 +216,7 @@ static main(void)
 	MakeName	(0X101598CC,	"log_rs232");
 	MakeName	(0X1015B45C,	"TI_SR_deleteArchive");
 	MakeName	(0X1015B584,	"TI_SR_NewArchive");
+	MakeName	(0X1015B62C,	"this_func_breaks_stuff");
 	MakeName	(0X1015B64C,	"TI_DS_CurrentObject");
 	MakeName	(0X1015B6A8,	"TI_DS_GetString");
 	MakeName	(0X1015B6B4,	"TI_DS_GetTagname");
@@ -896,6 +905,7 @@ static main(void)
 	MakeName	(0X10A21580,	"LoadNavstack");
 	MakeName	(0X10A30FE8,	"gui_gc_setPen");
 	MakeName	(0X10A7B898,	"lua_math__evalexpr");
+	MakeName	(0X10AA2FE8,	"gc_vtable");
 	MakeName	(0X10AB8BBC,	"aSNsStartServiceFailure0x04x");
 	MakeName	(0X10AC4F58,	"aPselfNull");
 	MakeName	(0X10AC5278,	"aSelfEditorconstraints_nameN");

@@ -4,3 +4,15 @@ How to update an .idc file:
 -Make your changes
 -File->Produce File->Dump Database to IDC file
 -Run "./lighten_idc.php <IDC file> <destination file>"
+
+How to add a new .idc file:
+-Load the binary in IDA
+-Let it finish the final pass
+-Find ERC_System_Error and mark it as noreturn
+-Run idamkfuncs.py
+-Run bindiff with the most similiar OS
+-Import Symbols and Comments, min. confidence 0.9
+-File->Produce File->Dump Database to IDC file
+-Run "./lighten_idc.php <IDC file> <destination file>"
+-Add the destination file into mkSyscalls.php
+-Run mkSyscalls.php, find and add missing syscalls, start again from #7

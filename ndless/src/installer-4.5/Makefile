@@ -27,7 +27,7 @@ all: $(DISTDIR)/ndless_installer_4.5.0.tns
 	$(OBJCOPY) -O binary $^ $@
 
 payload: ndless_installer.bin
-	(../tools/MakeChunkDispatch/MakeChunkDispatch 0x1800e7f4 0x12500000; cat $^) | base64 -w0 > $@ || rm $@
+	(../tools/MakeChunkDispatch/MakeChunkDispatch 0x1800e7f4 0x12480000; cat $^) | base64 -w0 > $@ || rm $@
 
 ndless_installer.elf: stage0.o stage1.o utils.o
 	$(LD) $(LFLAGS) $^ -o $@
