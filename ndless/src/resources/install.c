@@ -75,7 +75,21 @@ static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
 						0x1011BFB8, 0x1011BE10,
 						0x10120E84, 0x10120CDC,
 						0x10123CC8, 0x10123B14,
-						0x0, 0x1012546C};
+						0x0, 0x10125508};
+
+// OS-specific (only set if the installer document needs to be closed)
+// close_document
+static unsigned const close_document_addrs[NDLESS_MAX_OSID+1] =
+					       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0, 0x0, 0x0,
+						0x0, 0x0,
+						0x0, 0x0,
+						0x0, 0x0,
+						0x0, 0x0,
+						0x0, 0x0,
+						0x0, 0x1000b23c};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -130,9 +144,9 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
-		else if(ut_os_version_index < 26) //plh_hook_36 works for 3.9, 4.0 and 4.2 as well
+		else if(ut_os_version_index < 26) // plh_hook_36 works for 3.9, 4.0 and 4.2 as well
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_36);
-		else
+		else // plh_hook_44 works for 4.4 and 4.5
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_44);
 
 		lua_install_hooks();
@@ -205,6 +219,13 @@ void ins_install_successmsg_hook(void) {
 
 // chained after the startup programs execution
 HOOK_DEFINE(ins_successsuccessmsg_hook) {
+	static bool closed = false;
+	if (!closed && close_document_addrs[ut_os_version_index]) {
+		// To not close more than necessary and prevent recursion
+		closed = true;
+		((void(*)())close_document_addrs[ut_os_version_index])();
+	}
+
 	// OS-specific: reg number
 	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
