@@ -37,28 +37,7 @@ struct chunk {
 	uint32_t next;
 	uint32_t prev;
 	uint32_t free;
-	/* Instead of using full chunks like
-	   [next]
-	   [prev]
-	   [free]
-	   [pool]
-	   [next]
-	   [prev]
-	   [free]
-	   [pool]
-	   ...
-
-	   we can save four bytes per chunk by using the next value of
-	   the next chunk as pool value:
-	   [next]
-	   [prev]
-	   [free]
-	   [pool|next]
-	        [prev]
-	        [free]
-	        [pool|next]
-	              ...
-	uint32_t pool;*/
+	uint32_t pool;
 } __attribute__((packed));
 
 int main(int argc, char *argv[])
@@ -89,7 +68,7 @@ int main(int argc, char *argv[])
 		c.next = local_chunks_end;
 		c.prev = target_ptr;
 		c.free = 0;
-		/*c.pool = 0x13A00000; // Area of zeros */
+		c.pool = 0x13A00000; // Area of zeros
 
 		write(1, &c, sizeof(c));
 	}
