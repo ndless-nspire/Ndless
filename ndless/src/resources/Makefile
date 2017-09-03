@@ -42,5 +42,10 @@ $(ZEHN): $(ZEHN).elf
 $(EXE): $(ZEHN)
 	make-prg $^ $@
 
+test: $(EXE)
+	firebird-send $^ ndless
+
 clean:
 	rm -f *.o $(ZEHN) $(ZEHN).elf $(EXE)
+
+.PHONY: all test clean
