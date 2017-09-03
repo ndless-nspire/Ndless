@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prob xmlns="urn:TI.Problem" ver="1.0" pbname="">
+    <sym></sym>
+    <card clay="0" h1="10000" h2="10000" w1="10000" w2="10000">
+        <isDummyCard>0</isDummyCard>
+        <flag>0</flag>
+        <wdgt xmlns:sc="urn:TI.ScriptApp" type="TI.ScriptApp" ver="1.0">
+            <sc:mFlags>0</sc:mFlags>
+            <sc:value>8</sc:value>
+            <sc:cry>0</sc:cry>
+            <sc:legal>none</sc:legal>
+            <sc:schk>false</sc:schk>
+            <sc:guid>E229D13D5E8B4ACEB428FA06839C0DAC</sc:guid>
+            <sc:md>
+                <sc:mde name="PASSW" prop="536870912">

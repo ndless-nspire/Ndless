@@ -17,7 +17,8 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                      0, 0,
                                                      0x110ED6D4, 0x111516D4,
 						     0x110FD6DC, 0x111616DC,
-						     0x113356DC, 0x113996DC};
+						     0x113356DC, 0x113996DC,
+						     0x0, 0x113B16E4};
 
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
 static uint16_t *lcd_mirror = 0x0, *current_lcd_mirror = 0x0;

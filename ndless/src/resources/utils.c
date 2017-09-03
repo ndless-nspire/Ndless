@@ -143,6 +143,14 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 27;
 			break;
 #endif
+#if !defined(STAGE1) || NDLESS_450
+		case 0xdeadbeef: // 4.5.0.1180 non-CAS CX
+			ut_os_version_index = 28;
+			break;
+		case 0x103B1E60: // 4.5.0.1180 CAS CX
+			ut_os_version_index = 29;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}

@@ -1,5 +1,5 @@
 UNAME := $(shell uname)
-SUBDIRS = EscapeInstaller LuaBin MakeLuaInst MakeHotRebootPatches MakeSyscalls MakeQnAInst XORInstaller
+SUBDIRS = EscapeInstaller LuaBin MakeLuaInst MakeHotRebootPatches MakeSyscalls MakeQnAInst XORInstaller MakeChunkDispatch
 
 all: $(patsubst %, build-%, $(SUBDIRS))
 clean: $(patsubst %, clean-%, $(SUBDIRS))
