@@ -27,4 +27,4 @@ stubs.cpp: ../include/syscall-list.h mkStubs.php
 	php mkStubs.php > $(H_FILE)
 	
 clean:
-	rm -f $(AR_FILE) $(AR_FILE_NSPIREIO) $(O_FILES) stdlib*.o $(H_FILE) stubs.cpp
+	rm -f $(AR_FILE) $(AR_FILE_NSPIREIO) $(O_FILES) stdlib*.o
