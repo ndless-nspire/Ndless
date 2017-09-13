@@ -220,7 +220,7 @@ void ins_install_successmsg_hook(void) {
 // chained after the startup programs execution
 HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	static bool closed = false;
-	if (!closed && close_document_addrs[ut_os_version_index]) {
+	if (!nl_loaded_by_3rd_party_loader() && !closed && close_document_addrs[ut_os_version_index]) {
 		// To not close more than necessary and prevent recursion
 		closed = true;
 		((void(*)())close_document_addrs[ut_os_version_index])();
