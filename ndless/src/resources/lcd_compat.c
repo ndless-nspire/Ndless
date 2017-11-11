@@ -222,7 +222,10 @@ bool lcd_compat_enable()
 
     if(!lcd_mirror)
     {
-        lcd_mirror = calloc(sizeof(uint16_t), 320*240);
+        // Try to reuse the OS' internal mirror
+        lcd_mirror = lcd_mirror_ptr[ut_os_version_index] == 0 ? NULL : *(uint16_t**)lcd_mirror_ptr[ut_os_version_index];
+        if(!lcd_mirror)
+            lcd_mirror = calloc(sizeof(uint16_t), 320*240);
         if(!lcd_mirror)
             return false;
     }
