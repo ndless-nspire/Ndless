@@ -86,6 +86,15 @@ static main(void)
 	MakeName	(0X100857B8,	"write_nand");
 	MakeName	(0X100859F0,	"flash_get_block_data_size");
 	MakeName	(0X10085A1C,	"nand_erase_range");
+	MakeName	(0X10085ED0,	"TI_NN_Read");
+	MakeName	(0X10085EF8,	"TI_NN_Write");
+	MakeName	(0X10086180,	"TI_NN_Disconnect");
+	MakeName	(0X10086184,	"TI_NN_Connect");
+	MakeName	(0X100864D4,	"TI_NN_Init");
+	MakeName	(0X10086640,	"TI_NN_NodeEnumDone");
+	MakeName	(0X1008670C,	"TI_NN_NodeEnumNext");
+	MakeName	(0X100867A8,	"TI_NN_NodeEnumInit");
+	MakeName	(0X10086958,	"TI_NN_NH_RegisterNotifyCallback");
 	MakeName	(0X100877E0,	"TI_NN_InstallOSServiceStart");
 	MakeName	(0X10087D54,	"install_os_check_file");
 	MakeName	(0X100883E0,	"nn_perform_install_os");
@@ -101,6 +110,10 @@ static main(void)
 	MakeName	(0X1008C02C,	"TI_NN_DestroyOperationHandle");
 	MakeName	(0X1008C100,	"TI_NN_CreateOperationHandle");
 	MakeName	(0X1008CAFC,	"screen_get_error_code");
+	MakeName	(0X100951CC,	"TI_NN_CH_Write");
+	MakeName	(0X100952C8,	"TI_NN_CH_Read");
+	MakeName	(0X100966FC,	"TI_NN_SS_StopService");
+	MakeName	(0X100969F0,	"TI_NN_SS_StartService");
 	MakeName	(0X1009DAE8,	"find_connection");
 	MakeName	(0X100A1FF0,	"TI_NS_WritePacketToRemoteStream");
 	MakeName	(0X100A22FC,	"append_pkt_to_hold_q");
@@ -766,7 +779,6 @@ static main(void)
 	MakeName	(0X10A823F4,	"a000000093701aa");
 	MakeName	(0X10A82B34,	"a_tno");
 	MakeName	(0X10A82B3C,	"a_tnc");
-	MakeName	(0X10A83570,	"a35s02x02x02x02");
 	MakeName	(0X10A83948,	"a02x02x02x02x_2");
 	MakeName	(0X10A8396C,	"a0NspireCradleD");
 	MakeName	(0X10A84020,	"a0NspireUpgrade");
