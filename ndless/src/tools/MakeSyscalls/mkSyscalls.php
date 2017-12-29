@@ -26,6 +26,11 @@ $important = array(true, true, true, true, true, true,
 		   true, true,
 		   true, true);
 
+//Some functions got renamed by TI, but our syscalls have the same name everywhere.
+//If a function has an entry here, it is internally renamed to the value.
+$renamedSyscalls = array("TI_NN_SS_StartService" => "TI_NN_StartService",
+                         "TI_NN_SS_StopService" => "TI_NN_StopService");
+
 $syscall_nr_list = fopen(__DIR__ . "/../../../../ndless-sdk/include/syscall-list.h", "r");
 if($syscall_nr_list === FALSE)
 	die("Couldn't open syscall-list.h!\n");
@@ -96,6 +101,9 @@ foreach($idc_files as $nr => $idc_file)
 
 		if($found === 0 || $matches[1] == "0xFFFFFFFF")
 			continue;
+
+                if(isset($renamedSyscalls[$matches[2]]))
+			$matches[2] = $renamedSyscalls[$matches[2]];
 			
 		$syscall_addrs[$nr][$matches[2]] = $matches[1];
 	}
