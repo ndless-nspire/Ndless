@@ -16,7 +16,7 @@ PREFIX="${PWD}/install" # or the directory where the toolchain should be install
 PARALLEL="-j4" # or "-j<number of build jobs>"
 
 BINUTILS=binutils-2.28 # http://www.gnu.org/software/binutils/
-GCC=gcc-7.2.0 # http://gcc.gnu.org/
+GCC=gcc-7.3.0 # http://gcc.gnu.org/
 NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
 GDB=gdb-8.0 # http://www.gnu.org/software/gdb/
 
