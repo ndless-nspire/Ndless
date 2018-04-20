@@ -9,9 +9,12 @@ extern "C" {
 
 #define DLLDECL __cdecl __declspec(dllimport)
 
-typedef void *nn_ch_t;
-typedef void *nn_nh_t;
-typedef void *nn_oh_t;
+struct _nn_ch;
+typedef struct _nn_ch* nn_ch_t;
+struct _nn_nh;
+typedef struct _nn_nh* nn_nh_t;
+struct _nn_oh;
+typedef struct _nn_oh* nn_oh_t;
 
 DLLDECL int16_t TI_NN_Init(const char *opts);
 DLLDECL int16_t TI_NN_Shutdown(void);
@@ -29,7 +32,7 @@ DLLDECL int16_t TI_NN_RegisterNotifyCallback(uint32_t filter_flags, void (*cb)(v
 DLLDECL uint32_t TI_NN_GetConnMaxPktSize(nn_ch_t ch);
 DLLDECL int16_t TI_NN_StartService(uint32_t service_id, void *data, void (*cb)(nn_ch_t ch, void *data));
 DLLDECL int16_t TI_NN_StopService(uint32_t service_id);
-DLLDECL int16_t TI_NN_PutFile(nn_nh_t nh, nn_oh_t oh, const char *local_path, const char *remote_path);
+DLLDECL int16_t TI_NN_PutFile(nn_ch_t ch, nn_oh_t oh, const char *local_path, const char *remote_path);
 
 #ifdef __cplusplus
 }
