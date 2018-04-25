@@ -18,7 +18,7 @@
 	} while (0)
 
 /* Caution, hooks aren't re-entrant.
-* Must always exits with either HOOK_RESTORE_RETURN, HOOK_RETURN or HOOK_RESTORE_RETURN_SKIP.
+ * They must always exit with either HOOK_RESTORE_RETURN, HOOK_RETURN or HOOK_RESTORE_RETURN_SKIP.
  * A non-inlined body is required because naked function cannot use local variables.
  * A naked function is required because the return is handled by the hook, and to avoid any
  * register modification before they are saved */
