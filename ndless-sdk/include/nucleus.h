@@ -108,9 +108,12 @@ struct nuc_dirent {
 };
 
 //NavNet declarations
-typedef void *nn_ch_t;
-typedef void *nn_nh_t;
-typedef void *nn_oh_t;
+struct _nn_ch;
+typedef struct _nn_ch* nn_ch_t;
+struct _nn_nh;
+typedef struct _nn_nh* nn_nh_t;
+struct _nn_oh;
+typedef struct _nn_oh* nn_oh_t;
 
 //Provided by ndless
 unsigned char* keypad_type();
