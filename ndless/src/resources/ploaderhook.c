@@ -261,8 +261,13 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 			char prgm_name[FILENAME_MAX + 4];
 			strcpy(prgm_name, prgm_name_noext);
 			strcat(prgm_name, ".tns");
-			struct assoc_file_each_cb_ctx context = {prgm_name, prgm_path, &isassoc};
-			file_each("/", assoc_file_each_cb, &context);
+			if(prgm_name[0] == '/') {
+				strlcpy(prgm_path, prgm_name, FILENAME_MAX);
+				isassoc = 1;
+			} else {
+				struct assoc_file_each_cb_ctx context = {prgm_name, prgm_path, &isassoc};
+				file_each("/", assoc_file_each_cb, &context);
+			}
 		}
 		cfg_close();
 	}
