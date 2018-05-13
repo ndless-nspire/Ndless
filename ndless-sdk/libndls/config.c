@@ -147,7 +147,6 @@ close_quit:
 				entry->value_sz = pow2_roundup(val_len);
 				entry->value = malloc(entry->value_sz);
 				strlcpy(entry->value, value, entry->value_sz);
-				// printf("entry %s=%s\n", entry->key, entry->value);
 				if (kv_index >= max_kv_num) break; // too many key-value pairs
 			}
 		}
@@ -200,7 +199,6 @@ struct cfg_entry *cfg_get_entry(const char *key) {
 	if (!open_file[0]) return NULL;
 	for (i = 0; i < kv_num; i++) {
 		struct cfg_entry *e = &cfg_entries[i];
-		//printf("%s, %s\n", key, e->key);
 		if (!strcmp(key, e->key)) {
 			return e;
 		}
@@ -228,7 +226,6 @@ void cfg_put_entry(struct cfg_entry *entr, const char *val) {
 			entr->value = realloc(entr->value, entr->value_sz);
 		}
 		strlcpy(entr->value, val, entr->value_sz);
-		//printf("accepted change %s=%s\n", entr->key, val);
 		cfg_changed = 1;
 	}
 }
