@@ -22,6 +22,7 @@
  ****************************************************************************/
 
 #include <os.h>
+#include <limits.h>
 /* The config file is open whenever needed with cfg_open, and must be closed.
  * Each line of the file contains a key/value pair (key=value).
  * The key and the value are trimmed when read.
@@ -29,7 +30,7 @@
  * Invalid lines are ignored.
  */
  
-static char open_file[FILENAME_MAX] = {0};
+static char open_file[PATH_MAX] = {0};
 static unsigned max_kv_num;
 static unsigned kv_num;
 static unsigned cmt_num;
@@ -168,16 +169,16 @@ close_quit:
 	}
 	loop_end:
 	cmt_num = kv_num = kv_index;
-	strlcpy(open_file, filepath, FILENAME_MAX);
+	strlcpy(open_file, filepath, PATH_MAX);
 	free(file_content);
 }
 
-static char cfg_path[FILENAME_MAX] = {0};
+static char cfg_path[PATH_MAX] = {0};
 
 static int cfg_locate_cfg_file(char *dst_path, size_t dst_path_size) {
-	if(cfg_path[0] == 0) snprintf(cfg_path, FILENAME_MAX, "%s%s", get_documents_dir(), "ndless/ndless.cfg.tns");
+	if(cfg_path[0] == 0) snprintf(cfg_path, PATH_MAX, "%s%s", get_documents_dir(), "ndless/ndless.cfg.tns");
 	if(access(cfg_path, F_OK) == -1) {
-		int l = locate("ndless.cfg.tns", cfg_path, FILENAME_MAX);
+		int l = locate("ndless.cfg.tns", cfg_path, PATH_MAX);
 		if(l != 0) return l;
 	}
 	size_t actual_path_len = strlen(cfg_path);
@@ -188,7 +189,7 @@ static int cfg_locate_cfg_file(char *dst_path, size_t dst_path_size) {
 }
 
 void cfg_open(void) {
-	char path[FILENAME_MAX];
+	char path[PATH_MAX];
 	if (cfg_locate_cfg_file(path, sizeof(path)))
 		return;
 	cfg_open_file(path);
@@ -199,9 +200,8 @@ struct cfg_entry *cfg_get_entry(const char *key) {
 	if (!open_file[0]) return NULL;
 	for (i = 0; i < kv_num; i++) {
 		struct cfg_entry *e = &cfg_entries[i];
-		if (!strcmp(key, e->key)) {
+		if (strcmp(key, e->key) == 0)
 			return e;
-		}
 	}
 	return NULL;
 }
@@ -231,8 +231,8 @@ void cfg_put_entry(struct cfg_entry *entr, const char *val) {
 }
 
 void cfg_put(const char *key, const char *val) {
-	struct cfg_entry *entr;
-	if((entr = cfg_get_entry(key))) {
+	struct cfg_entry *entr = cfg_get_entry(key);
+	if(entr != NULL) {
 		cfg_put_entry(entr, val);
 	} else {
 		if(kv_num == max_kv_num) {
