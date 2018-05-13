@@ -173,9 +173,10 @@ close_quit:
 	free(file_content);
 }
 
-static char cfg_path[PATH_MAX] = {0};
 
 static int cfg_locate_cfg_file(char *dst_path, size_t dst_path_size) {
+	static char cfg_path[PATH_MAX] = {0};
+	
 	if(cfg_path[0] == 0) snprintf(cfg_path, PATH_MAX, "%s%s", get_documents_dir(), "ndless/ndless.cfg.tns");
 	if(access(cfg_path, F_OK) == -1) {
 		int l = locate("ndless.cfg.tns", cfg_path, PATH_MAX);

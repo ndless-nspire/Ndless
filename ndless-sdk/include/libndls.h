@@ -104,7 +104,6 @@ void wait_no_key_pressed(void);
 /* config.c */
 struct cfg_entry {
 	char key[15];
-//	short val_offset;
 	size_t value_sz;
 	char *value;
 };
