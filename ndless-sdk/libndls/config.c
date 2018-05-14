@@ -45,7 +45,7 @@ void cfg_save_file(const char *filepath) {
 	unsigned i;
 	for(i = 0; i < kv_num; i++) {
 		struct cfg_entry *n_entr = &cfg_entries[i];
-		if(cfg_comments[i]) {
+		if(i < cmt_num && cfg_comments[i]) {
 			fprintf(file, "%s=%s #%s\n", n_entr->key, n_entr->value, cfg_comments[i]);
 		} else {
 			fprintf(file, "%s=%s\n", n_entr->key, n_entr->value);
@@ -213,14 +213,8 @@ const char *cfg_get(const char *key) {
 	return e == NULL ? NULL : e->value; 
 }
 
-static int strict_strcmp(const char *a, const char *b) {
-	size_t l1 = strlen(a);
-	size_t l2 = strlen(b);
-	return memcmp(a, b, (l1 < l2 ? l1 : l2)+1);
-}
-
-void cfg_put_entry(struct cfg_entry *entr, const char *val) {
-	if(strict_strcmp(entr->value, val)) {
+void cfg_set_value(struct cfg_entry *entr, const char *val) {
+	if(strcmp(entr->value, val)) {
 		size_t vl = strlen(val) + 1;
 		if(vl > entr->value_sz || vl <= entr->value_sz / 2) {
 			entr->value_sz = pow2_roundup(vl);
@@ -231,23 +225,24 @@ void cfg_put_entry(struct cfg_entry *entr, const char *val) {
 	}
 }
 
-void cfg_put(const char *key, const char *val) {
+struct cfg_entry *cfg_put(const char *key, const char *val) {
 	struct cfg_entry *entr = cfg_get_entry(key);
 	if(entr != NULL) {
-		cfg_put_entry(entr, val);
+		cfg_set_value(entr, val);
 	} else {
 		if(kv_num == max_kv_num) {
 			max_kv_num *= 2;
 			cfg_entries = realloc(cfg_entries, max_kv_num * sizeof(struct cfg_entry));
 		}
-		struct cfg_entry *n_entr = &cfg_entries[kv_num++];
-		strlcpy(n_entr->key, key, 15);
+		struct cfg_entry *entr = &cfg_entries[kv_num++];
+		strlcpy(entr->key, key, 15);
 		size_t vl = strlen(val) + 1;
-		n_entr->value_sz = pow2_roundup(vl);
-		n_entr->value = malloc(n_entr->value_sz);
-		strlcpy(n_entr->value, val, n_entr->value_sz);
+		entr->value_sz = pow2_roundup(vl);
+		entr->value = malloc(entr->value_sz);
+		strlcpy(entr->value, val, entr->value_sz);
 		cfg_changed = 1;
 	}
+	return entr;
 }
 
 void cfg_put_fileext(const char *ext, const char *prgm) {
@@ -258,7 +253,7 @@ void cfg_put_fileext(const char *ext, const char *prgm) {
 		size_t pl = strlen(prgm);
 		size_t vl = strlen(entr->value);
 		if(pl > vl || entr->value[0] != '/' || strcmp(entr->value + (vl - pl), prgm)) {
-			cfg_put_entry(entr, prgm);
+			cfg_set_value(entr, prgm);
 		}
 	} else {
 		cfg_put(key, prgm);

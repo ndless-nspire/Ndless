@@ -279,10 +279,10 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 				if(isassoc) {
 					char *dot = strrchr(prgm_path, '.');
 					if(dot) *dot = '\0';
-					cfg_put_entry(entr, prgm_path);
+					cfg_set_value(entr, prgm_path);
 					if(dot) *dot = '.';
 				} else {
-					cfg_put_entry(entr, strrchr(prgm_name_noext, '/')+1);
+					cfg_set_value(entr, strrchr(prgm_name_noext, '/')+1);
 				}
 			}
 		}

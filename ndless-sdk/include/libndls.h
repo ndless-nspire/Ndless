@@ -104,6 +104,7 @@ void wait_no_key_pressed(void);
 /* config.c */
 struct cfg_entry {
 	char key[15];
+	// don't write to value_sz or value; instead, use cfg_set_value
 	size_t value_sz;
 	char *value;
 };
@@ -113,9 +114,9 @@ void cfg_open_file(const char *filepath);
 void cfg_close(void);
 // get/put only work if cfg file is open
 struct cfg_entry *cfg_get_entry(const char *key);
-void cfg_put_entry(struct cfg_entry *entr, const char *val);
+void cfg_set_value(struct cfg_entry *entr, const char *val);
 const char *cfg_get(const char *key);
-void cfg_put(const char *key, const char *val);
+struct cfg_entry *cfg_put(const char *key, const char *val);
 void cfg_put_fileext(const char *ext, const char *prgm);
 // register opens cfg file as always
 void cfg_register_fileext(const char *ext, const char *prgm);
