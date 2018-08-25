@@ -37,7 +37,7 @@ if [ $NOSTDLIB -ne 1 ]; then
 			stdlib=("${stdlib[@]}" "-l$lib")
 		fi
 	done
-	stdlib=("${stdlib[@]}" -lm --start-group -lnspireio -lstdc++ -lndls "-lsyscalls${NSPIREIO}" -lc --end-group -lgcc)
+	stdlib=("${stdlib[@]}" --start-group -lnspireio -lstdc++ -lndls "-lsyscalls${NSPIREIO}" -lm -lc --end-group -lgcc)
 fi
 
 (cd "$DIRNAME/../system" && make -s all)
