@@ -15,9 +15,9 @@ TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
 PARALLEL="-j4" # or "-j<number of build jobs>"
 
-BINUTILS=binutils-2.28 # http://www.gnu.org/software/binutils/
-GCC=gcc-7.3.0 # http://gcc.gnu.org/
-NEWLIB=newlib-2.4.0 # http://sourceware.org/newlib/
+BINUTILS=binutils-2.31.1 # http://www.gnu.org/software/binutils/
+GCC=gcc-8.2.0 # http://gcc.gnu.org/
+NEWLIB=newlib-3.0.0 # http://sourceware.org/newlib/
 GDB=gdb-8.1.1 # http://www.gnu.org/software/gdb/
 
 # For newlib
