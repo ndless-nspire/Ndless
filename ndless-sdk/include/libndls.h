@@ -102,10 +102,23 @@ BOOL isKeyPressed(const t_key *key);
 void wait_key_pressed(void);
 void wait_no_key_pressed(void);
 /* config.c */
+struct cfg_entry {
+	char key[15];
+	// don't write to value_sz or value; instead, use cfg_set_value
+	size_t value_sz;
+	char *value;
+};
+
 void cfg_open(void);
 void cfg_open_file(const char *filepath);
 void cfg_close(void);
-char *cfg_get(const char *key);
+// get/put only work if cfg file is open
+struct cfg_entry *cfg_get_entry(const char *key);
+void cfg_set_value(struct cfg_entry *entr, const char *val);
+const char *cfg_get(const char *key);
+struct cfg_entry *cfg_put(const char *key, const char *val);
+void cfg_put_fileext(const char *ext, const char *prgm);
+// register opens cfg file as always
 void cfg_register_fileext(const char *ext, const char *prgm);
 void cfg_register_fileext_file(const char *fielpath, const char *ext, const char *prgm);
 #define nl_hassyscall(x) _nl_hassyscall(e_##x)

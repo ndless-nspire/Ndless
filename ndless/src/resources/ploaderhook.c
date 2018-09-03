@@ -256,13 +256,35 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		char ext_key[4 + MAX_EXT_LEN + 1]; // ext.extension
 		strcpy(ext_key, "ext");
 		strcat(ext_key, ext);
-		char *prgm_name_noext = cfg_get(ext_key);
-		if (prgm_name_noext) {
-			char prgm_name[FILENAME_MAX + 4];
+		struct cfg_entry *entr = cfg_get_entry(ext_key);
+		if (entr) {
+			char *prgm_name_noext = entr->value;
+			char _prgm_name[FILENAME_MAX + 4];
+			char *prgm_name = _prgm_name;
 			strcpy(prgm_name, prgm_name_noext);
 			strcat(prgm_name, ".tns");
-			struct assoc_file_each_cb_ctx context = {prgm_name, prgm_path, &isassoc};
-			file_each("/", assoc_file_each_cb, &context);
+			BOOL abs_path = prgm_name[0] == '/';
+			if(abs_path) {
+				if(access(prgm_name, F_OK) != -1) {
+					strlcpy(prgm_path, prgm_name, FILENAME_MAX);
+					isassoc = 1;
+				} else {
+					prgm_name = strrchr(prgm_name, '/') + 1;
+				}
+			}
+			
+			if(!isassoc) {
+				struct assoc_file_each_cb_ctx context = {prgm_name, prgm_path, &isassoc};
+				file_each("/", assoc_file_each_cb, &context);
+				if(isassoc) {
+					char *dot = strrchr(prgm_path, '.');
+					if(dot) *dot = '\0';
+					cfg_set_value(entr, prgm_path);
+					if(dot) *dot = '.';
+				} else {
+					cfg_set_value(entr, strrchr(prgm_name_noext, '/')+1);
+				}
+			}
 		}
 		cfg_close();
 	}
