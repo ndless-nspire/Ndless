@@ -124,9 +124,12 @@ static int cfg_locate_cfg_file(char *dst_path, size_t dst_path_size) {
 }
 
 void cfg_open(void) {
-	char path[300];
-	if (cfg_locate_cfg_file(path, sizeof(path)))
-		return;
+	static char path[300] = "";
+	struct stat statbuf;
+	if (path[0] == '\0' || stat(path, &statbuf) != 0)
+		if (cfg_locate_cfg_file(path, sizeof(path)))
+			return;
+
 	cfg_open_file(path);
 }
 

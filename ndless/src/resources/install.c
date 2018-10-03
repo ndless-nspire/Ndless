@@ -142,6 +142,10 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			// The next HOOK_INSTALL invocation clears the cache for us
 		}
 
+		// Cache the path to ndless.cfg.tns to keep working even if the virtual root changes
+		cfg_open();
+		cfg_close();
+
 		if(ut_os_version_index < 6)
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_31);
 		else if(ut_os_version_index < 26) // plh_hook_36 works for 3.9, 4.0 and 4.2 as well
