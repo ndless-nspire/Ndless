@@ -131,7 +131,10 @@ static void lcd_timer_enable()
     *(volatile uint32_t*) 0xDC000010 = 1 << 3;
 
     // Enable FIQs
-    asm volatile("msr spsr_c, #0x93");
+    uint32_t spsr;
+    asm volatile("mrs %[spsr], spsr" : [spsr] "=r" (spsr));
+    spsr &= ~0x40;
+    asm volatile("msr spsr_c, %[spsr]" :: [spsr] "r" (spsr));
 
     lcd_timer_enabled = true;
 }
