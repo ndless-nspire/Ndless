@@ -57,3 +57,9 @@ unsigned msleep(unsigned millisec) {
 	
 	return 0;
 }
+
+bool LIBNDLS_POSIX_SLEEP = false;
+
+unsigned sleep(unsigned time) {
+	return msleep(LIBNDLS_POSIX_SLEEP ? time : time * 1000);
+}

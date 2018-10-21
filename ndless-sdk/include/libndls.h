@@ -85,15 +85,7 @@ int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
 unsigned msleep(unsigned millisec);
-#ifdef _LIBNDLS_POSIX_SLEEP
-static inline unsigned int sleep(unsigned int seconds) {
-	return msleep(seconds * 1000);
-}
-#else
-static inline unsigned sleep(unsigned millisec) {
-	return msleep(millisec);
-}
-#endif
+bool LIBNDLS_POSIX_SLEEP;
 int locate(const char *filename, char *dst_path, size_t dst_path_size);
 BOOL on_key_pressed(void);
 void refresh_osscr(void);
