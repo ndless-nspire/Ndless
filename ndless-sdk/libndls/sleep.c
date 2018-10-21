@@ -21,7 +21,7 @@
 
 #include <os.h>
 
-unsigned sleep(unsigned millisec) {
+unsigned msleep(unsigned millisec) {
 	if (is_classic) {
 		volatile unsigned *timer = (unsigned*)0x900D0000;
 		volatile unsigned *control = (unsigned*)0x900D0008;
@@ -33,7 +33,7 @@ unsigned sleep(unsigned millisec) {
 		*timer = millisec;
 		while (*timer > 0)
 			idle();
-	   *control = orig_control;
+		*control = orig_control;
 		*divider = orig_divider;
 		*timer = 32;
 	} else {
