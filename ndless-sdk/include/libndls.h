@@ -31,7 +31,7 @@ halt\@: b halt\@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#define sleep _sleep
 #include <keys.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -40,6 +40,7 @@ extern "C" {
 #include <os.h>
 #include <nucleus.h>
 #include <syscall-list.h>
+#undef sleep
 
 // WARNING: This is only here to trigger a build error.
 #define NDLESS_DIR ({"NDLESS_DIR got removed. Use get_documents_dir() to get the virtual root first."})
@@ -85,7 +86,8 @@ int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
 unsigned msleep(unsigned millisec);
-bool LIBNDLS_POSIX_SLEEP;
+#define sleep _Static_assert(false, "the sleep function was removed for incompatibility with the \
+POSIX standard, it has been renamed to msleep");
 int locate(const char *filename, char *dst_path, size_t dst_path_size);
 BOOL on_key_pressed(void);
 void refresh_osscr(void);
