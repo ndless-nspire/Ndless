@@ -86,8 +86,7 @@ int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
 unsigned msleep(unsigned millisec);
-#define sleep(x) _Static_assert(false, "the sleep function was removed and renamed to msleep,\
-see issue #142");
+#define sleep(x) ({"the sleep function was removed and renamed to msleep, see issue #142"})
 int locate(const char *filename, char *dst_path, size_t dst_path_size);
 BOOL on_key_pressed(void);
 void refresh_osscr(void);
