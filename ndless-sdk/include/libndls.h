@@ -31,7 +31,6 @@ halt\@: b halt\@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define sleep _sleep
 #include <keys.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -40,7 +39,6 @@ extern "C" {
 #include <os.h>
 #include <nucleus.h>
 #include <syscall-list.h>
-#undef sleep
 
 // WARNING: This is only here to trigger a build error.
 #define NDLESS_DIR ({"NDLESS_DIR got removed. Use get_documents_dir() to get the virtual root first."})
