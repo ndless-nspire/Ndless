@@ -280,7 +280,7 @@ int main() {
             }
 
             gui_gc_blit_to_screen(gc);
-            sleep(50);
+            msleep(50);
         }
         gui_gc_finish(gc);
 
@@ -468,7 +468,7 @@ int main() {
 
             /* Blit & sleep */
             gui_gc_blit_to_screen_region(gc, 90, 50, 140, 140);
-            sleep(10);
+            msleep(10);
         }
 
         gui_gc_finish(gc);

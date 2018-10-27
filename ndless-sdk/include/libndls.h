@@ -31,7 +31,6 @@ halt\@: b halt\@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 #include <keys.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -84,6 +83,8 @@ void clear_cache(void);
 int enable_relative_paths(char **argv);
 int file_each(const char *folder, int (*callback)(const char *path, void *context), void *context);
 void idle(void);
+unsigned msleep(unsigned millisec);
+#define sleep(x) ({"the sleep function was removed and renamed to msleep, see issue #142"})
 int locate(const char *filename, char *dst_path, size_t dst_path_size);
 BOOL on_key_pressed(void);
 void refresh_osscr(void);
