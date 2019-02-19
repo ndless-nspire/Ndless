@@ -154,6 +154,8 @@ main( int     argc,
 
   lcd_init(SCR_TYPE_INVALID);   /* Reset screen mode                 */
 
+  free(screen);
+
   return 0;
 }
 
