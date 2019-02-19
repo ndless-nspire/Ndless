@@ -104,25 +104,39 @@ int sc_nl_exec(const char *prgm_path, int argsn, char *args[]) {
     return ld_exec_with_args(prgm_path, argsn, args, NULL);
 }
 
+static void wait_for_vsync()
+{
+    // Clear sync flag
+    *(volatile uint32_t*)(0xC0000028) = 0b100;
+    // Wait for sync flag set
+    while((*(volatile uint32_t*)(0xC0000020) & 0b100) == 0)
+        idle();
+}
+
 typedef void (*lcd_blit_func)(void *buffer);
 
 static void lcd_blit_simple_565(void *buffer)
 {
+    wait_for_vsync();
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint16_t));
 }
 
 static void lcd_blit_simple_8(void *buffer)
 {
+    wait_for_vsync();
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 * sizeof(uint8_t));
 }
 
 static void lcd_blit_simple_4(void *buffer)
 {
+    wait_for_vsync();
     memcpy(REAL_SCREEN_BASE_ADDRESS, buffer, 320 * 240 / 2);
 }
 
 static void lcd_blit_320x240_240x320_8(void *buffer)
 {
+    wait_for_vsync();
+
     uint8_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
     for (int col = 0; col < 240; ++col)
     {
@@ -134,6 +148,8 @@ static void lcd_blit_320x240_240x320_8(void *buffer)
 
 static void lcd_blit_320x240_240x320_565(void *buffer)
 {
+    wait_for_vsync();
+
     uint16_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
     for (int col = 0; col < 240; ++col)
     {
@@ -145,6 +161,8 @@ static void lcd_blit_320x240_240x320_565(void *buffer)
 
 static void lcd_blit_240x320_320x240_565(void *buffer)
 {
+    wait_for_vsync();
+
     uint16_t *out = REAL_SCREEN_BASE_ADDRESS, *in = buffer;
     for (int col = 0; col < 320; ++col)
     {
