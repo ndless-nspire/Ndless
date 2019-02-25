@@ -5,6 +5,7 @@
 # Edited by Legimet for elf2flt and newer gcc/binutils/newlib/gdb versions.
 # Edited by Levak to update elf2flt url
 # Edited by Fabian Vogt to use the local (patched) version of elf2flt, newlib, GDB with python
+# Edited by FrostyPenguin to support overriding $PARALLEL
 
 # IMPORTANT NOTE: in order to compile GCC, you need the GMP (libgmp-dev), MPFR (libmpfr-dev) and MPC (libmpc-dev) development libraries.
 # 	For example, if you have installed them yourself in ${PREFIX}, you'll have to add --with-gmp=${PREFIX} --with-mpfr=${PREFIX} --with-mpc=${PREFIX}.
@@ -13,7 +14,7 @@
 
 TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
-PARALLEL="-j4" # or "-j<number of build jobs>"
+PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
 
 BINUTILS=binutils-2.31.1 # http://www.gnu.org/software/binutils/
 GCC=gcc-8.2.0 # http://gcc.gnu.org/
@@ -89,4 +90,4 @@ echo "Building GDB..."
 [ -f .built_gdb ] || (cd build && rm -rf ./* && ../${GDB}/configure ${OPTIONS_GDB} && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
 
 echo "Done!"
-echo "Don't forget to add '${PREFIX}/bin' to your \$PATH along with $SCRIPTPATH/../bin."
+echo "Don't forget to add '${PREFIX}/bin:${SCRIPTPATH}/../bin' to your \$PATH."
