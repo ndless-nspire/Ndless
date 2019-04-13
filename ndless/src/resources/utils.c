@@ -151,6 +151,14 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 29;
 			break;
 #endif
+#if !defined(STAGE1)
+		case 0x103B27D0: // 4.5.1.12 non-CAS CX
+			ut_os_version_index = 30;
+			break;
+		case 0x103B2EF0: // 4.5.1.12 CAS CX
+			ut_os_version_index = 31;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}
