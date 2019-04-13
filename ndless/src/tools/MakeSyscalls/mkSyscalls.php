@@ -12,13 +12,15 @@ $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc
 		"OS_ncascx-4.2.0.idc", "OS_cascx-4.2.0.idc",
 		"OS_ncascx-4.3.0.idc", "OS_cascx-4.3.0.idc",
 		"OS_ncascx-4.4.0.idc", "OS_cascx-4.4.0.idc",
-		"OS_ncascx-4.5.0.idc", "OS_cascx-4.5.0.idc");
+		"OS_ncascx-4.5.0.idc", "OS_cascx-4.5.0.idc",
+		"OS_ncascx-4.5.1.idc", "OS_cascx-4.5.1.idc");
 
 //Whether the file above is important. If not, no warnings will be printed
 $important = array(true, true, true, true, true, true,
 		   true, true, true, true,
 		   true, true, false, false,
 		   false, false, true, true,
+		   true, true,
 		   true, true,
 		   true, true,
 		   true, true,
