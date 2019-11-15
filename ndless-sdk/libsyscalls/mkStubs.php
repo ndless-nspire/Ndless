@@ -62,7 +62,7 @@ while(true)
 		break;
 
 	$matches = array();
-	$found = preg_match("%#define (e_.+) \\d+ // (([^ (]+)|\\((.+)\\)) (.+)\\((.*)\\)%", $lines[$i], $matches);
+	$found = preg_match("%^#define (e_.+) \\d+ // (([^ (]+)|\\((.+)\\)) (.+)\\((.*)\\)$%U", $lines[$i], $matches);
 	$i++;
 
 	/* Shouldn't be false if you didn't change anything */
@@ -87,7 +87,7 @@ while(true)
 		}*/
 
 	$rettype = $matches[3] == "" ? $matches[4] : $matches[3];
-	$param_count = $matches[6] == "" ? 0 : substr_count($matches[6], ",") + 1;
+	$param_count = $matches[6] == "" ? 0 : substr_count($matches[6], ", ") + 1;
 
 	if($param_count <= 4 && strpos($matches[6], "...") === FALSE)
 	{

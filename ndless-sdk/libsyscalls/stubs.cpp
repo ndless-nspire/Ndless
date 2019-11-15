@@ -965,9 +965,27 @@ usb_endpoint_descriptor_t* usbd_get_endpoint_descriptor(usbd_interface_handle p1
 {
 	return syscall<e_usbd_get_endpoint_descriptor, usb_endpoint_descriptor_t*>(p1,p2);
 }
-int usb_register_driver(int p1, int(*p2[])(device_t), const char* p3, int p4, unsigned int p5)
+__attribute__((naked)) int usb_register_driver(int p1, int(*p2[])(device_t), const char* p3, int p4, unsigned int p5)
 {
-	return syscall<e_usb_register_driver, int>(p1,p2,p3,p4);
+	asm volatile("push {r4-r6}\n"
+				"ldr r4, =savedlr_stack\n"
+				"ldr r5, =savedlr_stack_nr\n"
+				"ldr r6, [r5]\n"
+				"add r6, r6, #1\n"
+				"str lr, [r4, r6, lsl #2]\n"
+				"str r6, [r5]\n"
+				"pop {r4-r6}\n"
+				"swi %[nr]\n"
+				"push {r4-r6}\n"
+				"ldr r4, =savedlr_stack\n"
+				"ldr r5, =savedlr_stack_nr\n"
+				"ldr r6, [r5]\n"
+				"ldr lr, [r4, r6, lsl #2]\n"
+				"sub r6, r6, #1\n"
+				"str r6, [r5]\n"
+				"pop {r4-r6}\n"
+				"bx lr\n"
+				".ltorg" :: [nr] "i" (e_usb_register_driver));
 }
 void* device_get_ivars(device_t p1)
 {
@@ -1037,7 +1055,7 @@ int16_t TI_NN_Write(nn_ch_t p1, void *p2, uint32_t p3)
 }
 int16_t TI_NN_StartService(uint32_t p1, void *p2, void(*p3)(nn_ch_t,void*))
 {
-	return syscall<e_TI_NN_StartService, int16_t>(p1,p2);
+	return syscall<e_TI_NN_StartService, int16_t>(p1,p2,p3);
 }
 int16_t TI_NN_StopService(uint32_t p1)
 {
