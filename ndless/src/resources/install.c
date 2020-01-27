@@ -238,9 +238,17 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	// OS-specific: reg number
 	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
+		//Old code for being a good noodle - if you want this back, you're in the wrong repository
+		/*
 		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
 		gui_gc_setFont(gc, SerifRegular9);
 		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
+		*/
+		//NEW code for hiding the CAS logo from everyone (aka test admins)
+		//TODO: fix this because I don't have anything on hand for this
+		gui_gc_setColor(gc, has_colors ? 0x : 0xffffff);
+		gui_gc_drawLine(gc, 1, 1, 250, 1);
+		//loop this over and over for each color of the calc
 	}
 	HOOK_RESTORE_RETURN(ins_successsuccessmsg_hook);
 }
