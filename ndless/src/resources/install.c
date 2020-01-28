@@ -238,17 +238,27 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	// OS-specific: reg number
 	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
-		//Old code for being a good noodle - if you want this back, you're in the wrong repository
-		/*
-		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
-		gui_gc_setFont(gc, SerifRegular9);
-		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
-		*/
 		//NEW code for hiding the CAS logo from everyone (aka test admins)
-		//TODO: fix this because I don't have anything on hand for this
-		gui_gc_setColor(gc, has_colors ? 0x : 0xffffff);
-		gui_gc_drawLine(gc, 1, 1, 250, 1);
-		//loop this over and over for each color of the calc
+		//Spoiler alert: I don't have a legacy Nspire but my friend does so I probably won't make this compatible with his because I don't feel like it
+		gui_gc_setColor(gc, has_colors ? 0x101410 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 7, 174, 7);
+		gui_gc_setColor(gc, has_colors ? 0x181818 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 8, 174, 8);
+		gui_gc_drawLine(gc, 145, 9, 174, 9);
+		gui_gc_setColor(gc, has_colors ? 0x181c18 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 10, 174, 10);
+		gui_gc_setColor(gc, has_colors ? 0x212021 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 11, 174, 11);
+		gui_gc_setColor(gc, has_colors ? 0x212421 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 12, 174, 12);
+		gui_gc_drawLine(gc, 145, 13, 174, 13);
+		gui_gc_setColor(gc, has_colors ? 0x292829 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 14, 174, 14);
+		gui_gc_setColor(gc, has_colors ? 0x292c29 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 15, 174, 15);
+		gui_gc_setColor(gc, has_colors ? 0x313031 : 0xffffff);
+		gui_gc_drawLine(gc, 145, 16, 174, 16);
+		gui_gc_drawLine(gc, 145, 17, 174, 17);
 	}
 	HOOK_RESTORE_RETURN(ins_successsuccessmsg_hook);
 }
