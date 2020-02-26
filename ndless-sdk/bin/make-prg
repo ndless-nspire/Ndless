@@ -15,7 +15,7 @@ if [ "$UNAME" = "cygwin" ]; then
 	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
 fi
 
-make -C "${DIRNAME}/../tools/zehn_loader" -s all
+MAKEFLAGS= make -C "${DIRNAME}/../tools/zehn_loader" -s all
 
 # Validate the Zehn file
 genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for us
