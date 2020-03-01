@@ -374,7 +374,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	}
 
         if(!supports_hww)
-		lcd_compat_enable(savedscr);
+		lcd_compat_enable();
 	
 	is_current_prgm_resident = false;
 	clear_cache();
