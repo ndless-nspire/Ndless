@@ -82,7 +82,7 @@ static unsigned const interp_startup_addrs[NDLESS_MAX_OSID+1] =
 						0x1013CC44, 0x1013CE10,
 						0x1013FABC, 0x1013FC70,
 						0x10141830, 0x10141A50,
-						0x101420C0, 0x1014241C};
+						0x101420E0, 0x1014241C};
 
 // At the beginning of lua_close
 // OS-specific
