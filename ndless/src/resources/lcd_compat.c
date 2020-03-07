@@ -109,7 +109,7 @@ void lcd_compat_abort(uint32_t *regs)
             asm volatile("bkpt #2");
 
         int rd = (inst >> 12) & 0xF;
-	uint32_t *reg = 0;
+        uint32_t *reg = 0;
         if(rd <= 12) // Not a banked register?
             reg = regs + rd;
         else if(rd == 13)
@@ -138,26 +138,28 @@ void lcd_compat_abort(uint32_t *regs)
 }
 
 // OS-specific: Function for transferring data from and to the LCD controller over SPI
-static uint32_t spi_transfer_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
+static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0, 0, 0, 0,
                                                        0, 0, 0, 0,
                                                        0, 0, 0, 0,
                                                        0, 0,
                                                        0, 0,
-                                                       0x100D764C, 0x100D7468,
-                                                       0x100DABE4, 0x100DAA00,
-                                                       0x100DD710, 0x100DD534,
-                                                       0x100DE310, 0x100DE14C,
-                                                       0x100DE7F8, 0x100DE6C8};
+                                                       0x100235BC, 0x1002354C,
+                                                       0x10023B14, 0x10023AA4,
+                                                       0x10023BF0, 0x100239A8,
+                                                       0x10023D08, 0x10023C98,
+                                                       0x10023D2C, 0x10023CC8};
 
-void send_spi(const uint16_t *data, unsigned int count)
+static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
 {
-    // The "whichbus" parameter is not in OS 4.x, but ignored
-    void (*spi_transfer)(const uint16_t *send, uint16_t *recv, uint8_t count, int whichbus) = (typeof(spi_transfer)) spi_transfer_ptr[ut_os_version_index];
-
-    uint16_t recvbuf[count]; // Ignored
-    spi_transfer(data, recvbuf, count, 0);
+    void (*os_spi_send)(uint16_t, const uint8_t *, int) = (typeof(os_spi_send))spi_send_ptr[ut_os_version_index];
+    os_spi_send(cmd, data, data_count);
 }
+
+#define SPI_SEND(cmd, ...) do { \
+    const uint8_t data[] = {__VA_ARGS__}; \
+    spi_send(cmd, data, sizeof(data)); \
+} while(0)
 
 bool lcd_compat_enable()
 {
@@ -189,30 +191,10 @@ bool lcd_compat_enable()
     for(unsigned int i = 0; i < sizeof(saved_lcd_regs)/sizeof(*saved_lcd_regs); ++i)
         saved_lcd_regs[i] = lcdc[i];
 
-    uint16_t sendbuf[6];
-
-    sendbuf[0] = 0xB0; // Enable RGB bypass mode
-    sendbuf[1] = 0x191;
-    sendbuf[2] = 0x1F0;
-    send_spi(sendbuf, 3);
-
-    sendbuf[0] = 0x36; // Set MADCTL to XY-Swap + BGR panel
-    sendbuf[1] = 0x128;
-    send_spi(sendbuf, 2);
-
-    sendbuf[0] = 0x2A; // Set column address to (0, 320)
-    sendbuf[1] = 0x100;
-    sendbuf[2] = 0x100;
-    sendbuf[3] = 0x101;
-    sendbuf[4] = 0x13F;
-    send_spi(sendbuf, 5);
-
-    sendbuf[0] = 0x2B; // Set page address to (0, 240)
-    sendbuf[1] = 0x100;
-    sendbuf[2] = 0x100;
-    sendbuf[3] = 0x100;
-    sendbuf[4] = 0x1EF;
-    send_spi(sendbuf, 5);
+    SPI_SEND(0xB0, 0x91, 0xF0); // Enable RGB bypass mode
+    SPI_SEND(0x36, 0x28); // Set MADCTL to XY-Swap + BGR panel
+    SPI_SEND(0x2A, 0x00, 0x00, 0x01, 0x3F); // Set column address to (0, 320)
+    SPI_SEND(0x2B, 0x00, 0x00, 0x00, 0xEF); // Set page address to (0, 240)
 
     *(volatile uint32_t*)0xC0000018 &= ~0x800; // Disable the LCD
     // Timing params experimentally determined
@@ -258,29 +240,10 @@ void lcd_compat_disable()
         return;
 
     // Undo the changes again
-    uint16_t sendbuf[5];
-    sendbuf[0] = 0xB0;
-    sendbuf[1] = 0x111;
-    sendbuf[2] = 0x1F0;
-    send_spi(sendbuf, 3);
-
-    sendbuf[0] = 0x36;
-    sendbuf[1] = 0x108;
-    send_spi(sendbuf, 2);
-
-    sendbuf[0] = 0x2B;
-    sendbuf[1] = 0x100;
-    sendbuf[2] = 0x100;
-    sendbuf[3] = 0x101;
-    sendbuf[4] = 0x13F;
-    send_spi(sendbuf, 5);
-
-    sendbuf[0] = 0x2A;
-    sendbuf[1] = 0x100;
-    sendbuf[2] = 0x100;
-    sendbuf[3] = 0x100;
-    sendbuf[4] = 0x1EF;
-    send_spi(sendbuf, 5);
+    SPI_SEND(0xB0, 0x11, 0xF0);
+    SPI_SEND(0x36, 0x08);
+    SPI_SEND(0x2A, 0x00, 0x00, 0xEF);
+    SPI_SEND(0x2B, 0x00, 0x01, 0x3F);
 
     undo_lcdc_remap();
 
