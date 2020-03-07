@@ -192,7 +192,7 @@ static bool expand_stack()
 		page_table[i] = 0;
 	for(unsigned int i = 256 - pages; i < 256; ++i)
 	{
-		page_table[i] = new_stack_aligned | 0b111111111101;
+		page_table[i] = new_stack_aligned | 0b111111111110;
 		new_stack_aligned += 0x1000;
 	}
 
