@@ -48,7 +48,7 @@
 #define e_show_dialog_box2_ 30 // void show_dialog_box2_(int p1, const char *p2, const char *p3, const char **p4)
 #define e_strrchr 31
 #define e__vsprintf 32
-#define e_fseek 33 // int nuc_fseek(NUC_FILE *p1, long p2, int p3);
+#define e_fseek 33 // int nuc_fseek(NUC_FILE *p1, long p2, int p3)
 #define e_NU_Current_Dir 34 // int NU_Current_Dir(const char *p1, const char *p2)
 #define e_read_unaligned_longword 35
 #define e_read_unaligned_word 36
@@ -197,7 +197,7 @@
 #define e_lua_settable 179 // void lua_settable (lua_State *p1, int p2)
 #define e_lua_setfield 180 // void lua_setfield(lua_State *p1, int p2, const char *p3)
 #define e_lua_rawset 181 // void lua_rawset(lua_State *p1, int p2)
-#define e_lua_rawseti 182 // void lua_rawseti(lua_State *p1, int p2, int p3) 
+#define e_lua_rawseti 182 // void lua_rawseti(lua_State *p1, int p2, int p3)
 #define e_lua_setmetatable 183 // int lua_setmetatable(lua_State *p1, int p2)
 #define e_lua_setfenv 184 // int lua_setfenv(lua_State *p1, int p2)
 #define e_lua_call 185 // void lua_call(lua_State *p1, int p2, int p3)
@@ -332,7 +332,7 @@
 #define e_gui_gc_drawLine 314 // void gui_gc_drawLine(Gc p1, int p2, int p3, int p4, int p5)
 #define e_gui_gc_drawRect 315 // void gui_gc_drawRect(Gc p1, int p2, int p3, int p4, int p5)
 #define e_gui_gc_drawString 316 // void gui_gc_drawString(Gc p1, char *p2, int p3, int p4, gui_gc_StringMode p5)
-#define e_gui_gc_drawPoly 317 // void gui_gc_drawPoly(Gc p1, unsigned int* p2, unsigned int p3) 
+#define e_gui_gc_drawPoly 317 // void gui_gc_drawPoly(Gc p1, unsigned int* p2, unsigned int p3)
 #define e_gui_gc_fillArc 318 // void gui_gc_fillArc(Gc p1, int p2, int p3, int p4, int p5, int p6, int p7)
 #define e_gui_gc_fillPoly 319 // void gui_gc_fillPoly(Gc p1, unsigned int *p2, unsigned int p3)
 #define e_gui_gc_fillRect 320 // void gui_gc_fillRect(Gc p1, int p2, int p3, int p4, int p5)
