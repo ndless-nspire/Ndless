@@ -25,7 +25,7 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
 						     0x1134D6E4, 0x113B16E4};
 
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
-static uint32_t saved_lcd_regs[5];
+static uint32_t saved_lcd_regs[7];
 bool is_hww;
 
 void lcd_compat_load_hwrev()
@@ -242,13 +242,14 @@ void lcd_compat_disable()
     // Undo the changes again
     SPI_SEND(0xB0, 0x11, 0xF0);
     SPI_SEND(0x36, 0x08);
-    SPI_SEND(0x2A, 0x00, 0x00, 0xEF);
-    SPI_SEND(0x2B, 0x00, 0x01, 0x3F);
+    SPI_SEND(0x2A, 0x00, 0x00, 0x00, 0xEF);
+    SPI_SEND(0x2B, 0x00, 0x00, 0x01, 0x3F);
 
     undo_lcdc_remap();
 
     // Restore the LCD params
     volatile uint32_t *lcdc = (volatile uint32_t*) 0xC0000000;
+    lcdc[6] &= ~0x800; // Disable the LCD, the restoration below will reenable it
     for(unsigned int i = 0; i < sizeof(saved_lcd_regs)/sizeof(*saved_lcd_regs); ++i)
         lcdc[i] = saved_lcd_regs[i];
 }
