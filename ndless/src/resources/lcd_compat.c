@@ -137,7 +137,7 @@ void lcd_compat_abort(uint32_t *regs)
     }
 }
 
-// OS-specific: Function for transferring data from and to the LCD controller over SPI
+// OS-specific: Function for transferring data to the LCD controller over SPI
 static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0, 0, 0, 0,
                                                        0, 0, 0, 0,
