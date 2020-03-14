@@ -146,7 +146,7 @@ static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0, 0,
                                                        0x100235BC, 0x1002354C,
                                                        0x10023B14, 0x10023AA4,
-                                                       0x10023BF0, 0x100239A8,
+                                                       0x10023BF0, 0x10023B8C,
                                                        0x10023D08, 0x10023C98,
                                                        0x10023D2C, 0x10023CC8};
 
