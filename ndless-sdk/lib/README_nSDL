@@ -9,3 +9,33 @@ To build your nSDL programs, use and adapt Makefile.sample.
 For more information, have a look at the nSDL website: http://hoffa.github.com/nSDL/
 
 Ported by Christoffer Rehn (crehn@outlook.com)
+
+
+Rebuilding SDL_image
+====================
+
+* Clone nSDL
+
+  $ git clone git@github.com:hoffa/nSDL.git
+  $ cd nSDL/tinspire/libs/SDL_image-1.2.12-r2/
+
+* Build
+
+  * The Makefile is not configured with autotools. Don't run the
+    configure script!
+
+  * Locate the headers for SDL in your Ndless setup
+    e.g. /home/user/Source/ndless/ndless-sdk/include/SDL/
+
+  * Then build the library with:
+
+     $ INCLUDE="-I /home/user/Source/ndless/ndless-sdk/include/SDL/" make
+
+     where you replace the include path in the prepended environment
+     variable. If that doesn't work, edit the Makefile manually.
+
+* Install static library
+
+  * Copy the produced static library to your ndless installation:
+
+    $ cp libSDL_image.a /home/user/Source/ndless/ndless-sdk/lib/
