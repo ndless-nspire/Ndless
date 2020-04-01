@@ -6,8 +6,10 @@ DIRNAME="$(dirname "$0")"
 
 # DIRNAME may not be in the toolchain directory if this script was symlinked.
 # try to find the symlink target
-which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
-        DIRNAME="$(dirname "$(readlink "$0")")"
+{ (which realpath && alias realpath=realpath) || (readlink -f / && alias realpath='readlink -f') || \
+  (which readlink && alias realpath=readlink) || alias realpath=false; } >/dev/null 2>&1
+realpath "$0" >/dev/null 2>&1 && {
+        DIRNAME="$(dirname "$(realpath "$0")")"
 }
 
 if [ "$UNAME" = "cygwin" ]; then
