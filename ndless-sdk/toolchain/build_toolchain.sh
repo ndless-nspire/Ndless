@@ -20,7 +20,7 @@ PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
 PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
 BINUTILS=binutils-2.34 # http://www.gnu.org/software/binutils/
-GCC=gcc-9.2.0 # http://gcc.gnu.org/
+GCC=gcc-10.1.0 # http://gcc.gnu.org/
 NEWLIB=newlib-3.0.0 # http://sourceware.org/newlib/
 GDB=gdb-9.1 # http://www.gnu.org/software/gdb/
 
