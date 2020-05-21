@@ -95,4 +95,4 @@ echo "Building GDB..."
 [ -f .built_gdb ] || (cd build && rm -rf ./* && ../${GDB}/configure ${OPTIONS_GDB} && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
 
 echo "Done!"
-echo "Don't forget to add '${PREFIX}/bin:${SCRIPTPATH}/../bin' to your \$PATH."
+echo "Don't forget to add '${PREFIX}/bin:$(dirname ${SCRIPTPATH})/bin' to your \$PATH."
