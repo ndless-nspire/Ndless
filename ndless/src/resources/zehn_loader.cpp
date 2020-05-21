@@ -284,7 +284,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
                 case Zehn_reloc_type::UNALIGNED_RELOC:
                         if(r.offset != 0)
                         {
-                            printf("[Zehn] Unexpected UNALIGNED_RELOC value %lu!\n", r.offset);
+                            printf("[Zehn] Unexpected UNALIGNED_RELOC value %u!\n", r.offset);
                             return 1;
                         }
 
