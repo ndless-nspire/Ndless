@@ -19,10 +19,10 @@ PREFIX="${PWD}/install" # or the directory where the toolchain should be install
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
 PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
-BINUTILS=binutils-2.34 # http://www.gnu.org/software/binutils/
-GCC=gcc-10.1.0 # http://gcc.gnu.org/
-NEWLIB=newlib-3.0.0 # http://sourceware.org/newlib/
-GDB=gdb-9.1 # http://www.gnu.org/software/gdb/
+BINUTILS=binutils-2.34 # https://www.gnu.org/software/binutils/
+GCC=gcc-10.1.0 # https://gcc.gnu.org/
+NEWLIB=newlib-3.0.0 # https://sourceware.org/newlib/
+GDB=gdb-9.1 # https://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -Ofast -funroll-loops"
@@ -78,7 +78,7 @@ if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
 	if [ ! -d "download/${BINUTILS}" ]; then
 		echo "Downloading Binutils..."
 		rm -rf download/binutils*
-		downloadAndExtract http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+		downloadAndExtract https://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
 	fi
 
 	echo "Building Binutils..."
@@ -96,7 +96,7 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	echo "Building GCC (step 1)..."
@@ -114,7 +114,7 @@ if [ "$(cat .built_newlib 2>/dev/null)" != "${NEWLIB}" ]; then
 	if [ ! -d "download/${NEWLIB}" ]; then
 		echo "Downloading Newlib..."
 		rm -rf download/newlib*
-		downloadAndExtract ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+		downloadAndExtract https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
 	fi
 
 	echo "Building Newlib..."
@@ -134,7 +134,7 @@ if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	echo "Building GCC (step 2)..."
@@ -152,7 +152,7 @@ if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
 	if [ ! -d "download/${GDB}" ]; then
 		echo "Downloading GDB..."
 		rm -rf download/gdb*
-		downloadAndExtract ftp://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz
+		downloadAndExtract https://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz
 	fi
 
 	echo "Building GDB..."
