@@ -15,6 +15,7 @@
 TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
+PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
 BINUTILS=binutils-2.34 # http://www.gnu.org/software/binutils/
 GCC=gcc-9.2.0 # http://gcc.gnu.org/
@@ -29,7 +30,11 @@ export PATH="${PREFIX}/bin:${PATH}"
 OPTIONS_BINUTILS="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
 OPTIONS_GCC="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../${NEWLIB}/newlib/libc/include --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
 OPTIONS_NEWLIB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
-OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --disable-werror --with-python"
+OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --disable-werror"
+
+if [ -n "${PYTHON}" ]; then
+	OPTIONS_GDB="${OPTIONS_GDB} --with-python=${PYTHON}"
+fi
 
 # When building gcc with clang, the maximum amount of nested brackets has to be increased
 if (gcc -v 2>&1 | grep clang > /dev/null); then
@@ -49,7 +54,7 @@ if ! gcc -lgmp       test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-d
 if ! gcc -lmpfr      test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
 if ! gcc -lmpc       test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
 if ! gcc -lz         test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
-if ! gcc -lpython2.7 test.c -o test; then error=1; echo 'libpython2.7 (python-devel/python2.7-dev) dependency seems to be missing!'; fi
+if [ -n "${PYTHON}" ] && [ ! -x "${PYTHON}-config" ]; then error=1; echo "${PYTHON}-config (python3-devel/python3-dev) dependency seems to be missing!"; fi
 rm -f test test.c
 [ $error -eq 1 ] && exit 1
 
