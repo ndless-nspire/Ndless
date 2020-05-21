@@ -12,6 +12,8 @@
 # IMPORTANT NOTE #2: GDB needs some python includes for python support.
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
 
+set -eu
+
 TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
@@ -60,39 +62,112 @@ rm -f test test.c
 
 mkdir -p build download
 
-if [ ! -f .downloaded ]; then
-	wget -c http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2 -O download/${BINUTILS}.tar.bz2 && tar xvjf download/${BINUTILS}.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz      -O download/${GCC}.tar.xz       && tar xvJf download/${GCC}.tar.xz && \
-	wget -c ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz    -O download/${NEWLIB}.tar.gz    && tar xvzf download/${NEWLIB}.tar.gz && \
-	wget -c ftp://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz             -O download/${GDB}.tar.xz       && tar xvJf download/${GDB}.tar.xz && \
-	touch .downloaded
-	if [ $? -ne 0 ]; then
-		echo "Download failed!"
-		exit 1
+downloadAndExtract() {
+	url="$1"
+	target="download/$(basename "${url}")"
+	if ! wget -c "$url" -O "${target}"; then
+		rm -f "${target}"
+		return 1
 	fi
-fi
+	echo "Extracting $(basename "${url}")..."
+	tar -xaf "${target}" -C download
+}
 
 # Section 1: GNU Binutils.
-echo "Building Binutils..."
-[ -f .built_binutils ] || (cd build && rm -rf ./* && ../${BINUTILS}/configure ${OPTIONS_BINUTILS} && make $PARALLEL all && make install && cd .. && rm -rf build/* && touch .built_binutils) || exit 1;
+if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
+	if [ ! -d "download/${BINUTILS}" ]; then
+		echo "Downloading Binutils..."
+		rm -rf download/binutils*
+		downloadAndExtract http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+	fi
+
+	echo "Building Binutils..."
+	rm -rf build; mkdir build
+	pushd build >/dev/null
+		../download/${BINUTILS}/configure ${OPTIONS_BINUTILS}
+		make $PARALLEL all
+		make install
+	popd
+	echo -n "${BINUTILS}" > .built_binutils
+fi
 
 # Section 2: GCC, step 1.
-echo "Building GCC (step 1)..."
-[ -f .built_gcc_step1 ] || (cd build && rm -rf ./* && ../${GCC}/configure ${OPTIONS_GCC} && make $PARALLEL all-gcc && make install-gcc && cd .. && rm -rf build/* && touch .built_gcc_step1) || exit 1;
+if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
+	if [ ! -d "download/${GCC}" ]; then
+		echo "Downloading GCC..."
+		rm -rf download/gcc*
+		downloadAndExtract ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+	fi
+
+	echo "Building GCC (step 1)..."
+	rm -rf build; mkdir build
+	pushd build >/dev/null
+		../download/${GCC}/configure ${OPTIONS_GCC}
+		make $PARALLEL all-gcc
+		make install-gcc
+	popd
+	echo -n "${GCC}" > .built_gcc_step1
+fi
 
 # Section 3: Newlib.
-echo "Building Newlib..."
-[ -f .built_newlib ] || (cd build && rm -rf ./* && ../${NEWLIB}/configure ${OPTIONS_NEWLIB} && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_newlib) || exit 1;
-# Workaround for newlib bug
-rm -f "${PREFIX}/arm-none-eabi/sys-include/newlib.h"
+if [ "$(cat .built_newlib 2>/dev/null)" != "${NEWLIB}" ]; then
+	if [ ! -d "download/${NEWLIB}" ]; then
+		echo "Downloading Newlib..."
+		rm -rf download/newlib*
+		downloadAndExtract ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+	fi
+
+	echo "Building Newlib..."
+	rm -rf build; mkdir build
+	pushd build >/dev/null
+		../download/${NEWLIB}/configure ${OPTIONS_NEWLIB}
+		make $PARALLEL
+		make install
+	popd
+	# Workaround for newlib bug
+	rm -f "${PREFIX}/arm-none-eabi/sys-include/newlib.h"
+	echo -n "${NEWLIB}" > .built_newlib
+fi
 
 # Section 4: GCC, step 2. Yes, this is necessary.
-echo "Building GCC (step 2)..."
-[ -f .built_gcc_step2 ] || (cd build && ../${GCC}/configure ${OPTIONS_GCC} && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gcc_step2) || exit 1
+if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
+	if [ ! -d "download/${GCC}" ]; then
+		echo "Downloading GCC..."
+		rm -rf download/gcc*
+		downloadAndExtract ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+	fi
+
+	echo "Building GCC (step 2)..."
+	rm -rf build; mkdir build
+	pushd build >/dev/null
+		../download/${GCC}/configure ${OPTIONS_GCC}
+		make $PARALLEL
+		make install
+	popd
+	echo -n "${GCC}" > .built_gcc_step2
+fi
 
 # Section 5: GDB.
-echo "Building GDB..."
-[ -f .built_gdb ] || (cd build && rm -rf ./* && ../${GDB}/configure ${OPTIONS_GDB} && make $PARALLEL && make install && cd .. && rm -rf build/* && touch .built_gdb) || exit 1;
+if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
+	if [ ! -d "download/${GDB}" ]; then
+		echo "Downloading GDB..."
+		rm -rf download/gdb*
+		downloadAndExtract ftp://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz
+	fi
+
+	echo "Building GDB..."
+	rm -rf build; mkdir build
+	pushd build >/dev/null
+		../download/${GDB}/configure ${OPTIONS_GDB}
+		make $PARALLEL
+		make install
+	popd
+	echo -n "${GDB}" > .built_gdb
+fi
+
+echo "Cleaning up..."
+rm -rf build
+[ -d download ] && echo "You can delete the download/ directory to save some space."
 
 echo "Done!"
 echo "Don't forget to add '${PREFIX}/bin:$(dirname ${SCRIPTPATH})/bin' to your \$PATH."
