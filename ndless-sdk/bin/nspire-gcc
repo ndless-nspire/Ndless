@@ -2,21 +2,9 @@
 # Caution, must be kept compatible with dash used by some Linux distros.
 
 UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(dirname "$0")"
-
-# DIRNAME may not be in the toolchain directory if this script was symlinked.
-# try to find the symlink target
-{ (which realpath && alias realpath=realpath) || (readlink -f / && alias realpath='readlink -f') || \
-  (which readlink && alias realpath=readlink) || alias realpath=false; } >/dev/null 2>&1
-realpath "$0" >/dev/null 2>&1 && {
-        DIRNAME="$(dirname "$(realpath "$0")")"
-}
-
-if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
-fi
+DIRNAME="$(nspire-tools path)"
 
 GCC="$( (which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null)"
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-"$GCC" -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${DIRNAME}/../include" -I "${DIRNAME}/../include/freetype2"
+"$GCC" -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${DIRNAME}/include" -I "${DIRNAME}/include/freetype2"

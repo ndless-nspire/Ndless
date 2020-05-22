@@ -3,20 +3,7 @@
 # It is invoked instead of "arm-none-eabi-ld" (or the default linker of the ARM toolchain) to replace the default crt* with ndless compatible ones and also adds some more libs
 
 UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(dirname "$0")"
-
-# DIRNAME may not be in the toolchain directory if this script was symlinked.
-# try to find the symlink target
-{ (which realpath && alias realpath=realpath) || (readlink -f / && alias realpath='readlink -f') || \
-  (which readlink && alias realpath=readlink) || alias realpath=false; } >/dev/null 2>&1
-realpath "$0" >/dev/null 2>&1 && {
-	DIRNAME="$(dirname "$(realpath "$0")")"
-}
-
-# Cygwin owns a dedicated command to find the symlink target
-if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
-fi
+DIRNAME="$(nspire-tools path)"
 
 NOSTDLIB=0
 NSPIREIO=""
@@ -35,16 +22,16 @@ done
 declare -a stdlib
 if [ $NOSTDLIB -ne 1 ]; then
 	for lib in freetype z SDL_gfx SDL_image SDL; do
-		if [ -f "$DIRNAME/../lib/lib${lib}.a" ]; then
+		if [ -f "$DIRNAME/lib/lib${lib}.a" ]; then
 			stdlib=("${stdlib[@]}" "-l$lib")
 		fi
 	done
 	stdlib=("${stdlib[@]}" --start-group -lnspireio -lstdc++ -lndls "-lsyscalls${NSPIREIO}" -lm -lc --end-group -lgcc)
 fi
 
-(cd "$DIRNAME/../system" && MAKEFLAGS= make -s all)
+(cd "$DIRNAME/system" && MAKEFLAGS= make -s all)
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-$(basename "$0" | cut -f1 -d'.') --pic-veneer --emit-relocs -T "${DIRNAME}/../system/ldscript" -static "${DIRNAME}/../system/crt0.o" "${DIRNAME}/../system/crti.o" "${args[@]}" "${stdlib[@]}" "${DIRNAME}/../system/crtn.o" -L "${DIRNAME}/../lib" -L "${home}/.ndless/lib"
+$(basename "$0" | cut -f1 -d'.') --pic-veneer --emit-relocs -T "${DIRNAME}/system/ldscript" -static "${DIRNAME}/system/crt0.o" "${DIRNAME}/system/crti.o" "${args[@]}" "${stdlib[@]}" "${DIRNAME}/system/crtn.o" -L "${DIRNAME}/lib" -L "${home}/.ndless/lib"
