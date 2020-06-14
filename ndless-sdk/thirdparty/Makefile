@@ -60,6 +60,7 @@ $(NSPIREIO_A) $(NSPIREIO_H) $(ZLIB_A) $(ZLIB_H) $(FREETYPE_A) $(FREETYPE_H):
 
 clean:
 	-$(MAKE) -C nspire-io clean
+	rm -f zlib/libz.a # zlib's Makefile in git (before configure) has no clean target
 	-$(MAKE) -C zlib clean
 	-$(MAKE) -C freetype2 clean
 	rm -rf $(NSPIREIO_A) $(INCDIR)/nspireio2.h $(INCDIR)/nspireio $(ZLIB_A) $(ZLIB_H) $(FREETYPE_A) $(INCDIR)/freetype2

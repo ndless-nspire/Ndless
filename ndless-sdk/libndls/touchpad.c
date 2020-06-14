@@ -88,6 +88,6 @@ int touchpad_scan(touchpad_report_t *report) {
 BOOL touchpad_arrow_pressed(tpad_arrow_t arrow) {
 	touchpad_report_t report;
 	touchpad_scan(&report);
-	if (!report.pressed) return TPAD_ARROW_NONE;
+	if (!report.pressed) return false;
 	return report.arrow == arrow;
 }
