@@ -215,7 +215,7 @@ int16_t TI_NN_StartService(uint32_t p1, void *p2, void(*p3)(nn_ch_t,void*));
 int16_t TI_NN_StopService(uint32_t p1);
 int16_t TI_NN_Connect(nn_nh_t p1, uint32_t p2, nn_ch_t *p3);
 int16_t TI_NN_Disconnect(nn_ch_t p1);
-int16_t TI_NN_NodeEnumInit(nn_ch_t p1);
+int16_t TI_NN_NodeEnumInit(nn_oh_t p1);
 int16_t TI_NN_DestroyOperationHandle(nn_oh_t p1);
 nn_oh_t TI_NN_CreateOperationHandle();
 const char* get_documents_dir();

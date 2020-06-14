@@ -1069,7 +1069,7 @@ int16_t TI_NN_Disconnect(nn_ch_t p1)
 {
 	return syscall<e_TI_NN_Disconnect, int16_t>(p1);
 }
-int16_t TI_NN_NodeEnumInit(nn_ch_t p1)
+int16_t TI_NN_NodeEnumInit(nn_oh_t p1)
 {
 	return syscall<e_TI_NN_NodeEnumInit, int16_t>(p1);
 }

@@ -293,7 +293,7 @@
 #define e_TI_NN_StopService 275 // int16_t TI_NN_StopService(uint32_t p1)
 #define e_TI_NN_Connect 276 // int16_t TI_NN_Connect(nn_nh_t p1, uint32_t p2, nn_ch_t *p3)
 #define e_TI_NN_Disconnect 277 // int16_t TI_NN_Disconnect(nn_ch_t p1)
-#define e_TI_NN_NodeEnumInit 278 // int16_t TI_NN_NodeEnumInit(nn_ch_t p1)
+#define e_TI_NN_NodeEnumInit 278 // int16_t TI_NN_NodeEnumInit(nn_oh_t p1)
 #define e_TI_NN_UnregisterNotifyCallback 279 
 #define e_TI_NN_RegisterNotifyCallback 280
 #define e_TI_NN_InstallOS 281
