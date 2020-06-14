@@ -83,11 +83,11 @@ if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
 
 	echo "Building Binutils..."
 	rm -rf build; mkdir build
-	pushd build >/dev/null
+	cd build
 		../download/${BINUTILS}/configure ${OPTIONS_BINUTILS}
 		make $PARALLEL all
 		make install
-	popd
+	cd ..
 	echo -n "${BINUTILS}" > .built_binutils
 fi
 
@@ -101,11 +101,11 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 
 	echo "Building GCC (step 1)..."
 	rm -rf build; mkdir build
-	pushd build >/dev/null
+	cd build
 		../download/${GCC}/configure ${OPTIONS_GCC}
 		make $PARALLEL all-gcc
 		make install-gcc
-	popd
+	cd ..
 	echo -n "${GCC}" > .built_gcc_step1
 fi
 
@@ -119,11 +119,11 @@ if [ "$(cat .built_newlib 2>/dev/null)" != "${NEWLIB}" ]; then
 
 	echo "Building Newlib..."
 	rm -rf build; mkdir build
-	pushd build >/dev/null
+	cd build
 		../download/${NEWLIB}/configure ${OPTIONS_NEWLIB}
 		make $PARALLEL
 		make install
-	popd
+	cd ..
 	# Workaround for newlib bug
 	rm -f "${PREFIX}/arm-none-eabi/sys-include/newlib.h"
 	echo -n "${NEWLIB}" > .built_newlib
@@ -139,11 +139,11 @@ if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
 
 	echo "Building GCC (step 2)..."
 	rm -rf build; mkdir build
-	pushd build >/dev/null
+	cd build
 		../download/${GCC}/configure ${OPTIONS_GCC}
 		make $PARALLEL
 		make install
-	popd
+	cd ..
 	echo -n "${GCC}" > .built_gcc_step2
 fi
 
@@ -157,11 +157,11 @@ if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
 
 	echo "Building GDB..."
 	rm -rf build; mkdir build
-	pushd build >/dev/null
+	cd build
 		../download/${GDB}/configure ${OPTIONS_GDB}
 		make $PARALLEL
 		make install
-	popd
+	cd ..
 	echo -n "${GDB}" > .built_gdb
 fi
 
