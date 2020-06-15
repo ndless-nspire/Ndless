@@ -1,11 +1,6 @@
 #!/bin/bash
 # Adds the resources-loader at the top of the given binary for backwards-compatibility
 
-UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(nspire-tools path)"
-
-MAKEFLAGS= make -C "${DIRNAME}/tools/zehn_loader" -s all
-
 # Validate the Zehn file
 genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for us
 
@@ -13,4 +8,4 @@ genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for u
 COMPRESSED=
 genzehn --info --input "$1" | grep compressed >/dev/null && COMPRESSED="_compressed"
 
-cat "${DIRNAME}/tools/zehn_loader/zehn_loader${COMPRESSED}.tns" "$1" > "$2"
+cat "$(nspire-tools _zehnpath "$COMPRESSED")" "$1" > "$2"

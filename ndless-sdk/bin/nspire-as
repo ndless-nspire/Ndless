@@ -1,9 +1,7 @@
 #!/bin/sh
 # Caution, must be kept compatible with dash used by some Linux distros.
 
-UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(nspire-tools path)"
+NDLESS="$(nspire-tools path)"
 
 # gcc instead of as, to call the C preprocessor
-GCC=$( (which arm-elf-gcc arm-none-eabi-gcc arm-linux-gnueabi-gcc | head -1) 2>/dev/null)
-"$GCC" -mcpu=arm926ej-s -D GNU_AS "$@" -I "$DIRNAME/include"
+exec nspire-tools gcc -mcpu=arm926ej-s -D GNU_AS "$@" -I "$NDLESS/include"

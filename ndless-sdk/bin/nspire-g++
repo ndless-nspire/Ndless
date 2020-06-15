@@ -1,10 +1,8 @@
 #!/bin/sh
 # Caution, must be kept compatible with dash used by some Linux distros.
 
-UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(nspire-tools path)"
+NDLESS="$(nspire-tools path)"
 
-GCC="$( (which arm-elf-g++ arm-none-eabi-g++ arm-linux-gnueabi-g++ | head -1) 2>/dev/null)"
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-"$GCC" -mcpu=arm926ej-s -fno-use-cxa-atexit -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${DIRNAME}/include" -I "${DIRNAME}/include/freetype2"
+exec nspire-tools gcc -mcpu=arm926ej-s -fno-use-cxa-atexit -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"

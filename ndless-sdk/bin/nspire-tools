@@ -8,33 +8,52 @@ function usage() {
 
 
 UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(dirname "$0")"
 
 # DIRNAME may not be in the toolchain directory if this script was symlinked.
 # try to find the symlink target	
 {
-  (which realpath && alias realpath=realpath) || (readlink -f / && alias realpath='readlink -f') || \
-  (which readlink && alias realpath=readlink) || alias realpath=false;
+  if which realpath; then
+    alias realpath=realpath
+  elif readlink -f /; then
+    alias realpath='readlink -f'
+  elif which readlink; then
+    alias realpath=readlink
+  else
+    alias realpath=false
+  fi
+
+  real0="$(realpath "$0")" || real0=$0
+  DIRNAME="$(dirname "$real0")"
 } >/dev/null 2>&1
 
-realpath "$0" >/dev/null 2>&1 && {
-    DIRNAME="$(dirname "$(realpath "$0")")"
-}
 
 # Cygwin owns a dedicated command to find the symlink target
 if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
+	DIRNAME="$(cygpath --path --windows "$BINPATH")"
 fi
+NDLESS="$(dirname "$DIRNAME")"
 
 if [ $# -eq 0 ]; then
 	usage
 	exit 0
 fi
 
-case "$1" in
+# following functions can be patched when packaging/distributing
+toolchainbin() {
+	echo "$NDLESS/toolchain/install/bin"
+}
+zehn_loader_path() {
+	MAKEFLAGS='' make -C "${NDLESS}/tools/zehn_loader" -s all
+	local suffix=$1
+	echo "$NDLESS/tools/zehn_loader/zehn_loader$suffix.tns"
+}
+
+cmd=$1
+shift
+case "$cmd" in
 	new)
 		if [ -f Makefile ]; then
-			if [ $# -eq 1 ]; then
+			if [ $# -eq 0 ]; then
 				usage
 				exit 1
 			fi
@@ -44,7 +63,7 @@ case "$1" in
 				exit 0
 			fi
 		fi
-		prgmname="$(echo "$2" | tr -d ' ')"
+		prgmname="$(echo "$1" | tr -d ' ')"
 		sed -e "s/@@EXENAME@@/${prgmname}/" "${DIRNAME}/Makefile.tpl" > Makefile
 		echo "Makefile created."
 		;;
@@ -59,7 +78,17 @@ case "$1" in
 		cp "${DIRNAME}/main.c.tpl" main.c
 		;;
 	path)
-		echo "$(dirname "$DIRNAME")/"
+		echo "$NDLESS/"
+		;;
+	gcc)
+		GCC=$(toolchainbin)/arm-none-eabi-gcc
+		exec "$GCC" "$@"
+		;;
+	toolchainbin)
+		toolchainbin
+		;;
+	_zehnpath)
+		zehn_loader_path "$1"
 		;;
 	*)
 		usage
