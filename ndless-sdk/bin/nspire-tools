@@ -2,8 +2,11 @@
 
 function usage() {
 	echo "Usage: nspire-tools <command> <args>"
-	echo -e "   new <program>:   Generate a standard Makefile for <program>.tns"
-	echo -e "   main:            Create an empty main.c"
+	echo "   new <program>:   Generate a standard Makefile for <program>.tns"
+	echo "   main:            Create an empty main.c"
+	echo "   path:            Print out the path of the ndless installation directory"
+	echo "   gcc <args...>:   Run arm-none-eabi-gcc with arguments. Usually prefer the nspire-gcc command over this."
+	echo "   toolchainbin:    Print out the path of the directory that has the binaries for Ndless' arm-none-eabi toolchain."
 }
 
 
