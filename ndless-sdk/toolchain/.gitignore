@@ -1,11 +1,5 @@
-binutils-*
 build
-build-binutils
 download
-gcc-*
-gdb-*
 install
-newlib-*
 .built*
-.downloaded
 
