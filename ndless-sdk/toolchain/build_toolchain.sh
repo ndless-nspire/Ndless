@@ -28,7 +28,7 @@ export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DN
 export PATH="${PREFIX}/bin:${PATH}"
 
 OPTIONS_BINUTILS="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
-OPTIONS_GCC="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c,c++" --with-system-zlib --with-newlib --with-headers=../${NEWLIB}/newlib/libc/include --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
+OPTIONS_GCC="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages=c,c++ --with-system-zlib --with-newlib --with-headers=../${NEWLIB}/newlib/libc/include --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
 OPTIONS_NEWLIB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
 OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --disable-werror"
 
@@ -61,10 +61,22 @@ rm -f test test.c
 mkdir -p build download
 
 if [ ! -f .downloaded ]; then
-	wget -c http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2 -O download/${BINUTILS}.tar.bz2 && tar xvjf download/${BINUTILS}.tar.bz2 && \
-	wget -c ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz      -O download/${GCC}.tar.xz       && tar xvJf download/${GCC}.tar.xz && \
-	wget -c ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz    -O download/${NEWLIB}.tar.gz    && tar xvzf download/${NEWLIB}.tar.gz && \
-	wget -c ftp://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz             -O download/${GDB}.tar.xz       && tar xvJf download/${GDB}.tar.xz && \
+	if [ ! -f .downloaded_binutils ]; then
+		wget -c http://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2 -O download/${BINUTILS}.tar.bz2 && tar xvjf download/${BINUTILS}.tar.bz2 && \
+		touch .downloaded_binutils
+	fi
+	if [ ! -f .downloaded_gcc ]; then
+		wget -c ftp://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz      -O download/${GCC}.tar.xz       && tar xvJf download/${GCC}.tar.xz && \
+		touch .downloaded_gcc
+	fi
+	if [ ! -f .downloaded_newlib ]; then
+		wget -c ftp://sourceware.org/pub/newlib/${NEWLIB}.tar.gz    -O download/${NEWLIB}.tar.gz    && tar xvzf download/${NEWLIB}.tar.gz && \
+		touch .downloaded_newlib
+	fi
+	if [ ! -f .downloaded_gdb ]; then
+		wget -c ftp://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz             -O download/${GDB}.tar.xz       && tar xvJf download/${GDB}.tar.xz && \
+		touch .downloaded_gdb
+	fi
 	touch .downloaded
 	if [ $? -ne 0 ]; then
 		echo "Download failed!"
