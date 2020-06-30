@@ -5,8 +5,6 @@ function usage() {
 	echo "   new <program>:   Generate a standard Makefile for <program>.tns"
 	echo "   main:            Create an empty main.c"
 	echo "   path:            Print out the path of the ndless installation directory"
-	echo "   gcc <args...>:   Run arm-none-eabi-gcc with arguments. Usually prefer the nspire-gcc command over this."
-	echo "   toolchainbin:    Print out the path of the directory that has the binaries for Ndless' arm-none-eabi toolchain."
 }
 
 
@@ -16,23 +14,22 @@ UNAME="$(uname -s | tr A-Z a-z)"
 # try to find the symlink target	
 {
   if which realpath; then
-    alias realpath=realpath
+    real0="$(realpath "$0")" || real0=$0
   elif readlink -f /; then
-    alias realpath='readlink -f'
+    real0="$(readlink -f "$0")" || real0=$0
   elif which readlink; then
-    alias realpath=readlink
+    real0="$(readlink "$0")" || real0=$0
   else
-    alias realpath=false
+    real0=$0
   fi
 
-  real0="$(realpath "$0")" || real0=$0
   DIRNAME="$(dirname "$real0")"
 } >/dev/null 2>&1
 
 
 # Cygwin owns a dedicated command to find the symlink target
 if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$BINPATH")"
+	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
 fi
 NDLESS="$(dirname "$DIRNAME")"
 
@@ -42,13 +39,13 @@ if [ $# -eq 0 ]; then
 fi
 
 # following functions can be patched when packaging/distributing
-toolchainbin() {
+toolchainpath() {
 	echo "$NDLESS/toolchain/install/bin"
 }
 zehn_loader_path() {
 	MAKEFLAGS='' make -C "${NDLESS}/tools/zehn_loader" -s all
 	local suffix=$1
-	echo "$NDLESS/tools/zehn_loader/zehn_loader$suffix.tns"
+	echo "$NDLESS/tools/zehn_loader/zehn_loader${suffix}.tns"
 }
 
 cmd=$1
@@ -83,14 +80,10 @@ case "$cmd" in
 	path)
 		echo "$NDLESS/"
 		;;
-	gcc)
-		GCC=$(toolchainbin)/arm-none-eabi-gcc
-		exec "$GCC" "$@"
+	_toolchainpath)
+		toolchainpath
 		;;
-	toolchainbin)
-		toolchainbin
-		;;
-	_zehnpath)
+	_zehn_loader_path)
 		zehn_loader_path "$1"
 		;;
 	*)

@@ -33,6 +33,6 @@ MAKEFLAGS='' make -C "$NDLESS/system" -s all
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/lib"
 
-LD=$(nspire-tools toolchainbin)/arm-none-eabi-ld
+LD="$(nspire-tools _toolchainpath)/arm-none-eabi-ld"
 
 exec "$LD" --pic-veneer --emit-relocs -T "${NDLESS}/system/ldscript" -static "${NDLESS}/system/crt0.o" "${NDLESS}/system/crti.o" "${args[@]}" "${stdlib[@]}" "${NDLESS}/system/crtn.o" -L "${NDLESS}/lib" -L "${home}/.ndless/lib"

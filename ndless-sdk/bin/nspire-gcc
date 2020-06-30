@@ -5,4 +5,5 @@ NDLESS="$(nspire-tools path)"
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-exec nspire-tools gcc -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"
+GCC="$(nspire-tools _toolchainpath)/arm-none-eabi-gcc"
+exec "$GCC" -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"

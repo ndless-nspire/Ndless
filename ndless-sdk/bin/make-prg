@@ -8,4 +8,4 @@ genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for u
 COMPRESSED=
 genzehn --info --input "$1" | grep compressed >/dev/null && COMPRESSED="_compressed"
 
-cat "$(nspire-tools _zehnpath "$COMPRESSED")" "$1" > "$2"
+cat "$(nspire-tools _zehn_loader_path "$COMPRESSED")" "$1" > "$2"
