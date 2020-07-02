@@ -4,4 +4,5 @@
 NDLESS="$(nspire-tools path)"
 
 # gcc instead of as, to call the C preprocessor
+GCC="$(nspire-tools _toolchainpath)/arm-none-eabi-gcc"
 exec nspire-tools gcc -mcpu=arm926ej-s -D GNU_AS "$@" -I "$NDLESS/include"

@@ -31,22 +31,12 @@ UNAME="$(uname -s | tr A-Z a-z)"
 if [ "$UNAME" = "cygwin" ]; then
 	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
 fi
-NDLESS="$(dirname "$DIRNAME")"
+SDKROOT="$(dirname "$DIRNAME")"
 
 if [ $# -eq 0 ]; then
 	usage
 	exit 0
 fi
-
-# following functions can be patched when packaging/distributing
-toolchainpath() {
-	echo "$NDLESS/toolchain/install/bin"
-}
-zehn_loader_path() {
-	MAKEFLAGS='' make -C "${NDLESS}/tools/zehn_loader" -s all
-	local suffix=$1
-	echo "$NDLESS/tools/zehn_loader/zehn_loader${suffix}.tns"
-}
 
 cmd=$1
 shift
@@ -78,13 +68,21 @@ case "$cmd" in
 		cp "${DIRNAME}/main.c.tpl" main.c
 		;;
 	path)
-		echo "$NDLESS/"
+		echo "$SDKROOT/"
 		;;
 	_toolchainpath)
-		toolchainpath
+		if [[ -n $_NDLESS_TOOLCHAIN_PATH ]]; then
+			_NDLESS_TOOLCHAIN_PATH="$SDKROOT/toolchain/install/bin"
+		fi
+		echo "$_NDLESS_TOOLCHAIN_PATH"
 		;;
 	_zehn_loader_path)
-		zehn_loader_path "$1"
+		if [[ -n $_NDLESS_ZEHN_PATH ]]; then
+			MAKEFLAGS='' make -C "${SDKROOT}/tools/zehn_loader" -s all
+			_NDLESS_ZEHN_PATH="$SDKROOT/tools/zehn_loader/"
+		fi
+		suffix=$1
+		echo "$_NDLESS_ZEHN_PATH/zehn_loader${suffix}.tns"
 		;;
 	*)
 		usage

@@ -5,5 +5,5 @@ NDLESS="$(nspire-tools path)"
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-G++="$(nspire-tools _toolchainpath)/arm-none-eabi-g++"
-exec "$G++" -mcpu=arm926ej-s -fno-use-cxa-atexit -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"
+GXX="$(nspire-tools _toolchainpath)/arm-none-eabi-g++"
+exec "$GXX" -mcpu=arm926ej-s -fno-use-cxa-atexit -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"
