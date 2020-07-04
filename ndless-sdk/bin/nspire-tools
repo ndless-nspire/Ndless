@@ -66,13 +66,13 @@ case "$cmd" in
 		echo "$SDKROOT/"
 		;;
 	_toolchainpath)
-		if [[ -n $_NDLESS_TOOLCHAIN_PATH ]]; then
+		if [[ -z $_NDLESS_TOOLCHAIN_PATH ]]; then
 			_NDLESS_TOOLCHAIN_PATH="$SDKROOT/toolchain/install/bin"
 		fi
 		echo "$_NDLESS_TOOLCHAIN_PATH"
 		;;
 	_zehn_loader_path)
-		if [[ -n $_NDLESS_ZEHN_PATH ]]; then
+		if [[ -z $_NDLESS_ZEHN_PATH ]]; then
 			MAKEFLAGS='' make -C "${SDKROOT}/tools/zehn_loader" -s all
 			_NDLESS_ZEHN_PATH="$SDKROOT/tools/zehn_loader/"
 		fi
