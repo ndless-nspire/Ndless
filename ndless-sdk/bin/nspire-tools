@@ -26,11 +26,6 @@ UNAME="$(uname -s | tr A-Z a-z)"
   DIRNAME="$(dirname "$real0")"
 } >/dev/null 2>&1
 
-
-# Cygwin owns a dedicated command to find the symlink target
-if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
-fi
 SDKROOT="$(dirname "$DIRNAME")"
 
 if [ $# -eq 0 ]; then
