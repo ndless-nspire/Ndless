@@ -1,22 +1,6 @@
 #!/bin/bash
 # Adds the resources-loader at the top of the given binary for backwards-compatibility
 
-UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(dirname "$0")"
-
-# DIRNAME may not be in the toolchain directory if this script was symlinked.
-# try to find the symlink target
-which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
-	DIRNAME="$(dirname "$(readlink "$0")")"
-}
-
-# Cygwin owns a dedicated command to find the symlink target
-if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
-fi
-
-MAKEFLAGS= make -C "${DIRNAME}/../tools/zehn_loader" -s all
-
 # Validate the Zehn file
 genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for us
 
@@ -24,4 +8,4 @@ genzehn --info --input "$1" >/dev/null || exit 1 # genzehn prints an error for u
 COMPRESSED=
 genzehn --info --input "$1" | grep compressed >/dev/null && COMPRESSED="_compressed"
 
-cat "${DIRNAME}/../tools/zehn_loader/zehn_loader${COMPRESSED}.tns" "$1" > "$2"
+cat "$(nspire-tools _zehn_loader_path "$COMPRESSED")" "$1" > "$2"

@@ -2,41 +2,43 @@
 
 function usage() {
 	echo "Usage: nspire-tools <command> <args>"
-	echo -e "   new <program>:   Generate a standard Makefile for <program>.tns"
-	echo -e "   main:            Create an empty main.c"
+	echo "   new <program>:   Generate a standard Makefile for <program>.tns"
+	echo "   main:            Create an empty main.c"
+	echo "   path:            Print out the path of the ndless SDK directory"
 }
 
 
 UNAME="$(uname -s | tr A-Z a-z)"
-DIRNAME="$(dirname "$0")"
 
 # DIRNAME may not be in the toolchain directory if this script was symlinked.
 # try to find the symlink target	
-which readlink >/dev/null 2>&1 && readlink "$0" >/dev/null 2>&1 && {
-    SYMLINK="$(readlink "$0")"
-    
-    # On MacOS X, the readlink command hasn't the same behavior than the others operating systems based on Unix.
-    if [ "$UNAME" == "darwin" ]; then
-    	DIRNAME="$(dirname "$SYMLINK")"
-    else
-    	DIRNAME="${SYMLINK}/.."
-    fi
-}
+{
+  if which realpath; then
+    real0="$(realpath "$0")" || real0=$0
+  elif readlink -f /; then
+    real0="$(readlink -f "$0")" || real0=$0
+  elif which readlink; then
+    real0="$(readlink "$0")" || real0=$0
+  else
+    real0=$0
+  fi
 
-# Cygwin owns a dedicated command to find the symlink target
-if [ "$UNAME" = "cygwin" ]; then
-	DIRNAME="$(cygpath --path --windows "$DIRNAME")"
-fi
+  DIRNAME="$(dirname "$real0")"
+} >/dev/null 2>&1
+
+SDKROOT="$(dirname "$DIRNAME")"
 
 if [ $# -eq 0 ]; then
 	usage
 	exit 0
 fi
 
-case "$1" in
+cmd=$1
+shift
+case "$cmd" in
 	new)
 		if [ -f Makefile ]; then
-			if [ $# -eq 1 ]; then
+			if [ $# -eq 0 ]; then
 				usage
 				exit 1
 			fi
@@ -46,7 +48,7 @@ case "$1" in
 				exit 0
 			fi
 		fi
-		prgmname="$(echo "$2" | tr -d ' ')"
+		prgmname="$(echo "$1" | tr -d ' ')"
 		sed -e "s/@@EXENAME@@/${prgmname}/" "${DIRNAME}/Makefile.tpl" > Makefile
 		echo "Makefile created."
 		;;
@@ -61,7 +63,21 @@ case "$1" in
 		cp "${DIRNAME}/main.c.tpl" main.c
 		;;
 	path)
-		echo "$(dirname "$DIRNAME")/"
+		echo "$SDKROOT/"
+		;;
+	_toolchainpath)
+		if [[ -z $_NDLESS_TOOLCHAIN_PATH ]]; then
+			_NDLESS_TOOLCHAIN_PATH="$SDKROOT/toolchain/install/bin"
+		fi
+		echo "$_NDLESS_TOOLCHAIN_PATH"
+		;;
+	_zehn_loader_path)
+		if [[ -z $_NDLESS_ZEHN_PATH ]]; then
+			MAKEFLAGS='' make -C "${SDKROOT}/tools/zehn_loader" -s all
+			_NDLESS_ZEHN_PATH="$SDKROOT/tools/zehn_loader/"
+		fi
+		suffix=$1
+		echo "$_NDLESS_ZEHN_PATH/zehn_loader${suffix}.tns"
 		;;
 	*)
 		usage
