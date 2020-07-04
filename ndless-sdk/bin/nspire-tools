@@ -4,7 +4,7 @@ function usage() {
 	echo "Usage: nspire-tools <command> <args>"
 	echo "   new <program>:   Generate a standard Makefile for <program>.tns"
 	echo "   main:            Create an empty main.c"
-	echo "   path:            Print out the path of the ndless installation directory"
+	echo "   path:            Print out the path of the ndless SDK directory"
 }
 
 
