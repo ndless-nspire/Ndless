@@ -36,7 +36,7 @@ all: $(EXE).tns
 	$(AS) -c $< -o $@
 
 gen_font_droid.h: droid/DroidSans.ttf
-	xxd -i $< > $@
+	xxd -i $< $@
 
 freetype_demo.o: freetype_demo.c gen_font_droid.h
 	$(GCC) $(GCCFLAGS) -c $<
@@ -51,4 +51,4 @@ $(EXE).tns: $(EXE).elf
 	rm $@.zehn
 
 clean:
-	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn
+	rm -f gen_font_droid.h $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn

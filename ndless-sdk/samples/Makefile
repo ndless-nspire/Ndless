@@ -1,9 +1,7 @@
 SUBDIRS = colors helloworld-sdl helloworld-cpp link-sdl luaext particles ngc newlib newlib-c++ zehn
 # freetype depends on the xxd command
-LINUX_SUBDIRS = freetype
-OS ?= `uname -s`
-ifneq ($(OS),Windows_NT)
-	SUBDIRS += $(LINUX_SUBDIRS)
+ifneq (, $(shell which xxd 2>/dev/null))
+	SUBDIRS += freetype
 endif
 
 all: $(patsubst %, build-%, $(SUBDIRS))
