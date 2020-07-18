@@ -106,7 +106,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 	if(emu_debug_alloc_ptr)
 	{
-		if(emu_debug_alloc_size < remaining_mem)
+		if(emu_debug_alloc_size() < remaining_mem)
 		{
 			puts("[Zehn] emu_debug_alloc_size too small!");
 			*mem_ptr = malloc(remaining_mem);

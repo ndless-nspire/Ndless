@@ -174,7 +174,7 @@ int bflt_load(FILE* fp, void **mem_ptr, int (**entry_address_ptr)(int,char*[])) 
 
     if(emu_debug_alloc_ptr)
     {
-        if(emu_debug_alloc_size < binary_size)
+        if(emu_debug_alloc_size() < binary_size)
         {
             puts("bFLT: emu_debug_alloc_size too small!");
             mem = malloc(binary_size);

@@ -76,7 +76,7 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 	uint8_t *docptr;
 	if(emu_debug_alloc_ptr)
 	{
-		if(emu_debug_alloc_size < docstat.st_size)
+		if(emu_debug_alloc_size() < docstat.st_size)
 		{
 			puts("ndless_load: emu_debug_alloc_size too small!");
 			docptr = malloc(docstat.st_size);	

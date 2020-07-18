@@ -49,7 +49,7 @@ extern "C" {
 
 /* emu.c */
 extern void *emu_debug_alloc_ptr;
-static const size_t emu_debug_alloc_size = 8 * 1024 * 1024; //8MB
+extern size_t emu_debug_alloc_size();
 extern unsigned emu_sysc_table[];
 
 /* install.c */

@@ -28,6 +28,13 @@
 // set by emu_debug_alloc()
 void *emu_debug_alloc_ptr;
 
+size_t emu_debug_alloc_size()
+{
+	// 12 MiB if 64MiB of RAM, 8 otherwise
+	int mebibytes = (has_colors && !is_cm) ? 12 : 8;
+	return mebibytes * 1024 * 1024;
+}
+
 // The following functions are exported as syscalls.
 
 /* Allocates a memory block that should be used by the loader to load the program
@@ -39,7 +46,7 @@ void *emu_debug_alloc_ptr;
  * Returns a pointer to the memory block, or null in case of error. */
 static void *emu_debug_alloc(void) {
 	if (!emu_debug_alloc_ptr)
-		emu_debug_alloc_ptr = malloc(emu_debug_alloc_size);
+		emu_debug_alloc_ptr = malloc(emu_debug_alloc_size());
 
 	return emu_debug_alloc_ptr;
 }
