@@ -66,6 +66,6 @@ jobs:
           echo "::add-path::$GITHUB_WORKSPACE/ndless-sdk/toolchain/install/bin"
           echo "::add-path::$GITHUB_WORKSPACE/ndless-sdk/bin"
       - name: Install dependencies
-        run: sudo apt install -y libboost-program-options-dev
+        run: sudo apt install -y libboost-program-options-dev libmpfr-dev libmpc-dev
       - name: Build
         run: make
