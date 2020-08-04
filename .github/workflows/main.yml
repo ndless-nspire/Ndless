@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: toolchain
-          path: toolchain.tar
+          path: toolchain.tar.gz
   build-sdk:
     needs: build-toolchain
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: toolchain
-          path: toolchain.tar
+          path: toolchain.tar.gz
       - name: Extract toolchain
         run: tar -xvzf toolchain.tar.gz ndless-sdk/toolchain/install
       - name: Set up PATH
