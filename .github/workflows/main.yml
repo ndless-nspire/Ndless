@@ -10,7 +10,10 @@ on:
 
 jobs:
   build-toolchain:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04]
 
     steps:
       - name: Checkout
@@ -38,7 +41,7 @@ jobs:
       - name: Upload built toolchain
         uses: actions/upload-artifact@v2
         with:
-          name: toolchain
+          name: toolchain-${{ runner.os }}
           path: toolchain.tar.gz
   build-sdk:
     needs: build-toolchain
@@ -58,7 +61,7 @@ jobs:
       - name: Download built toolchain
         uses: actions/download-artifact@v2
         with:
-          name: toolchain
+          name: toolchain-${{ runner.os }}
       - name: Extract toolchain
         run: tar -xvzf toolchain.tar.gz ndless-sdk/toolchain/install
       - name: Set up PATH
