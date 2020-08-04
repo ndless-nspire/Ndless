@@ -54,6 +54,9 @@ jobs:
         with:
           name: toolchain
           path: ndless-sdk/toolchain/install
+      # necessary because +x isn't retained in the artifact
+      - name: Fix toolchain permissions
+        run: chmod +x ndless-sdk/toolchain/install/bin/*
       - name: Set up PATH
         run: |
           echo "::add-path::$GITHUB_WORKSPACE/ndless-sdk/toolchain/install/bin"
