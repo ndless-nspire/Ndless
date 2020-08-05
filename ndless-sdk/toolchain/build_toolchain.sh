@@ -70,7 +70,7 @@ downloadAndExtract() {
 		return 1
 	fi
 	echo "Extracting $(basename "${url}")..."
-	tar -xaf "${target}" -C download
+	tar -xf "${target}" -C download
 }
 
 # Section 1: GNU Binutils.
