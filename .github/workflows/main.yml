@@ -23,6 +23,10 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0 # submodule checkout does not work with depth=1 (the default)
 
+      # needed both at compile- and runtime for the toolchain
+      - name: Install dependencies
+        run: sudo apt install -y libgmp-dev libmpfr-dev libmpc-dev
+
       # build the toolchain first
       # it takes ~40min to build, so we want to avoid that whenever possible!
       - uses: actions/cache@v2
@@ -33,9 +37,6 @@ jobs:
             ndless-sdk/toolchain/install
           # gcc/binutils/etc versions are in build_toolchain.sh, so that'll be part of our cache key
           key: ${{ matrix.os }}-${{ hashFiles('ndless-sdk/toolchain/build_toolchain.sh') }}
-      - name: Install dependencies
-        if: steps.toolchain-cache.outputs.cache-hit != 'true'
-        run: sudo apt install -y libmpfr-dev libmpc-dev
       - name: Build toolchain
         if: steps.toolchain-cache.outputs.cache-hit != 'true'
         working-directory: ndless-sdk/toolchain
