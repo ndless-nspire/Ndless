@@ -71,4 +71,4 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libboost-program-options-dev libmpfr-dev libmpc-dev
       - name: Build
-        run: make
+        run: make -j4
