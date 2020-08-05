@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0 # submodule checkout does not work with depth=1 (the default)
 
       # needed both at compile- and runtime for the toolchain
-      - name: Install dependencies
+      - name: Install toolchain dependencies
         run: sudo apt install -y libgmp-dev libmpfr-dev libmpc-dev
 
       # build the toolchain first
