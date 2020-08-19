@@ -2,8 +2,8 @@
 # Caution, must be kept compatible with dash used by some Linux distros.
 
 NDLESS="$(nspire-tools path)"
+export PATH="$(nspire-tools _toolchainpath):$PATH"
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
-GCC="$(nspire-tools _toolchainpath)/arm-none-eabi-gcc"
-exec "$GCC" -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"
+exec arm-none-eabi-gcc -mcpu=arm926ej-s -D _TINSPIRE -fuse-ld=gold "$@" -I "$home/.ndless/include" -I "${NDLESS}/include" -I "${NDLESS}/include/freetype2"
