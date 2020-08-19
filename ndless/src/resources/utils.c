@@ -46,9 +46,8 @@ void __attribute__ ((noreturn)) ut_calc_reboot(void) {
  * May be used for OS-specific arrays of constants (marked with "// OS-specific"). */
 void ut_read_os_version_index(void) {
 	switch (*(unsigned*)(0x10000020)) {
-#ifndef NDLESS_39
 		// OS-specific
-#ifndef NDLESS_36
+#ifndef STAGE1
 		case 0x102F0FA0: // 3.1.0 non-CAS
 			ut_os_version_index = 0;
 			break;
@@ -68,6 +67,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 5;
 			break;
 #endif
+#if !defined(STAGE1) || defined(NDLESS_36)
 		case 0x10375BB0: // 3.6.0 non-CAS
 			ut_os_version_index = 6;
 			break;
