@@ -367,6 +367,14 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		memcpy(argvptr, args, argsn * sizeof(char*));
 
 	argv[argc] = NULL;
+
+	volatile uint32_t *cursorctrl = (volatile uint32_t*)0xC0000C00;
+	uint32_t saved_cursorctrl = 0;
+	if(is_cx2) {
+		// Disable the LCDC cursor overlay
+		saved_cursorctrl = *cursorctrl;
+		*cursorctrl &= ~1;
+	}
 	
 	if (has_colors) {
 		volatile unsigned *palette = (volatile unsigned*)0xC0000200;
@@ -386,6 +394,9 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 
         if(!supports_hww)
 		lcd_compat_disable();
+
+	if(is_cx2)
+		*cursorctrl = saved_cursorctrl;
 
 	if(savedscr && !plh_noscrredraw)
 		memcpy((void*) REAL_SCREEN_BASE_ADDRESS, savedscr, _scrsize());
