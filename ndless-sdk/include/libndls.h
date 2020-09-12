@@ -146,6 +146,7 @@ static inline void bkpt(void) {
 unsigned hwtype(void);
 #define is_classic (hwtype() < 1)
 #define is_cm (nl_hwsubtype() == 1)
+#define is_cx2 (nl_hwsubtype() == 2)
 #define has_colors (!is_classic)
 #define IO_LCD_CONTROL IO(0xC000001C, 0xC0000018)
 #define IO(a,b) (((volatile unsigned*[]){ (unsigned*)a, (unsigned*)b })[hwtype()])

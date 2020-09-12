@@ -149,6 +149,12 @@ template <int nr> int syscall_addr()
 #elif defined(NDLESS_450)
                 ut_os_version_index == 28 ? syscall_addrs[28][nr] :
                 syscall_addrs[29][nr];
+#elif defined(NDLESS_453) && defined(NDLESS_520)
+		ut_os_version_index == 32 ? syscall_addrs[32][nr] :
+		ut_os_version_index == 33 ? syscall_addrs[33][nr] :
+		ut_os_version_index == 34 ? syscall_addrs[34][nr] :
+		ut_os_version_index == 35 ? syscall_addrs[35][nr] :
+		syscall_addrs[36][nr];
 #else
 	#error No (known) STAGE1 OS version given!
 #endif

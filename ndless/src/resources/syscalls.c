@@ -40,7 +40,9 @@
  *   non-CAS CX 4.3.0.702 and CAS CX 4.3.0.702,
  *   non-CAS CX 4.4.0.532 and CAS CX 4.4.0.532,
  *   non-CAS CX 4.5.0.1180 and CAS CX 4.5.0.1180,
- *   non-CAS CX 4.5.1.12 and CAS CX 4.5.1.12 */
+ *   non-CAS CX 4.5.1.12 and CAS CX 4.5.1.12,
+ *   non-CAS CX 4.5.3.14 and CAS CX 4.5.3.14,
+ *   non-CAS CX II 5.2.0.771, non-CAS CX II-T 5.2.0.771 and CAS CX II 5.2.0.771 */
 int sc_nl_osvalue(const int *values, unsigned size) {
     unsigned index = ut_os_version_index;
     if (index >= size)
@@ -84,7 +86,14 @@ unsigned sc_nl_osid(void) {
     return ut_os_version_index;
 }
 
+BOOL nl_is_cx2(void) {
+    return ut_os_version_index >= 34;
+}
+
 unsigned sc_nl_hwsubtype(void) {
+    if(nl_is_cx2())
+        return 2; // 2 if CX II
+
     unsigned asic_user_flags_model = (*(volatile unsigned*)0x900A002C & 0x7C000000) >> 26;
     return (/* CM */ asic_user_flags_model == 2 || /* CM CAS */ asic_user_flags_model == 3); // 1 if CM
 }
@@ -286,3 +295,31 @@ unsigned sc_ext_table[] = {
     (unsigned)ins_loaded_by_3rd_party_loader, (unsigned)sc_nl_hwsubtype, (unsigned)sc_nl_exec, (unsigned)sc_nl_osid,
     (unsigned)sc_nl_hassyscall, (unsigned)sc_nl_lcd_blit, (unsigned)sc_nl_lcd_type, (unsigned)sc_nl_lcd_init
 };
+
+/* The behaviour of touchpad_{read,write} on OS 5.x is the same as on previous versions,
+   except for the inverted return value. */
+
+static int (*touchpad_read_real)(unsigned char, unsigned char, char*) = 0;
+static int touchpad_read_compat(unsigned char first, unsigned char last, char *buf)
+{
+    return !touchpad_read_real(first, last, buf);
+}
+
+static int (*touchpad_write_real)(unsigned char, unsigned char, char*) = 0;
+static int touchpad_write_compat(unsigned char first, unsigned char last, char *buf)
+{
+    return !touchpad_write_real(first, last, buf);
+}
+
+void sc_install_compat(void) {
+    if(nl_is_cx2()) {
+        // keypad_type was part of the old manuf driver, which does not exist anymore.
+        static int keypad_type_compat = 4;
+        sc_addrs_ptr[e_keypad_type] = (uintptr_t)&keypad_type_compat;
+
+        touchpad_read_real = (typeof(touchpad_read_real)) sc_addrs_ptr[e_touchpad_read];
+        sc_addrs_ptr[e_touchpad_read] = (uintptr_t)&touchpad_read_compat;
+        touchpad_write_real = (typeof(touchpad_write_real)) sc_addrs_ptr[e_touchpad_write];
+        sc_addrs_ptr[e_touchpad_write] = (uintptr_t)&touchpad_write_compat;
+    }
+}

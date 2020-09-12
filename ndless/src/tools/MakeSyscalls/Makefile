@@ -5,7 +5,7 @@ all: $(ADDRFILE)
 
 .PHONY: clean
 
-$(ADDRFILE): $(shell find "$(IDCFOLDER)" -name \*.idc)
+$(ADDRFILE): mkSyscalls.php $(shell find "$(IDCFOLDER)" -name \*.idc)
 	php ./mkSyscalls.php "$(IDCFOLDER)" "$@"
 
 clean:

@@ -82,7 +82,9 @@ static unsigned const interp_startup_addrs[NDLESS_MAX_OSID+1] =
 						0x1013CC44, 0x1013CE10,
 						0x1013FABC, 0x1013FC70,
 						0x10141830, 0x10141A50,
-						0x101420E0, 0x1014241C};
+						0x101420E0, 0x1014241C,
+						0x10142838, 0x10142B7C,
+						0x10178748, 0x101788F4, 0x10178E38};
 
 // At the beginning of lua_close
 // OS-specific
@@ -97,7 +99,9 @@ static unsigned const interp_shutdown_addrs[NDLESS_MAX_OSID+1] =
 						0x108575A8, 0x10857B5C,
 						0x10866090, 0x1086666C,
 						0x10871420, 0x10871A6C,
-						0x10872178, 0x108728E4};
+						0x10872178, 0x108728E4,
+						0x10872BB4, 0x10873370,
+						0x108A6D1C, 0x108A73EC, 0x108A8104};
 
 void lua_install_hooks(void) {
 	if(interp_startup_addrs[ut_os_version_index] != 0)

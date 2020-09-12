@@ -22,7 +22,9 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
 						     0x110FD6DC, 0x111616DC,
 						     0x113356DC, 0x113996DC,
 						     0x113496E4, 0x113B16E4,
-						     0x1134D6E4, 0x113B16E4};
+						     0x1134D6E4, 0x113B16E4,
+						     0x1134D6E4, 0x113B16E4,
+						     0x0, 0x0, 0x0};
 
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
 static uint32_t saved_lcd_regs[7];
@@ -148,12 +150,27 @@ static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0x10023B14, 0x10023AA4,
                                                        0x10023BF0, 0x10023B8C,
                                                        0x10023D08, 0x10023C98,
-                                                       0x10023D2C, 0x10023CC8};
+                                                       0x10023D2C, 0x10023CC8,
+                                                       0x10023D2C, 0x10023CF8,
+                                                       0x100106F4, 0x100106F4, 0x100106F4};
 
 static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
 {
-    void (*os_spi_send)(uint16_t, const uint8_t *, int) = (typeof(os_spi_send))spi_send_ptr[ut_os_version_index];
-    os_spi_send(cmd, data, data_count);
+    // Different method signatures
+    if(ut_os_version_index < 34)
+    {
+        void (*os_spi_send)(uint16_t, const uint8_t *, int) = (typeof(os_spi_send))spi_send_ptr[ut_os_version_index];
+        os_spi_send(cmd, data, data_count);
+    }
+    else
+    {
+        void (*os_spi_send)(const uint8_t *) = (typeof(os_spi_send))spi_send_ptr[ut_os_version_index];
+        uint8_t transfer[data_count + 4];
+        transfer[0] = cmd;
+        transfer[1] = data_count;
+        memcpy(transfer + 4, data, data_count);
+        os_spi_send(transfer);
+    }
 }
 
 #define SPI_SEND(cmd, ...) do { \
@@ -164,7 +181,7 @@ static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
 bool lcd_compat_enable()
 {
     // Only needed on HW-W+
-    if(!is_hww)
+    if(!is_hww && !nl_is_cx2())
         return true;
 
     const char *dlg[] = {"DLG", NULL};
@@ -236,12 +253,12 @@ static void undo_lcdc_remap()
 
 void lcd_compat_disable()
 {
-    if(!is_hww)
+    if(!is_hww && !nl_is_cx2())
         return;
 
     // Undo the changes again
     SPI_SEND(0xB0, 0x11, 0xF0);
-    SPI_SEND(0x36, 0x08);
+    SPI_SEND(0x36, nl_is_cx2() ? 0x48 : 0x08);
     SPI_SEND(0x2A, 0x00, 0x00, 0x00, 0xEF);
     SPI_SEND(0x2B, 0x00, 0x00, 0x01, 0x3F);
 
