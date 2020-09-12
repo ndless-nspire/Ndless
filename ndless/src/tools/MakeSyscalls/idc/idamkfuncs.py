@@ -5,7 +5,7 @@ import idc
 def define_functions():
 	ea = 0x10000000
 	unknown = idc.FindUnexplored(ea, idc.SEARCH_DOWN)
-	while unknown != idc.BADADDR:
+	while unknown != idc.BADADDR and unknown < 0x11000000:
 		insn = idc.Dword(unknown)
 		if insn & 0xF0000000 == 0xE0000000 and unknown & 3 == 0 and idc.MakeCode(unknown) == 4:
 			print "Trying %x" % unknown
