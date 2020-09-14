@@ -257,6 +257,13 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
 		gui_gc_setFont(gc, SerifRegular9);
 		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
+
+		static int i = 6;
+		if (!i--) {
+			HOOK_UNINSTALL(ins_successmsg_hook_addrs[ut_os_version_index], ins_successsuccessmsg_hook);
+			clear_cache();
+		}
 	}
+
 	HOOK_RESTORE_RETURN(ins_successsuccessmsg_hook);
 }
