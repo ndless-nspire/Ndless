@@ -23,6 +23,9 @@
 
 /* speed is one of CPU_SPEED_* */
 unsigned set_cpu_speed(unsigned speed) {
+  if(is_cx2) // Not sure whether it's worth it to implement that
+    return 0;
+
   unsigned previous_speed = *(volatile unsigned*)0x900B0000;
   *(volatile unsigned*)0x900B0000 = speed;
   *(volatile unsigned*)0x900B000C = 4;

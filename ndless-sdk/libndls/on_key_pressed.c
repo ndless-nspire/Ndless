@@ -23,5 +23,8 @@
 #include <libndls.h>
 
 BOOL on_key_pressed(void) {
+  if(is_cx2)
+    return !(*(volatile int*)0x90140810 & 0x100);
+
   return !(*(volatile int*)0x900B0028 & 16);
 }
