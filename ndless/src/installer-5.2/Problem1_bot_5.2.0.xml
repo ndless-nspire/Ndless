@@ -15,7 +15,7 @@
                     gc:drawString(&quot;(this line is just deco)&quot;, 198 + 0, 53 + 30, &quot;top&quot;)
 
                     s = ""
-                    s = string.rep(installer, 1024)
+                    s = string.rep(installer, 768)
 
                     timer.start(0.2)
                 end
