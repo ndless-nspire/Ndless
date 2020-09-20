@@ -345,8 +345,44 @@ fieldset[disabled] .btn-sdk.active {
   background-color: #FFFFFF; 
 }
 
-/* ---- */
+.table-os {
+	border-collapse: collapse;
+	border-spacing: 10px;
+	line-height: 1.2em;
+}
 
+.table-os thead {
+	font-weight: bold;
+}
+
+.table-os thead td {
+	font-weight: bold;
+	font-family: sans-serif;
+	text-align: center;
+	vertical-align: bottom;
+}
+
+.table-os td {
+	padding: 10px;
+	padding-right: 1em;
+	vertical-align: top;
+	font-size: 0.9em;
+	font-family: monospace;
+}
+
+.table-os td div {
+	text-align: left;
+	width: fit-content;
+	margin: 0px auto;
+}
+
+.table-os td em {
+	font-weight: bold;
+	font-size: 1.4em;
+	font-style: normal;
+}
+
+/* ---- */
 
 .cbp-so-scroller {
 	overflow: hidden;
