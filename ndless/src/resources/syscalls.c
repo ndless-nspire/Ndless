@@ -296,19 +296,77 @@ unsigned sc_ext_table[] = {
     (unsigned)sc_nl_hassyscall, (unsigned)sc_nl_lcd_blit, (unsigned)sc_nl_lcd_type, (unsigned)sc_nl_lcd_init
 };
 
-/* The behaviour of touchpad_{read,write} on OS 5.x is the same as on previous versions,
-   except for the inverted return value. */
+/* On the CX II, touchpad_read/_write have to be wrapped to preserve compatibility:
+ * - The return value is inverted (now 0 indicates success)
+ * - On more revent HW revisions (around AK), the touchpad model changed and is now
+ *   using a different protocol. */
 
 static int (*touchpad_read_real)(unsigned char, unsigned char, char*) = 0;
-static int touchpad_read_compat(unsigned char first, unsigned char last, char *buf)
+static int (*touchpad_write_real)(unsigned char, unsigned char, char*) = 0;
+
+static int touchpad_read_compat_synaptics(unsigned char first, unsigned char last, char *buf)
 {
     return !touchpad_read_real(first, last, buf);
 }
 
-static int (*touchpad_write_real)(unsigned char, unsigned char, char*) = 0;
-static int touchpad_write_compat(unsigned char first, unsigned char last, char *buf)
+static int touchpad_write_compat_synaptics(unsigned char first, unsigned char last, char *buf)
 {
     return !touchpad_write_real(first, last, buf);
+}
+
+static int touchpad_read_compat_captivate(unsigned char first, unsigned char last, char *buf)
+{
+    // libndls' touchpad_getinfo
+    if(first == 0x04 && last == 0x07) {
+        uint8_t captivate_info[6];
+        if(touchpad_read_real(0x07, 0x07+sizeof(captivate_info)-1, (char*)&captivate_info))
+            return false;
+
+        buf[0] = captivate_info[3];
+        buf[1] = captivate_info[2];
+        buf[2] = captivate_info[5];
+        buf[3] = captivate_info[4];
+        return true;
+    }
+
+    // libndls' touchpad_scan
+    if(first == 0x00 && last == 0x0A) {
+        uint8_t captivate_report[6];
+        if(touchpad_read_real(0x01, 0x01+sizeof(captivate_report)-1, (char*)&captivate_report))
+            return false;
+
+        touchpad_report_t libndls_report = {0};
+        libndls_report.contact = (bool)(captivate_report[1] & 0b10);
+        libndls_report.pressed = (bool)(captivate_report[1] & 0b01);
+        libndls_report.proximity = libndls_report.pressed ? 100 : (libndls_report.contact ? 30 : 0);
+        libndls_report.x = (captivate_report[2] << 8) | captivate_report[3];
+        libndls_report.y = (captivate_report[4] << 8) | captivate_report[5];
+        /* Relative values could be implemented, but nothing appears to use them... */
+
+        memcpy(buf, &libndls_report, last-first+1);
+        return true;
+    }
+
+    return false;
+}
+
+static int touchpad_write_compat_captivate(unsigned char first, unsigned char last, char *buf)
+{
+    // Only page switching is expected
+    return first == 0xFF && last == 0xFF && (buf[0] == 0x4 || buf[0] == 0x10);
+}
+
+#define FIRST_CXII_OSID 34
+typedef uint32_t (*manuf_hwflags_func)(void);
+/* OS-specific: Function which returns HW flags (field 5400) */
+static uintptr_t manuf_hwflags_ptr[NDLESS_MAX_OSID-FIRST_CXII_OSID+1] = {
+    0x100114A8, 0x100114A8, 0x100114A8
+};
+
+static bool has_captivate()
+{
+    // Bit 0 of field 5400 in the manuf
+    return ((manuf_hwflags_func)manuf_hwflags_ptr[ut_os_version_index - FIRST_CXII_OSID])() & 0b1;
 }
 
 void sc_install_compat(void) {
@@ -318,8 +376,14 @@ void sc_install_compat(void) {
         sc_addrs_ptr[e_keypad_type] = (uintptr_t)&keypad_type_compat;
 
         touchpad_read_real = (typeof(touchpad_read_real)) sc_addrs_ptr[e_touchpad_read];
-        sc_addrs_ptr[e_touchpad_read] = (uintptr_t)&touchpad_read_compat;
         touchpad_write_real = (typeof(touchpad_write_real)) sc_addrs_ptr[e_touchpad_write];
-        sc_addrs_ptr[e_touchpad_write] = (uintptr_t)&touchpad_write_compat;
+
+        if(has_captivate()) {
+            sc_addrs_ptr[e_touchpad_read] = (uintptr_t)&touchpad_read_compat_captivate;
+            sc_addrs_ptr[e_touchpad_write] = (uintptr_t)&touchpad_write_compat_captivate;
+        } else {
+            sc_addrs_ptr[e_touchpad_read] = (uintptr_t)&touchpad_read_compat_synaptics;
+            sc_addrs_ptr[e_touchpad_write] = (uintptr_t)&touchpad_write_compat_synaptics;
+        }
     }
 }
