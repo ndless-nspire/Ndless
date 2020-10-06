@@ -27,6 +27,7 @@ jobs:
       - name: Install toolchain dependencies
         run: sudo apt install -y libgmp-dev libmpfr-dev libmpc-dev
 
+      # ndless-sdk
       # build the toolchain first
       # it takes ~40min to build, so we want to avoid that whenever possible!
       - uses: actions/cache@v2
@@ -40,11 +41,11 @@ jobs:
         working-directory: ndless-sdk/toolchain
         run: ./build_toolchain.sh
       
-      # actual build starts here
+      # ndless
       - name: Set up PATH
         run: |
-          echo "::add-path::$GITHUB_WORKSPACE/ndless-sdk/toolchain/install/bin"
-          echo "::add-path::$GITHUB_WORKSPACE/ndless-sdk/bin"
+          echo "$GITHUB_WORKSPACE/ndless-sdk/toolchain/install/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/ndless-sdk/bin" >> $GITHUB_PATH
       - name: Install dependencies
         run: sudo apt install -y libboost-program-options-dev
       - name: Build
