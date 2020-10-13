@@ -316,7 +316,7 @@ static int touchpad_write_compat_synaptics(unsigned char first, unsigned char la
 
 static int touchpad_read_compat_captivate(unsigned char first, unsigned char last, char *buf)
 {
-    // libndls' touchpad_getinfo
+    // libndls' touchpad_getinfo, also works for nespire
     if(first == 0x04 && last == 0x07) {
         uint8_t captivate_info[6];
         if(touchpad_read_real(0x07, 0x07+sizeof(captivate_info)-1, (char*)&captivate_info))
@@ -329,8 +329,8 @@ static int touchpad_read_compat_captivate(unsigned char first, unsigned char las
         return true;
     }
 
-    // libndls' touchpad_scan
-    if(first == 0x00 && last == 0x0A) {
+    // libndls' touchpad_scan (0x0-0xA) and nespire (0x2-0xA)
+    if(first <= last && last == 0x0A) {
         uint8_t captivate_report[6];
         if(touchpad_read_real(0x01, 0x01+sizeof(captivate_report)-1, (char*)&captivate_report))
             return false;
@@ -343,7 +343,7 @@ static int touchpad_read_compat_captivate(unsigned char first, unsigned char las
         libndls_report.y = (captivate_report[4] << 8) | captivate_report[5];
         /* Relative values could be implemented, but nothing appears to use them... */
 
-        memcpy(buf, &libndls_report, last-first+1);
+        memcpy(buf, (char*)(&libndls_report) + first, last-first+1);
         return true;
     }
 
