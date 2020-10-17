@@ -1,0 +1,52 @@
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # we don't need submodules for building the toolchain, but we do for everything else
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0 # submodule checkout does not work with depth=1 (the default)
+
+      # needed both at compile- and runtime for the toolchain
+      - name: Install toolchain dependencies
+        run: sudo apt install -y libgmp-dev libmpfr-dev libmpc-dev
+
+      # ndless-sdk
+      # build the toolchain first
+      # it takes ~40min to build, so we want to avoid that whenever possible!
+      - uses: actions/cache@v2
+        id: toolchain-cache
+        with:
+          path: ndless-sdk/toolchain/install
+          # gcc/binutils/etc versions are in build_toolchain.sh, so that'll be part of our cache key
+          key: ${{ matrix.os }}-${{ hashFiles('ndless-sdk/toolchain/build_toolchain.sh') }}
+      - name: Build toolchain
+        if: steps.toolchain-cache.outputs.cache-hit != 'true'
+        working-directory: ndless-sdk/toolchain
+        run: ./build_toolchain.sh
+      
+      # ndless
+      - name: Set up PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/ndless-sdk/toolchain/install/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/ndless-sdk/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: sudo apt install -y libboost-program-options-dev
+      - name: Build
+        run: make -j4
