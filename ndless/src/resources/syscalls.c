@@ -314,6 +314,21 @@ static int touchpad_write_compat_synaptics(unsigned char first, unsigned char la
     return !touchpad_write_real(first, last, buf);
 }
 
+static int8_t clamp_to_int8(int val)
+{
+	if(val < SCHAR_MIN)
+		return SCHAR_MIN;
+	if(val > SCHAR_MAX)
+		return SCHAR_MAX;
+
+	return val;
+}
+
+static int bswap16(short s)
+{
+        return ((s & 0xFF) << 8) | ((s & 0xFF00) >> 8);
+}
+
 static int touchpad_read_compat_captivate(unsigned char first, unsigned char last, char *buf)
 {
     // libndls' touchpad_getinfo, also works for nespire
@@ -341,7 +356,15 @@ static int touchpad_read_compat_captivate(unsigned char first, unsigned char las
         libndls_report.proximity = libndls_report.pressed ? 100 : (libndls_report.contact ? 30 : 0);
         libndls_report.x = (captivate_report[2] << 8) | captivate_report[3];
         libndls_report.y = (captivate_report[4] << 8) | captivate_report[5];
-        /* Relative values could be implemented, but nothing appears to use them... */
+
+        // Calculate relative values
+        static touchpad_report_t report_last = {0};
+        if(libndls_report.contact && report_last.contact) {
+            libndls_report.x_velocity = clamp_to_int8(bswap16(libndls_report.x) - bswap16(report_last.x));
+            libndls_report.y_velocity = clamp_to_int8(bswap16(libndls_report.y) - bswap16(report_last.y));
+        }
+        // The reference is the last time they're read, which is every time this function is called
+        report_last = libndls_report;
 
         memcpy(buf, (char*)(&libndls_report) + first, last-first+1);
         return true;
