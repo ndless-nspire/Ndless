@@ -5,7 +5,7 @@ LD := "$(shell (which arm-elf-ld arm-none-eabi-ld arm-linux-gnueabi-ld | head -1
 OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnueabi-objcopy | head -1) 2>/dev/null)"
 
 BASE64 := base64 -w0
-ifneq ($(shell base64 -w >/dev/null 2>&1; echo $$?),0)
+ifneq ($(shell base64 -w0 >/dev/null 2>&1 </dev/null; echo $$?),0)
 	BASE64 := base64
 endif
 
