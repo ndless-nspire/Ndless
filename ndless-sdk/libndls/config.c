@@ -120,7 +120,15 @@ close_quit:
 }
 
 static int cfg_locate_cfg_file(char *dst_path, size_t dst_path_size) {
-	return locate("ndless.cfg.tns", dst_path, dst_path_size);
+	static char cfg_path[FILENAME_MAX] = {0};
+	if(cfg_path[0] == 0) snprintf(cfg_path, FILENAME_MAX, "%s%s", get_documents_dir(), "ndless/ndless.cfg.tns");
+	if(access(cfg_path, F_OK) == -1) {
+		int l = locate("ndless.cfg.tns", cfg_path, FILENAME_MAX);
+		if(l != 0) return l;
+	}
+	if(strlen(cfg_path)+1 > dst_path_size) return 1;
+	strlcpy(dst_path, cfg_path, dst_path_size);
+	return 0;
 }
 
 void cfg_open(void) {
