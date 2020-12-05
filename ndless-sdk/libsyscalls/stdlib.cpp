@@ -25,6 +25,10 @@ extern int errno;
 #include <syscall-list.h>
 #include "syscall.h"
 
+namespace __gnu_cxx {
+	extern __attribute__((weak)) void __freeres();
+}
+
 extern "C" {
 
 // The only macro, I swear
@@ -197,6 +201,10 @@ void _exit(int ret)
 		// its buffers either.
 		nio_free(&csl);
 	#endif
+
+	// Free memory allocated by libstdc++
+	if(__gnu_cxx::__freeres)
+		__gnu_cxx::__freeres();
 
 	// Newlib doesn't reclaim data from the statically allocated reent
 	// itself, so do it here. It needs a bit of "convincing".
