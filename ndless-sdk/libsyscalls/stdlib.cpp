@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <sys/reent.h>
 #include <limits.h>
 #include <nucleus.h>
 #include <libndls.h>
@@ -23,6 +24,10 @@ extern int errno;
 // Syscall enum
 #include <syscall-list.h>
 #include "syscall.h"
+
+namespace __gnu_cxx {
+	extern __attribute__((weak)) void __freeres();
+}
 
 extern "C" {
 
@@ -196,6 +201,17 @@ void _exit(int ret)
 		// its buffers either.
 		nio_free(&csl);
 	#endif
+
+	// Free memory allocated by libstdc++
+	if(__gnu_cxx::__freeres)
+		__gnu_cxx::__freeres();
+
+	// Newlib doesn't reclaim data from the statically allocated reent
+	// itself, so do it here. It needs a bit of "convincing".
+	// See https://sourceware.org/pipermail/newlib/2020/018173.html
+	struct _reent *global_reent = _impure_ptr;
+	_impure_ptr = nullptr;
+	_reclaim_reent(global_reent);
 
 	__crt0_exit(ret);
 	

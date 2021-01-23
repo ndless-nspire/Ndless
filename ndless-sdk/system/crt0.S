@@ -5,7 +5,6 @@ _start: .global _start
 	str  sp, __crt0_savedsp
 	push {r0, r1}
 	bl initialise_monitor_handles /* Grab stdin, -out and -err, required for newlib */
-	bl _init_signal /* Required for newlibs atexit */
 	bl __cpp_init /* C++ static initializers */
 	pop {r0, r1}
 	bl   main
