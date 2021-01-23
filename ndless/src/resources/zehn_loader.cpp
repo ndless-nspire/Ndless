@@ -12,27 +12,35 @@
 #include "ndless_version.h"
 #include "zehn_loader.h"
 
-// Lighter alternative to std::vector (DON'T ASSIGN)
+// Lighter alternative to std::vector
 template <typename T> class Storage
 {
 public:
-	Storage(size_t count) : count(count) { data = reinterpret_cast<T*>(malloc(sizeof(T) * count)); }
-	~Storage() { free(data); }
+	Storage(const size_t count) : m_count(count) { m_data = reinterpret_cast<T*>(malloc(sizeof(T) * m_count)); }
+	Storage(const Storage<T> &s) = delete;
+	~Storage() { free(m_data); }
+	Storage<T> &operator=(const Storage<T> &s) = delete;
 
-	T* begin() { return data; }
-	T* end() { return data + count; }
+	T* begin() { return m_data; }
+	T* end() { return m_data + m_count; }
 
-	T* data;
-	size_t count;
+	size_t size() { return m_count; }
+	T* data() { return m_data; }
+
+	bool alloc_failed() { return m_count > 0 && m_data == nullptr; }
+
+private:
+	const size_t m_count;
+	T* m_data;
 };
 
 void msgbox(const char *title, const char *fmt, ...)
 {
-	char content[512];
+	char content[1024];
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(content, fmt, args);
+	vsnprintf(content, sizeof(content), fmt, args);
 
 	show_msgbox(title, content);
 
@@ -94,9 +102,15 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 	Storage<Zehn_flag> flags(header.flag_count);
 	Storage<uint8_t> extra_data(header.extra_size);
 
-	if(nuc_fread(reinterpret_cast<void*>(relocs.data), sizeof(Zehn_reloc), header.reloc_count, file) != header.reloc_count
-		|| nuc_fread(reinterpret_cast<void*>(flags.data), sizeof(Zehn_flag), header.flag_count, file) != header.flag_count
-		|| nuc_fread(reinterpret_cast<void*>(extra_data.data), 1, header.extra_size, file) != header.extra_size)
+	if(relocs.alloc_failed() || flags.alloc_failed() || extra_data.alloc_failed())
+	{
+		puts("[Zehn] Allocation of metadata failed!");
+		return 1;
+	}
+
+	if(nuc_fread(reinterpret_cast<void*>(relocs.data()), sizeof(Zehn_reloc), header.reloc_count, file) != header.reloc_count
+		|| nuc_fread(reinterpret_cast<void*>(flags.data()), sizeof(Zehn_flag), header.flag_count, file) != header.flag_count
+		|| nuc_fread(reinterpret_cast<void*>(extra_data.data()), 1, header.extra_size, file) != header.extra_size)
 	{
 		puts("[Zehn] File read failed!");
 		return 1;
@@ -124,23 +138,23 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		return 1;
 	}
 
-	if(relocs.data[0].type == Zehn_reloc_type::FILE_COMPRESSED)
+	if(relocs.size() > 0 && relocs.data()[0].type == Zehn_reloc_type::FILE_COMPRESSED)
 	{
-		if(relocs.data[0].offset != static_cast<int>(Zehn_compress_type::ZLIB))
+		if(relocs.data()[0].offset != static_cast<int>(Zehn_compress_type::ZLIB))
 		{
 			puts("[Zehn] Compression format not supported!");
 			return 1;
 		}
 
 		Storage<uint8_t> compressed(remaining_file);
-		if(nuc_fread(compressed.data, remaining_file, 1, file) != 1)
+		if(nuc_fread(compressed.data(), remaining_file, 1, file) != 1)
 		{
 			puts("[Zehn] File read failed!");
 			return 1;
 		}
 
 		uLongf dest_len = remaining_mem;
-		if(uncompress(base, &dest_len, compressed.data, remaining_file) != Z_OK)
+		if(uncompress(base, &dest_len, compressed.data(), remaining_file) != Z_OK)
 		{
 			puts("[Zehn] Decompression failed!");
 			return 1;
@@ -171,7 +185,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		switch(f.type)
 		{
 		case Zehn_flag_type::EXECUTABLE_NAME:
-			if(!zehn_check_string(extra_data.begin(), f, 255, &application_name))
+			if(!zehn_check_string(extra_data.data(), f, 255, &application_name))
 			{
 				puts("[Zehn] Invalid application name!");
 				return 1;
@@ -179,12 +193,12 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 			break;
 		case Zehn_flag_type::EXECUTABLE_NOTICE:
-			if(zehn_check_string(extra_data.begin(), f, 1024, &ptr))
+			if(zehn_check_string(extra_data.data(), f, 1024, &ptr))
 				application_notice = ptr;
 
 			break;
 		case Zehn_flag_type::EXECUTABLE_AUTHOR:
-			if(zehn_check_string(extra_data.begin(), f, 128, &ptr))
+			if(zehn_check_string(extra_data.data(), f, 128, &ptr))
 				application_author = ptr;
 
 			break;
@@ -242,10 +256,7 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 	// Show some information about the executable
 	if(isKeyPressed(KEY_NSPIRE_CAT))
 	{
-		char info[1536];
-		sprintf(info, "Name: %s Version: %u\nAuthor: %s\nNotice: %s", application_name, application_version, application_author, application_notice);
-		show_msgbox("Information about the executable", info);
-
+		msgbox("Information about the executable", "Name: %s Version: %u\nAuthor: %s\nNotice: %s", application_name, application_version, application_author, application_notice);
 		return 2;
 	}
 

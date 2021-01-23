@@ -26,7 +26,6 @@
 #include <os.h>
 #include <ngc.h>
 
-#include "calchook.h"
 #include "lcd_compat.h"
 #include "ndless.h"
 
@@ -169,7 +168,6 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_44);
 
 		lua_install_hooks();
-		calchook_install();
 	}
 
 	if (argv[0] && argv[0][0] == 'L') { // third-party launcher
