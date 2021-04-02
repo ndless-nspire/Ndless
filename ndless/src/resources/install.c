@@ -44,7 +44,9 @@ static unsigned const ploader_hook_addrs[NDLESS_MAX_OSID+1] =
 						0x1000AD90, 0x1000AD8C,
 						0x1000ADAC, 0x1000ADB4,
 						0x1000ADAC, 0x1000ADE4,
-						0x1002612C, 0x10026144, 0x10026164};
+						0x1002612C, 0x10026144, 0x10026164,
+						0x1000B034, 0x1000B074,
+						0x10028168, 0x100282A4, 0x100282F8};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
@@ -66,6 +68,8 @@ static unsigned const end_of_init_addrs[NDLESS_MAX_OSID+1] =
 						0x10012E54, 0x10012E00,
 						0x10012E8C, 0x10012E44,
 						0x0, 0x0,
+						0x0, 0x0, 0x0,
+						0x0, 0x0,
 						0x0, 0x0, 0x0};
 
 // OS-specific
@@ -83,7 +87,9 @@ static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
 						0x10125670, 0x10125508,
 						0x10125B58, 0x10125A7C,
 						0x10126084, 0x10125FB4,
-						0x1015CC6C, 0x1015CE10, 0x1015CDFC};
+						0x1015CC6C, 0x1015CE10, 0x1015CDFC,
+						0x1012656C, 0x101264F4,
+						0x101600AC, 0x10160354, 0x1016038C};
 
 // OS-specific (only set if the installer document needs to be closed)
 // close_document
@@ -100,7 +106,9 @@ static unsigned const close_document_addrs[NDLESS_MAX_OSID+1] =
 						0x1000b240, 0x1000b23c,
 						0x0, 0x0,
 						0x1000B278, 0x1000B2B0,
-						0x100265D4, 0x10026614, 0x1002660C};
+						0x100265D4, 0x10026614, 0x1002660C,
+						0x1000B4E4, 0x1000B524,
+						0x10028610, 0x10028770, 0x100287A0};
 
 void ins_uninstall(void) {
 	ut_calc_reboot();
@@ -214,7 +222,9 @@ const unsigned ins_successmsg_hook_addrs[NDLESS_MAX_OSID+1] =
 					 0x100310FC, 0x100310A4,
 					 0x100311C4, 0x10031164,
 					 0x100311C0, 0x10031198,
-					 0x1004AD6C, 0x1004ADF4, 0x1004ADB4};
+					 0x1004AD6C, 0x1004ADF4, 0x1004ADB4,
+					 0x1003167C, 0x10031660,
+					 0x1004CE70, 0x1004D018, 0x1004D00C};
 
 // OS-specific
 // number of the HOME icon
@@ -231,6 +241,8 @@ const unsigned ins_successmsg_icon[NDLESS_MAX_OSID+1] =
 					 0x172, 0x172,
 					 0x172, 0x172,
 					 0x172, 0x172,
+					 0x14F, 0x14F, 0x14F,
+					 0x18C, 0x18C,
 					 0x14F, 0x14F, 0x14F};
 
 void ins_install_successmsg_hook(void) {

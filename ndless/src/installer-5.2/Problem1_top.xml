@@ -17,9 +17,9 @@
             </sc:md>
             <sc:script version="33817092" id="0">
                 platform.apiLevel = &quot;2.7&quot;
+                attempt = 0
 
                 local function drawXCenteredString(gc, str, y)
                     gc:drawString(str, (platform.window:width() - gc:getStringWidth(str)) / 2, y, &quot;top&quot;)
                 end
 
-                function on.paint(gc)

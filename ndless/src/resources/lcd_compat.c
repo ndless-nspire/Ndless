@@ -24,6 +24,8 @@ static uint32_t lcd_mirror_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
 						     0x113496E4, 0x113B16E4,
 						     0x1134D6E4, 0x113B16E4,
 						     0x1134D6E4, 0x113B16E4,
+						     0x0, 0x0, 0x0,
+						     0x1134D6E4, 0x113B56E4,
 						     0x0, 0x0, 0x0};
 
 static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
@@ -152,12 +154,14 @@ static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0x10023D08, 0x10023C98,
                                                        0x10023D2C, 0x10023CC8,
                                                        0x10023D2C, 0x10023CF8,
-                                                       0x100106F4, 0x100106F4, 0x100106F4};
+                                                       0x100106F4, 0x100106F4, 0x100106F4,
+                                                       0x100241B4, 0x10024188,
+                                                       0x10010734, 0x10010734, 0x10010734};
 
 static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
 {
     // Different method signatures
-    if(ut_os_version_index < 34)
+    if(!nl_is_cx2())
     {
         void (*os_spi_send)(uint16_t, const uint8_t *, int) = (typeof(os_spi_send))spi_send_ptr[ut_os_version_index];
         os_spi_send(cmd, data, data_count);

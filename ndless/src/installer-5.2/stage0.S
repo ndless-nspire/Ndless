@@ -1,7 +1,7 @@
 .text
 _start: .global _start
 .org 0 @ Actually not, but this is PIC
-.rep 1024
+.rep 1152
 b begin
 .endr
 
@@ -111,6 +111,41 @@ nextos:
 .word 0x1043AD98 @ fopen
 .word 0x1043AF3C @ fread
 .word 0x1043A5B8 @ fclose
+
+.word 0x10417DA0 @ 5.3.0.564 CAS CX II
+.word 0x1048CB78 @ stat
+.word 0x1047E988 @ malloc
+.word 0x104847DC @ fopen
+.word 0x10484980 @ fread
+.word 0x1048425C @ fclose
+
+.word 0x10417460 @ 5.3.0.564 non-CAS CX II-T
+.word 0x1048C238 @ stat
+.word 0x1047E048 @ malloc
+.word 0x10483E9C @ fopen
+.word 0x10484040 @ fread
+.word 0x1048391C @ fclose
+
+.word 0x10416CC0 @ 5.3.0.564 non-CAS CX II
+.word 0x1048BA98 @ stat
+.word 0x1047D8A8 @ malloc
+.word 0x104836FC @ fopen
+.word 0x104838A0 @ fread
+.word 0x1048317C @ fclose
+
+.word 0x103B4130 @ 4.5.4.48 CAS CX
+.word 0x10444168 @ stat
+.word 0x104365B8 @ malloc
+.word 0x1043BEA8 @ fopen
+.word 0x1043C04C @ fread
+.word 0x1043B6C8 @ fclose
+
+.word 0x103B3A10 @ 4.5.4.48 non-CAS CX
+.word 0x10443A00 @ stat
+.word 0x10435E98 @ malloc
+.word 0x1043B788 @ fopen
+.word 0x1043B92C @ fread
+.word 0x1043AFA8 @ fclose
 
 endos:
 .word 0x0

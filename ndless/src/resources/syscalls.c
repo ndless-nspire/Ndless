@@ -30,19 +30,22 @@
 
 /* Ndless extensions exposed as syscalls. See os.h for documentation. */
 
-/* Values is an array of values for non-CAS 3.1, CAS 3.1, non-CAS CX 3.1, CAS CX 3.1, CM-C 3.1, CAS CM-C 3.1,
+/* Values is an array of values for
+ * non-CAS 3.1, CAS 3.1, non-CAS CX 3.1, CAS CX 3.1, CM-C 3.1, CAS CM-C 3.1,
  * non-CAS 3.6, CAS 3.6, non-CAS CX 3.6, CAS CX 3.6,
- *   non-CAS 3.9.0, CAS 3.9.0, non-CAS CX 3.9.0, CAS CX 3.9.0,
- *   non-CAS 3.9.1, CAS 3.9.1, non-CAS CX 3.9.1, CAS CX 3.9.1,
- *   non-CAS CX 4.0.0, CAS CX 4.0.0,
- *   non-CAS CX 4.0.3 and CAS CX 4.0.3,
- *   non-CAS CX 4.2.0 and CAS CX 4.2.0,
- *   non-CAS CX 4.3.0.702 and CAS CX 4.3.0.702,
- *   non-CAS CX 4.4.0.532 and CAS CX 4.4.0.532,
- *   non-CAS CX 4.5.0.1180 and CAS CX 4.5.0.1180,
- *   non-CAS CX 4.5.1.12 and CAS CX 4.5.1.12,
- *   non-CAS CX 4.5.3.14 and CAS CX 4.5.3.14,
- *   non-CAS CX II 5.2.0.771, non-CAS CX II-T 5.2.0.771 and CAS CX II 5.2.0.771 */
+ * non-CAS 3.9.0, CAS 3.9.0, non-CAS CX 3.9.0, CAS CX 3.9.0,
+ * non-CAS 3.9.1, CAS 3.9.1, non-CAS CX 3.9.1, CAS CX 3.9.1,
+ * non-CAS CX 4.0.0, CAS CX 4.0.0,
+ * non-CAS CX 4.0.3 and CAS CX 4.0.3,
+ * non-CAS CX 4.2.0 and CAS CX 4.2.0,
+ * non-CAS CX 4.3.0.702 and CAS CX 4.3.0.702,
+ * non-CAS CX 4.4.0.532 and CAS CX 4.4.0.532,
+ * non-CAS CX 4.5.0.1180 and CAS CX 4.5.0.1180,
+ * non-CAS CX 4.5.1.12 and CAS CX 4.5.1.12,
+ * non-CAS CX 4.5.3.14 and CAS CX 4.5.3.14,
+ * non-CAS CX II 5.2.0.771, non-CAS CX II-T 5.2.0.771, CAS CX II 5.2.0.771,
+ * non-CAS CX 4.5.4.48 and CAS CX 4.5.4.48, 
+ * non-CAS CX II 5.2.0.564, non-CAS CX II-T 5.2.0.564, CAS CX II 5.3.0.564 */
 int sc_nl_osvalue(const int *values, unsigned size) {
     unsigned index = ut_os_version_index;
     if (index >= size)
@@ -87,7 +90,11 @@ unsigned sc_nl_osid(void) {
 }
 
 BOOL nl_is_cx2(void) {
-    return ut_os_version_index >= 34;
+    static uint32_t model_id = 0;
+    if(model_id == 0)
+        model_id = *(volatile uint32_t*)0x900A0000;
+
+    return model_id == 0x202;
 }
 
 unsigned sc_nl_hwsubtype(void) {
@@ -383,7 +390,9 @@ static int touchpad_write_compat_captivate(unsigned char first, unsigned char la
 typedef uint32_t (*manuf_hwflags_func)(void);
 /* OS-specific: Function which returns HW flags (field 5400) */
 static uintptr_t manuf_hwflags_ptr[NDLESS_MAX_OSID-FIRST_CXII_OSID+1] = {
-    0x100114A8, 0x100114A8, 0x100114A8
+    0x100114A8, 0x100114A8, 0x100114A8,
+    0x0, 0x0,
+    0x100114E8, 0x100114E8, 0x100114E8,
 };
 
 static bool has_captivate()

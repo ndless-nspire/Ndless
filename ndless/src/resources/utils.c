@@ -178,6 +178,25 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 36;
 			break;
 #endif
+#if !defined(STAGE1) || NDLESS_454
+		case 0x103B3A10: // 4.5.4.48 non-CAS CX
+			ut_os_version_index = 37;
+			break;
+		case 0x103B4130: // 4.5.4.48 CAS CX
+			ut_os_version_index = 38;
+			break;
+#endif
+#if !defined(STAGE1) || NDLESS_540
+		case 0x10416CC0: // 5.3.0.564 non-CAS CX II
+			ut_os_version_index = 39;
+			break;
+		case 0x10417460: // 5.3.0.564 non-CAS CX II-T
+			ut_os_version_index = 40;
+			break;
+		case 0x10417DA0: // 5.3.0.564 CAS CX II
+			ut_os_version_index = 41;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}

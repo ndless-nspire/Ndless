@@ -1,0 +1,65 @@
+                function on.paint(gc)
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 15)
+                    drawXCenteredString(gc, &quot;Ndless for OS:&quot;, 10)
+                    gc:setFont(&quot;sansserif&quot;, &quot;b&quot;, 12)
+                    drawXCenteredString(gc, &quot;4.5.3.14&quot;, 40)
+
+                    drawXCenteredString(gc, &quot;4.5.4.48&quot;, 60)
+                    drawXCenteredString(gc, &quot;5.2.0.771&quot;, 90)
+                    drawXCenteredString(gc, &quot;5.3.0.564&quot;, 110)
+
+                    gc:setFont(&quot;sansserif&quot;, &quot;r&quot;, 10)
+
+                    if ndless then
+                        gc:drawString(&quot;Ndless is already installed!&quot;, 5, 150, &quot;top&quot;)
+                        return
+                    end
+
+                    gc:drawString(&quot;Installing ndless...&quot;, 5, 150, &quot;top&quot;)
+
+                    if attempt &gt; 2 then
+                        gc:drawString(&quot;Several attempts failed,&quot;, 5, 170, &quot;top&quot;)
+                        gc:drawString(&quot;missing ndless_resources.tns?&quot;, 5, 185, &quot;top&quot;)
+                    end
+                end
+
+                s = ""
+                s = string.rep(installer, 768)
+                if not ndless then
+                    timer.start(0.3)
+                end
+
+                function on.timer()
+                    timer.stop()
+                    collectgarbage()
+                    require('physics')
+                    space = physics.Space()
+                    body = physics.Body(0, 0)
+                    shape = physics.CircleShape(body, 1, physics.Vect(0, 0))
+                    space:addShape(shape)
+                    body = physics.Body(0, 0)
+                    shape = physics.CircleShape(body, 1, physics.Vect(0, 0))
+                    space:addShape(shape)
+
+                    local a = ""
+                    local x = string.pack("u32", 0x13000000)
+
+                    function preSolveCb()
+                        space:removeCollisionHandler(0, 0)
+                        for i = 1,10
+                        do
+                            a = a..x
+                        end
+                        return 1
+                    end
+                    space:addCollisionHandler(0, 0, {preSolve = preSolveCb})
+                    space:step(1)
+
+                    attempt = attempt + 1
+                    platform.window:invalidate()
+                    timer.start(1)
+                end
+            </sc:script>
+        </wdgt>
+    </card>
+</prob>

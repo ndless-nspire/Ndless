@@ -15,22 +15,12 @@ $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc
 		"OS_ncascx-4.5.0.idc", "OS_cascx-4.5.0.idc",
 		"OS_ncascx-4.5.1.idc", "OS_cascx-4.5.1.idc",
 		"OS_ncascx-4.5.3.idc", "OS_cascx-4.5.3.idc",
-		"OS_ncascx2-5.2.0.771.idc", "OS_ncascx2t-5.2.0.771.idc", "OS_cascx2-5.2.0.711.idc");
+		"OS_ncascx2-5.2.0.771.idc", "OS_ncascx2t-5.2.0.771.idc", "OS_cascx2-5.2.0.771.idc",
+		"OS_ncascx-4.5.4.48.idc", "OS_cascx-4.5.4.48.idc",
+		"OS_ncascx2-5.3.0.564.idc", "OS_ncascx2t-5.3.0.564.idc", "OS_cascx2-5.3.0.564.idc");
 
-//Whether the file above is important. If not, no warnings will be printed
-$important = array(true, true, true, true, true, true,
-		   true, true, true, true,
-		   true, true, false, false,
-		   false, false, true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true,
-		   true, true, true);
+//If the file is listed, no warnings will be printed
+$unimportant = array("OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc", "OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc");
 
 //Some functions got renamed by TI, but our syscalls have the same name everywhere.
 //If a function has an entry here, it is internally renamed to the value.
@@ -94,7 +84,7 @@ foreach($idc_files as $nr => $idc_file)
 	if($idc_fp === FALSE)
 	{
 		$syscall_addrs[$nr] = array();
-		if($important[$nr])
+		if(!in_array($idc_file, $unimportant))
 			echo "Warning: couldn't open '" . $filename . "'!\n";
 
 		continue;
@@ -145,8 +135,8 @@ for($nr = 0; $nr < $count_os; $nr++)
 		if(!isset($syscall_addrs[$nr][$syscall_name]))
 		{
 			//Only warn if the file was opened at all
-			if($important[$nr] && count($syscall_addrs[$nr]) > 0)
-				echo "Warning: Syscall '" . $syscall_name . "' not found in '" . $idc_files[$nr] . "'!\n";
+			if(!in_array($idc_files[$nr], $unimportant) && count($syscall_addrs[$nr]) > 0)
+				echo "Warning: " . $idc_files[$nr] . " is missing syscall " . $syscall_name . "!\n";
 
 			fwrite($syscall_addr_list, "0x0,\n");
 		}

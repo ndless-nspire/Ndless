@@ -153,7 +153,9 @@ static const uintptr_t tct_current_thread_addrs[NDLESS_MAX_OSID+1] =
 						0x103B2BAC, 0x103B31AC,
 						0x103B3B1C, 0x103B423C,
 						0x103B436C, 0x103B4A8C,
-						0x1040F760, 0x1040FD70, 0x10410640};
+						0x1040F760, 0x1040FD70, 0x10410640,
+						0x103B4D5C, 0x103B547C,
+						0x10417F50, 0x104186F0, 0x10419030};
 
 /* Expand the stack of the currently running Task by 128K */
 static bool expand_stack()

@@ -1,15 +1,16 @@
 How to update an .idc file:
--Load the binary in IDA
+-Load the binary in IDA, with "Delete instructions without xrefs" off
 -Load the IDC script in IDA
 -Make your changes
 -File->Produce File->Dump Database to IDC file
 -Run "./lighten_idc.php <IDC file> <destination file>"
 
 How to add a new .idc file:
--Load the binary in IDA
--Let it finish the final pass
+-Load the binary in IDA, with "Delete instructions without xrefs" off
 -Find ERC_System_Error and mark it as noreturn
+-Let it finish analysis and trigger a final pass
 -Run idamkfuncs.py
+-Save with os specific file name, otherwise the bindiff gui breaks
 -Run bindiff with the most similiar OS
 -Import Symbols and Comments, min. confidence 0.9
 -File->Produce File->Dump Database to IDC file
