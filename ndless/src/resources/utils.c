@@ -159,7 +159,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 31;
 			break;
 #endif
-#if !defined(STAGE1) || NDLESS_453
+#if !defined(STAGE1)
 		case 0x103B3020: // 4.5.3.14 non-CAS CX
 			ut_os_version_index = 32;
 			break;
@@ -167,7 +167,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 33;
 			break;
 #endif
-#if !defined(STAGE1) || NDLESS_520
+#if !defined(STAGE1)
 		case 0x1040E4D0: // 5.2.0.771 non-CAS CX II
 			ut_os_version_index = 34;
 			break;
@@ -178,7 +178,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 36;
 			break;
 #endif
-#if !defined(STAGE1) || NDLESS_454
+#if !defined(STAGE1)
 		case 0x103B3A10: // 4.5.4.48 non-CAS CX
 			ut_os_version_index = 37;
 			break;
@@ -186,7 +186,7 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 38;
 			break;
 #endif
-#if !defined(STAGE1) || NDLESS_540
+#if !defined(STAGE1)
 		case 0x10416CC0: // 5.3.0.564 non-CAS CX II
 			ut_os_version_index = 39;
 			break;
