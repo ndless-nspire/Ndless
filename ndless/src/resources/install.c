@@ -46,7 +46,7 @@ static unsigned const ploader_hook_addrs[NDLESS_MAX_OSID+1] =
 						0x1000ADAC, 0x1000ADE4,
 						0x1002612C, 0x10026144, 0x10026164,
 						0x1000B034, 0x1000B074,
-						0x10028168, 0x100282A4, 0x100282F8};
+						0x10028168, 0x100282A0, 0x100282F8};
 
 // initialized at load time. Kept in resident program memory, use nl_is_3rd_party_loader to read it.
 static BOOL loaded_by_3rd_party_loader = FALSE;
