@@ -45,7 +45,7 @@
  * non-CAS CX 4.5.3.14 and CAS CX 4.5.3.14,
  * non-CAS CX II 5.2.0.771, non-CAS CX II-T 5.2.0.771, CAS CX II 5.2.0.771,
  * non-CAS CX 4.5.4.48 and CAS CX 4.5.4.48, 
- * non-CAS CX II 5.2.0.564, non-CAS CX II-T 5.2.0.564, CAS CX II 5.3.0.564 */
+ * non-CAS CX II 5.3.0.564, non-CAS CX II-T 5.3.0.564, CAS CX II 5.3.0.564 */
 int sc_nl_osvalue(const int *values, unsigned size) {
     unsigned index = ut_os_version_index;
     if (index >= size)
