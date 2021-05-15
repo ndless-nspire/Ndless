@@ -17,5 +17,7 @@ int main(void) {
 	lua_State *L = nl_lua_getstate();
 	if (!L) return 0; // not being called as Lua module
 	luaL_register(L, "luaextdemo", lualib);
-	return 0;
+
+	// Skip cleanup on exit, this is a resident program
+	_exit(0);
 }
