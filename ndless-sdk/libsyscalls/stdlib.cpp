@@ -46,10 +46,13 @@ constexpr int MAX_OPEN_FILES = 20;
 static NUC_FILE* openfiles[MAX_OPEN_FILES];
 static void* saved_screen_buffer; //In case the program changes the buffer
 
+static bool is_clean_exit = false; // Whether returned from main or exit called
+
 #ifdef USE_NSPIREIO
 	#include <nspireio/nspireio.h>
 
 	static nio_console csl;
+	static bool nio_ready = false;
 #endif
 
 // Called at startup (even before c++ constructors are run)
@@ -65,7 +68,10 @@ void initialise_monitor_handles()
 	        nio_init(&csl,NIO_MAX_COLS,NIO_MAX_ROWS,0,0,NIO_COLOR_BLACK,NIO_COLOR_WHITE,TRUE);
 	        nio_set_default(&csl);
 		nio_fflush(&csl);
+		nio_ready = true;
 	#endif
+
+	atexit([] { is_clean_exit = true; });
 }
 
 static int newslot()
@@ -183,13 +189,14 @@ void *calloc(size_t nmemb, size_t size)
 int _puts(const char *s)
 {
 #ifdef USE_NSPIREIO
-	return nio_puts(s);
-#else
-	return syscall<e_puts, int>(s);
+	if(nio_ready)
+		return nio_puts(s);
 #endif
+
+	return syscall<e_puts, int>(s);
 }
 
-void  __crt0_exit(int ret); // Declared in crt0.S
+void  __attribute__((noreturn)) __crt0_exit(int ret); // Declared in crt0.S
 
 void _exit(int ret)
 {
@@ -199,8 +206,14 @@ void _exit(int ret)
 		// it the right place for deinititalizing nspireio, as after this
 		// nothing has access to csl anymore and newlib itself won't flush
 		// its buffers either.
-		nio_free(&csl);
+		if(nio_ready)
+			nio_free(&csl);
+		nio_ready = false;
 	#endif
+
+	// When calling _exit, don't perform any cleanup
+	if(!is_clean_exit)
+		__crt0_exit(ret);
 
 	// Free memory allocated by libstdc++
 	if(__gnu_cxx::__freeres)
@@ -214,8 +227,6 @@ void _exit(int ret)
 	_reclaim_reent(global_reent);
 
 	__crt0_exit(ret);
-	
-	__builtin_unreachable();
 }
 
 std::type_info* __cxa_current_exception_type() __attribute__((weak));
@@ -314,7 +325,7 @@ int _fstat(int file, struct stat *st)
 int _read(int file, char *ptr, int len)
 {
 #ifdef USE_NSPIREIO
-	if(file == 0)
+	if(file == 0 && nio_ready)
 	{
 		if(!nio_fgets(ptr, len - 1, &csl))
 			*ptr = 0;
@@ -344,7 +355,7 @@ int _read(int file, char *ptr, int len)
 int _write(int file, char *ptr, int len)
 {
 #ifdef USE_NSPIREIO
-	if(file == 1 || file == 2)
+	if((file == 1 || file == 2) && nio_ready)
 	{
 		int len2 = len;
 		while(len2--)

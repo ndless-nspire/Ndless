@@ -124,6 +124,9 @@ unsigned int nl_hwsubtype();
 BOOL nl_loaded_by_3rd_party_loader();
 BOOL nl_isstartup();
 BOOL _nl_hassyscall(int nr);
+// Mark the program as resident, i.e. don't unload the executable on exit.
+// Instead of calling exit or return from main, _exit has to be used.
+// Otherwise cleanup breaks some library functions!
 void nl_set_resident();
 unsigned int nl_osvalue(const unsigned int *values, unsigned size);
 int nl_exec(const char* prg, int argc, char** argv);
