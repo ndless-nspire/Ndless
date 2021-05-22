@@ -310,9 +310,15 @@ int _stat(const char *path, struct stat *st)
 	st->st_gid = nuc_st.st_gid;
 	st->st_rdev = nuc_st.st_rdev;
 	st->st_size = nuc_st.st_size;
+#if __NEWLIB__ > 3 || (__NEWLIB__ == 3 && __NEWLIB_MINOR__ >= 2)
+	st->st_atim.tv_sec = nuc_st.st_atime;
+	st->st_mtim.tv_sec = nuc_st.st_mtime;
+	st->st_ctim.tv_sec = nuc_st.st_ctime;
+#else
 	st->st_atime = nuc_st.st_atime;
 	st->st_mtime = nuc_st.st_mtime;
 	st->st_ctime = nuc_st.st_ctime;
+#endif
   
 	return 0;
 }
