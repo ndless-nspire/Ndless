@@ -59,7 +59,7 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
       - name: Build docker image
-        working-directory: ndless-sdk/toolchain
+        working-directory: ndless-sdk
         run: make docker
 #      - name: Push docker image
 #        run: |

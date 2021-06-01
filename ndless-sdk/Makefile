@@ -16,8 +16,8 @@ build-%: %
 clean-%: %
 	+$(MAKE) -C $< clean
 
-docker: Dockerfile.ndless
+docker: docker-ndless
 
 docker-ndless: Dockerfile.ndless
-	docker build . -t ndless/ndless
+	docker build . -f Dockerfile.ndless -t ndless/ndless
 

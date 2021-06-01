@@ -27,7 +27,7 @@ RUN git clone --recursive https://github.com/ndless-nspire/Ndless.git
 
 # Build and install toolchain
 WORKDIR /Ndless/ndless-sdk/toolchain/
-RUN PARALLEL=$(nproc) ./build_toolchain.sh
+RUN PARALLEL=-j$(nproc) ./build_toolchain.sh
 
 ENV PATH="/Ndless/ndless-sdk/toolchain/install/bin:/Ndless/ndless-sdk/bin:${PATH}"
 
