@@ -50,3 +50,18 @@ jobs:
         run: sudo apt install -y libboost-program-options-dev
       - name: Build
         run: make -j4
+  build-docker:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.2.0
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+      - name: Build docker image
+        working-directory: ndless-sdk
+        run: make docker
+#      - name: Push docker image
+#        run: |
+#            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+#            docker image push ndless/ndless --all-tags
