@@ -264,9 +264,9 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	// OS-specific: reg number
 	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
-		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
+		gui_gc_setColor(gc, has_colors ? 0x444444 : 0x505050);
 		gui_gc_setFont(gc, SerifRegular9);
-		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
+		gui_gc_drawString(gc, (char*) u".", 25, 4, GC_SM_TOP);
 
 		static int i = 6;
 		if (!i--) {
