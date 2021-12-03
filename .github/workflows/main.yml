@@ -49,4 +49,4 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libboost-program-options-dev
       - name: Build
-        run: make -j4
+        run: make -j$(nproc --all)
