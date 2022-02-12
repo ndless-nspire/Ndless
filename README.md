@@ -27,6 +27,8 @@ For more in-depth info, visit the wiki:
 
 ->    https://hackspire.org
 
+## NOTE!! Ndless is not currently compatible with calculator OS version 4.5.5. While a version that is compatible is currently in the works, there is no planned release date. 
+
 Quick guide
 ===========
 
