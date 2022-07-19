@@ -158,6 +158,6 @@ Legal stuff
 ===========
 
 Most of the work is covered by the Mozilla Public License, version 1.1 (MPL). 
-Please read the file "[`Mozilla-Public-License-v1.1.html`](/Mozilla-Public-License-v1.1.html)" carefully before distributing any part of Ndless, with or without modification.
+Please read the file [`Mozilla-Public-License-v1.1.html`](./Mozilla-Public-License-v1.1.html) carefully before distributing any part of Ndless, with or without modification.
 
 Some parts are covered by other licenses. Others are in the public domain. These parts are identified by the files `LICENSE.txt` or `LICENSE.html` in the sub-directory.
