@@ -134,7 +134,7 @@ Prerequisites: OS 3.6
 Uninstalling
 ------
 
-To uninstall Ndless, simply run the `ndless_resources.tns` file and select "`Yes`", after which, the device will reboot with Ndless uninstalled
+To uninstall Ndless, simply run the `ndless_resources.tns` file and select "Yes", after which the device will reboot.
 
 Development team
 ================
