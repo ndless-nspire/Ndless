@@ -147,7 +147,7 @@ Creators:
   Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
 
 Contributors and testers: Adriweb, bsl, critor, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, tangrs... and many others.  
-You can see the full list of contributors [here](https://github.com/ndless-nspire/Ndless/graphs/contributors)
+You can also see the list of additionally GitHub contributors [here](https://github.com/ndless-nspire/Ndless/graphs/contributors)
 
 Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org
 
