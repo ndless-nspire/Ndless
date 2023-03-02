@@ -13,8 +13,7 @@ __cpp_init: .global __cpp_init
 	popeq {r0, r1, r4, r5, pc}
 	cmp r0, #0
 	popeq {r0, r1, r4, r5, pc}
-	mov lr,pc
-	mov pc,r0
+	blx r0
 	add r4, r4, #4
 	b ctor_runloop
 	
@@ -32,8 +31,7 @@ __cpp_fini: .global __cpp_fini
 	popeq {r0, r1, r4, r5, pc}
 	cmp r0, #0
 	popeq {r0, r1, r4, r5, pc}
-	mov lr,pc
-	mov pc,r0
+	blx r0
 	add r4, r4, #4
 	b dtor_runloop
 	
