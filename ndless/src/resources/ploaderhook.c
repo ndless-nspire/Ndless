@@ -56,7 +56,7 @@ int assoc_file_each_cb(const char *path, void *context) {
 	return 0;
 }
 
-static bool is_current_prgm_resident;
+static bool is_current_prgm_resident = FALSE;
 
 // Can be called through a builtin function by the running program
 void ld_set_resident(void) {
@@ -73,28 +73,14 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		return 1;
 	}
 
-	uint8_t *docptr;
-	if(emu_debug_alloc_ptr)
-	{
-		if(emu_debug_alloc_size() < docstat.st_size)
-		{
-			puts("ndless_load: emu_debug_alloc_size too small!");
-			docptr = malloc(docstat.st_size);	
-		}
-		else
-			docptr = emu_debug_alloc_ptr;
-	}
-	else
-		docptr = malloc(docstat.st_size);
-
+	uint8_t *docptr = execmem_alloc(docstat.st_size);
 	if (!docptr) {
 		puts("ndless_load: can't malloc");
 		return 1;
 	}
 	if (!nuc_fread(docptr, docstat.st_size, 1, docfile)) {
 		puts("ndless_load: can't read doc");
-		if (!emu_debug_alloc_ptr)
-			free(docptr);
+		execmem_free(docptr);
 		return 1;
 	}
 
@@ -111,8 +97,7 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 			{
 			case 0: // Execute as Zehn
 			case 2: // Valid Zehn, but don't execute
-				if(!emu_debug_alloc_ptr)
-					free(docptr);
+				execmem_free(docptr);
 				return ret;
 			case 1: // Invalid Zehn
 				break;
@@ -273,6 +258,7 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	}
 
 	ld_bin_format = LD_ERROR_BIN;
+	is_current_prgm_resident = resident_ptr != NULL;
 
 	uint32_t signature;
 
@@ -386,7 +372,6 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
         if(!supports_hww)
 		lcd_compat_enable();
 	
-	is_current_prgm_resident = false;
 	clear_cache();
 	ret = entry(argc, argv); /* run the program */
 	if (has_colors)
@@ -405,22 +390,21 @@ ld_exec_with_args_quit:
 	free(savedscr);
 	wait_no_key_pressed(); // let the user release the key used to exit the program, to avoid being read by the OS
 	TCT_Local_Control_Interrupts(intmask);
-	if (ret != 0xDEAD && resident_ptr) {
-		*resident_ptr = base;
-		return ret;
-	}
-	if (is_current_prgm_resident) // required by the program itself
-		return ret;
-	if (!emu_debug_alloc_ptr)
-	    free(base);
+	if (ret != 0xDEAD && is_current_prgm_resident) {
+		if (resident_ptr)
+			*resident_ptr = base;
 
+		return ret;
+        }
+
+	ld_free(base);
 	free(argv);
 	return ret;
 }
 
 // To free the program's memory block when run with ld_exec(non null resident_ptr)
 void ld_free(void *resident_ptr) {
-	free(resident_ptr);
+	execmem_free(resident_ptr);
 }
 
 // When opening a document

@@ -48,8 +48,8 @@ extern "C" {
 #endif
 
 /* emu.c */
-extern void *emu_debug_alloc_ptr;
-extern size_t emu_debug_alloc_size();
+extern void *execmem_alloc(size_t size);
+extern void execmem_free(void *ptr);
 extern unsigned emu_sysc_table[];
 
 /* install.c */

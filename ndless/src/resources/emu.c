@@ -26,13 +26,36 @@
 #include "ndless.h"
 
 // set by emu_debug_alloc()
-void *emu_debug_alloc_ptr;
+static void *emu_debug_alloc_ptr = NULL;
+static size_t emu_debug_alloc_size = 0;
+// Set by execmem_alloc, unset by execmem_free
+static bool emu_debug_alloc_ptr_used = false;
 
-size_t emu_debug_alloc_size()
+void *execmem_alloc(size_t size)
 {
-	// 12 MiB if 64MiB of RAM, 8 otherwise
-	int mebibytes = (has_colors && !is_cm) ? 12 : 8;
-	return mebibytes * 1024 * 1024;
+	if (!emu_debug_alloc_ptr)
+		return malloc(size);
+
+	if (emu_debug_alloc_ptr_used) {
+		puts("emu_debug_alloc_ptr in use by a resident program already");
+		return malloc(size);
+	}
+
+	if (size > emu_debug_alloc_size) {
+		printf("emu_debug_alloc_size too small (%u B) for this program (%u B)\n", emu_debug_alloc_size, size);
+		return malloc(size);
+	}
+
+	emu_debug_alloc_ptr_used = true;
+	return emu_debug_alloc_ptr;
+}
+
+void execmem_free(void *ptr)
+{
+	if (ptr == emu_debug_alloc_ptr)
+		emu_debug_alloc_ptr_used = false;
+	else
+		free(ptr);
 }
 
 // The following functions are exported as syscalls.
@@ -45,8 +68,13 @@ size_t emu_debug_alloc_size()
  * is sent only once by GDB for each debug session.
  * Returns a pointer to the memory block, or null in case of error. */
 static void *emu_debug_alloc(void) {
-	if (!emu_debug_alloc_ptr)
-		emu_debug_alloc_ptr = malloc(emu_debug_alloc_size());
+	if (!emu_debug_alloc_ptr) {
+		// 12 MiB if 64MiB of RAM, 8 otherwise
+		int mebibytes = (has_colors && !is_cm) ? 12 : 8;
+		emu_debug_alloc_size = mebibytes * 1024 * 1024;
+
+		emu_debug_alloc_ptr = malloc(emu_debug_alloc_size);
+	}
 
 	return emu_debug_alloc_ptr;
 }

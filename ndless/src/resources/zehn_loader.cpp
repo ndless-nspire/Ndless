@@ -35,11 +35,6 @@ private:
 	T* m_data;
 };
 
-struct PodDeleter
-{
-	void operator()(void* ptr) { free(ptr); }
-};
-
 void msgbox(const char *title, const char *fmt, ...)
 {
 	char content[1024];
@@ -124,22 +119,8 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 	size_t remaining_mem = header.alloc_size - nuc_ftell(file) + file_start, remaining_file = header.file_size - nuc_ftell(file) + file_start;
 
-	uint8_t *base = nullptr;
-	if(emu_debug_alloc_ptr)
-	{
-		if(emu_debug_alloc_size() < remaining_mem)
-			puts("[Zehn] emu_debug_alloc_size too small!");
-		else
-			base = reinterpret_cast<uint8_t*>(emu_debug_alloc_ptr);
-	}
-
-	std::unique_ptr<uint8_t[], PodDeleter> mem_allocation;
-	if(!base)
-	{
-		mem_allocation.reset(reinterpret_cast<uint8_t*>(malloc(remaining_mem)));
-		base = mem_allocation.get();
-	}
-
+	std::unique_ptr<uint8_t[], decltype(&execmem_free)> mem_allocation{reinterpret_cast<uint8_t*>(execmem_alloc(remaining_mem)), &execmem_free};
+	uint8_t *base = mem_allocation.get();
 	if(!base)
 	{
 		puts("[Zehn] Memory allocation failed!");
