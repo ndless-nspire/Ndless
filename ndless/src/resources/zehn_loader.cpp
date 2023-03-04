@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstdarg>
+#include <memory>
 
 #include <zlib.h>
 #include <libndls.h>
@@ -32,6 +33,11 @@ public:
 private:
 	const size_t m_count;
 	T* m_data;
+};
+
+struct PodDeleter
+{
+	void operator()(void* ptr) { free(ptr); }
 };
 
 void msgbox(const char *title, const char *fmt, ...)
@@ -118,20 +124,22 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 
 	size_t remaining_mem = header.alloc_size - nuc_ftell(file) + file_start, remaining_file = header.file_size - nuc_ftell(file) + file_start;
 
+	uint8_t *base = nullptr;
 	if(emu_debug_alloc_ptr)
 	{
 		if(emu_debug_alloc_size() < remaining_mem)
-		{
 			puts("[Zehn] emu_debug_alloc_size too small!");
-			*mem_ptr = malloc(remaining_mem);
-		}
 		else
-			*mem_ptr = emu_debug_alloc_ptr;
+			base = reinterpret_cast<uint8_t*>(emu_debug_alloc_ptr);
 	}
-	else
-		*mem_ptr = malloc(remaining_mem);
 
-	uint8_t *base = reinterpret_cast<uint8_t*>(*mem_ptr);
+	std::unique_ptr<uint8_t[], PodDeleter> mem_allocation;
+	if(!base)
+	{
+		mem_allocation.reset(reinterpret_cast<uint8_t*>(malloc(remaining_mem)));
+		base = mem_allocation.get();
+	}
+
 	if(!base)
 	{
 		puts("[Zehn] Memory allocation failed!");
@@ -320,6 +328,8 @@ extern "C" int zehn_load(NUC_FILE *file, void **mem_ptr, int (**entry)(int,char*
 		}
 	}
 
+	*mem_ptr = base;
+	mem_allocation.release(); // Caller owns it now
 	*entry = reinterpret_cast<int (*)(int,char*[])>(base + header.entry_offset);
 
 	return 0;

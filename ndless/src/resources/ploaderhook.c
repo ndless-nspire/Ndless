@@ -324,8 +324,6 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 			ld_bin_format = LD_ZEHN_BIN;
 			break;
 		}
-		if(base && base != emu_debug_alloc_ptr)
-			free(base);
 
 		nuc_fclose(prgm);
 		return ret == 1 ? 0xDEAD : 0xBEEF;
