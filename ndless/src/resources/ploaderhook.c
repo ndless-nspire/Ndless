@@ -73,6 +73,45 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		return 1;
 	}
 
+	// Scan the first 20KiB for an embedded Zehn file
+	size_t scansize = docstat.st_size;
+	if(scansize > 20 * 1024)
+		scansize = 20 * 1024;
+
+	uint32_t * const scanarea = malloc(scansize);
+	if (!scanarea) {
+		puts("ndless_load: can't malloc");
+		return 1;
+	}
+
+	if (!nuc_fread(scanarea, scansize, 1, docfile)) {
+		puts("ndless_load: can't read doc");
+		free(scanarea);
+		return 1;
+	}
+
+	for(size_t i = 0; i + 1 < scansize / sizeof(uint32_t); ++i)
+	{
+		// Found an embedded Zehn file
+		if(scanarea[i] == 0x6e68655a && scanarea[i + 1] == 1)
+		{
+			nuc_fseek(docfile, i * sizeof(uint32_t), SEEK_SET);
+			int ret = zehn_load(docfile, base, entry_address_ptr, supports_hww);
+			switch(ret)
+			{
+			case 0: // Execute as Zehn
+			case 2: // Valid Zehn, but don't execute
+				free(scanarea);
+				return ret;
+			case 1: // Invalid Zehn
+				break;
+			}
+		}
+	}
+	free(scanarea);
+
+	nuc_fseek(docfile, 0, SEEK_SET);
+
 	uint8_t *docptr = execmem_alloc(docstat.st_size);
 	if (!docptr) {
 		puts("ndless_load: can't malloc");
@@ -82,28 +121,6 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 		puts("ndless_load: can't read doc");
 		execmem_free(docptr);
 		return 1;
-	}
-
-	// Scan the first 20KiB (5120 32bit values) for an embedded Zehn file
-	uint32_t *ptr32 = (uint32_t*) docptr, *ptr32_end = ptr32 + ((docstat.st_size / 4) < 5120 ? (docstat.st_size / 4) : 5120);
-	while(ptr32 < ptr32_end - 1)
-	{
-		// Found an embedded Zehn file
-		if(*ptr32 == 0x6e68655a && *(ptr32 + 1) == 1)
-		{
-			nuc_fseek(docfile, (uint8_t*)(ptr32) - (uint8_t*)(docptr), SEEK_SET);
-			int ret = zehn_load(docfile, base, entry_address_ptr, supports_hww);
-			switch(ret)
-			{
-			case 0: // Execute as Zehn
-			case 2: // Valid Zehn, but don't execute
-				execmem_free(docptr);
-				return ret;
-			case 1: // Invalid Zehn
-				break;
-			}
-		}
-		ptr32++;
 	}
 
 	*base = docptr;
