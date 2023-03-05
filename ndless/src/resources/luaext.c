@@ -29,10 +29,15 @@
 static void *loaded[LUAEXT_MAX_MODULES];
 static unsigned loaded_next_index = 0;
 
-
 static int require_file_each_cb(const char *path, void *context) {
-	if (strcmp(strrchr(path, '/') + 1, (char*)context) || ld_exec(path, loaded + loaded_next_index))
+	if (strcmp(strrchr(path, '/') + 1, (char*)context))
 		return 0;
+	loaded[loaded_next_index] = NULL;
+	if (ld_exec(path, &loaded[loaded_next_index]) != 0) {
+		// Loading failed or module returned failure
+		ld_free(loaded[loaded_next_index]);
+		return 0;
+	}
  	loaded_next_index++; // found and loaded
 	return 1;
 }
