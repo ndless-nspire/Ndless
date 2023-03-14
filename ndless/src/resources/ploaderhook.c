@@ -101,6 +101,7 @@ static int ndless_load(const char *docpath, NUC_FILE *docfile, void **base, int 
 			{
 			case 0: // Execute as Zehn
 			case 2: // Valid Zehn, but don't execute
+				ld_bin_format = LD_ZEHN_BIN;
 				free(scanarea);
 				return ret;
 			case 1: // Invalid Zehn
@@ -301,30 +302,30 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 	switch(signature)
 	{
 	case 0x00475250: //"PRG\0"
+		ld_bin_format = LD_PRG_BIN;
 		if((ret = ndless_load(prgm_path, prgm, &base, &entry, &supports_hww)) == 0)
 		{
 			nuc_fclose(prgm);
-			ld_bin_format = LD_PRG_BIN;
 			break;
 		}
 
 		nuc_fclose(prgm);
 		return ret == 1 ? 0xDEAD : 0xBEEF;
 	case 0x544c4662: //"bFLT"
+		ld_bin_format = LD_BFLT_BIN;
 		if(bflt_load(prgm, &base, &entry) == 0)
 		{
 			nuc_fclose(prgm);
-			ld_bin_format = LD_BFLT_BIN;
 			break;
 		}
 
 		nuc_fclose(prgm);
 		return 0xDEAD;
 	case 0x6e68655a: //"Zehn"
+		ld_bin_format = LD_ZEHN_BIN;
 		if((ret = zehn_load(prgm, &base, &entry, &supports_hww)) == 0)
 		{
 			nuc_fclose(prgm);
-			ld_bin_format = LD_ZEHN_BIN;
 			break;
 		}
 
