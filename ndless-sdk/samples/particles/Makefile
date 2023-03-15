@@ -24,7 +24,7 @@ DISTDIR = .
 vpath %.tns $(DISTDIR)
 vpath %.elf $(DISTDIR)
 
-all: $(EXE).prg.tns
+all: $(EXE).tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $<
@@ -40,13 +40,12 @@ $(EXE).elf: $(OBJS)
 	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@ $(ZEHNFLAGS)
-
-$(EXE).prg.tns: $(EXE).tns
-	make-prg $(DISTDIR)/$^ $(DISTDIR)/$@
+	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@.zehn $(ZEHNFLAGS)
+	make-prg $(DISTDIR)/$@.zehn $(DISTDIR)/$@
+	rm $(DISTDIR)/$@.zehn
 
 clean:
-	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).prg.tns
+	rm -f *.o $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn
 
 ## Header dependencies ##
 main.o : gravity_particles.h
