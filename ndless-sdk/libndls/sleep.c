@@ -17,6 +17,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s): 
+ *  - miracade <https://github.com/miracade>
  ****************************************************************************/
 
 #include <os.h>
@@ -37,7 +38,9 @@ unsigned msleep(unsigned millisec) {
 		*divider = orig_divider;
 		*timer = 32;
 	} else {
-		// see http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0271d/CHDFDDCF.html
+		// The timer used is the SP804.
+		// Documentation: https://developer.arm.com/documentation/ddi0271/d/
+		// The base address of this timer is 0x900D0000.
 		volatile unsigned *load = (unsigned*)0x900D0000;
 		volatile unsigned *control = (unsigned*)0x900D0008;
 		volatile unsigned *int_clear = (unsigned*)0x900D000C;
