@@ -16,7 +16,7 @@ set -eu
 
 TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
-PARALLEL="${PARALLEL--$(nproc --all)}" # or "-j<number of build jobs>"
+PARALLEL="${PARALLEL--j$(getconf _NPROCESSORS_ONLN)}" # or "-j<number of build jobs>"
 PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
 BINUTILS=binutils-2.38 # https://www.gnu.org/software/binutils/
