@@ -13,11 +13,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
+        os: [ubuntu-20.04, ubuntu-22.04]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         # we don't need submodules for building the toolchain, but we do for everything else
         with:
           submodules: 'recursive'
@@ -30,7 +30,7 @@ jobs:
       # ndless-sdk
       # build the toolchain first
       # it takes ~40min to build, so we want to avoid that whenever possible!
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: toolchain-cache
         with:
           path: ndless-sdk/toolchain/install
@@ -51,7 +51,7 @@ jobs:
       - name: Build
         run: make -j$(nproc --all)
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         with:
           name: output
           path: ndless/calcbin/*.tns

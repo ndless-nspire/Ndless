@@ -6,35 +6,20 @@
 __cpp_init: .global __cpp_init
 	push {r0, r1, r4, r5, lr}
 	adr r4,ctors
-	
-	ctor_runloop:
-	ldr r0, [r4]
+runloop:
+	ldr r0, [r4], #4
 	cmp r0, #-1
+	cmpne r0, #0
 	popeq {r0, r1, r4, r5, pc}
-	cmp r0, #0
-	popeq {r0, r1, r4, r5, pc}
-	mov lr,pc
-	mov pc,r0
-	add r4, r4, #4
-	b ctor_runloop
-	
+	blx r0
+	b runloop
+
 	ctors: /* Begin list of function pointers */
-	
-	
+
 .section .fini_array
 __cpp_fini: .global __cpp_fini
 	push {r0, r1, r4, r5, lr}
 	adr r4,dtors
-	
-	dtor_runloop:
-	ldr r0, [r4]
-	cmp r0, #-1
-	popeq {r0, r1, r4, r5, pc}
-	cmp r0, #0
-	popeq {r0, r1, r4, r5, pc}
-	mov lr,pc
-	mov pc,r0
-	add r4, r4, #4
-	b dtor_runloop
-	
+	b runloop
+
 	dtors:

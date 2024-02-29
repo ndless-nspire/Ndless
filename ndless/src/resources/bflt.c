@@ -172,19 +172,7 @@ int bflt_load(FILE* fp, void **mem_ptr, int (**entry_address_ptr)(int,char*[])) 
     size_t binary_size = header.bss_end - header.entry;
     info("Attempting to alloc %u bytes",binary_size);
 
-    if(emu_debug_alloc_ptr)
-    {
-        if(emu_debug_alloc_size() < binary_size)
-        {
-            puts("bFLT: emu_debug_alloc_size too small!");
-            mem = malloc(binary_size);
-        }
-        else
-            mem = emu_debug_alloc_ptr;
-    }
-    else
-        mem = malloc(binary_size);
-
+    mem = execmem_alloc(binary_size);
     if (!mem) error_goto_error("Failed to alloc binary memory");
 
     if (copy_segments(fp, &header, mem, binary_size) != 0) error_goto_error("Failed to copy segments");
@@ -211,7 +199,7 @@ int bflt_load(FILE* fp, void **mem_ptr, int (**entry_address_ptr)(int,char*[])) 
     info("Successfully loaded bFLT executable to memory");
     return 0;
     error:
-    if (mem) free(mem);
+    execmem_free(mem);
     *mem_ptr = NULL;
     *entry_address_ptr = NULL;
     error_return("Caught error - exiting");
