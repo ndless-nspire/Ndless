@@ -151,9 +151,6 @@ More contributions can be seen on [the GitHub repo](https://github.com/ndless-ns
 
 Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org
 
-We will gladly accept PayPal donations for the hardware expenses that were required for the development of Ndless. You can use the e-mail addresses above or the following URL:  
-Thank you for your support! [![Donate via PayPal](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=olivier%2ecalc%40gmail%2ecom&lc=US&item_name=Ndless&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted)
-
 Legal stuff
 ===========
 
