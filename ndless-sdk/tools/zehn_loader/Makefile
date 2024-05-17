@@ -7,11 +7,11 @@ ZLIB_CFLAGS := -Os -fPIE -ffunction-sections -fdata-sections -DNO_GZIP -ffreesta
 
 all: zehn_loader.tns zehn_loader_compressed.tns
 
-zehn_loader_compressed.tns.elf: loader.cpp zlib/libz.a
-	$(GXX) $(GXXFLAGS) $^ -o $@ -DENABLE_ZLIB -lgcc
+zehn_loader_compressed.tns.elf: ldscript loader.cpp zlib/libz.a
+	$(GXX) $(GXXFLAGS) loader.cpp zlib/libz.a -o $@ -DENABLE_ZLIB -lgcc
 
-zehn_loader.tns.elf: loader.cpp
-	$(GXX) $(GXXFLAGS) $^ -o $@
+zehn_loader.tns.elf: ldscript loader.cpp
+	$(GXX) $(GXXFLAGS) loader.cpp -o $@
 
 zehn_loade%.tns: zehn_loade%.tns.elf
 	$(OBJCOPY) --set-section-flags .pad=alloc,load,contents -O binary $^ $@
