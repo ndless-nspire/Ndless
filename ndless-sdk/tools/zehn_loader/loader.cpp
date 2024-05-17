@@ -72,9 +72,9 @@ int main(int argc, char **argv)
 
 		old_storage = reinterpret_cast<const uint8_t*>(header);
 		syscall<e_memcpy, void*>(mallocd, old_storage, header->file_size);
-		header = reinterpret_cast<const Zehn_header*>(mallocd);
+		header = reinterpret_cast<const Zehn_header*>(__builtin_assume_aligned(mallocd, 4));
 	}
-	
+
 	const Zehn_reloc *reloc_table = reinterpret_cast<const Zehn_reloc*>(reinterpret_cast<const uint8_t*>(header) + sizeof(Zehn_header));
 	//This loader doesn't parse the flag table
 	const uint8_t *flag_table = reinterpret_cast<const uint8_t*>(reloc_table) + sizeof(Zehn_reloc) * header->reloc_count;
