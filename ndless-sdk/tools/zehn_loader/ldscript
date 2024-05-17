@@ -11,7 +11,6 @@ SECTIONS
 		*(.got.plt);
 		*(.got);
 	}
-	/* .bss before .data, to make sure space is allocated for it in the binary file */
 	.bss : {
 		*(.bss);
 		*(.bss.*);
@@ -20,7 +19,10 @@ SECTIONS
 		*(.data);
 		*(.data.*);
 	}
-
-	. = ALIGN(4);
+	/* Put padding into its own section which is force included
+	   by the objcopy call. This ensures that NOBITS data is filled. */
+	.pad : {
+		. = ALIGN(4);
+	}
 }
 zehn_start = .;

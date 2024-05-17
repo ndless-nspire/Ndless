@@ -14,7 +14,7 @@ zehn_loader.tns.elf: loader.cpp
 	$(GXX) $(GXXFLAGS) $^ -o $@
 
 zehn_loade%.tns: zehn_loade%.tns.elf
-	$(OBJCOPY) -O binary $^ $@
+	$(OBJCOPY) --set-section-flags .pad=alloc,load,contents -O binary $^ $@
 
 zlib/Makefile: ../../thirdparty/zlib/configure
 	mkdir -p zlib
