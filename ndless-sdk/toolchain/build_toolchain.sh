@@ -19,10 +19,10 @@ PREFIX="${PWD}/install" # or the directory where the toolchain should be install
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
 PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
-BINUTILS=binutils-2.38 # https://www.gnu.org/software/binutils/
-GCC=gcc-11.2.0 # https://gcc.gnu.org/
+BINUTILS=binutils-2.43 # https://www.gnu.org/software/binutils/
+GCC=gcc-14.2.0 # https://gcc.gnu.org/
 NEWLIB=newlib-4.1.0 # https://sourceware.org/newlib/
-GDB=gdb-11.2 # https://www.gnu.org/software/gdb/
+GDB=gdb-16.2 # https://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O3"
