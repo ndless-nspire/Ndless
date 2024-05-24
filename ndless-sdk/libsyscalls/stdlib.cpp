@@ -558,6 +558,12 @@ clock_t _times(struct tms *ptms)
 	return 0;
 }
 
+int _getentropy (void *, size_t)
+{
+	errno = ENOSYS;
+	return -1;
+}
+
 // Miscellaneous
 void *__dso_handle __attribute__((weak));
 void __sync_synchronize(){}

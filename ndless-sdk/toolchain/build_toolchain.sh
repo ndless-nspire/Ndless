@@ -19,19 +19,19 @@ PREFIX="${PWD}/install" # or the directory where the toolchain should be install
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
 PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
 
-BINUTILS=binutils-2.38 # https://www.gnu.org/software/binutils/
-GCC=gcc-11.2.0 # https://gcc.gnu.org/
-NEWLIB=newlib-4.1.0 # https://sourceware.org/newlib/
-GDB=gdb-11.2 # https://www.gnu.org/software/gdb/
+BINUTILS=binutils-2.44 # https://www.gnu.org/software/binutils/
+GCC=gcc-14.2.0 # https://gcc.gnu.org/
+NEWLIB=newlib-4.5.0.20241231 # https://sourceware.org/newlib/
+GDB=gdb-16.2 # https://www.gnu.org/software/gdb/
 
 # For newlib
 export CFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O3"
 export CXXFLAGS_FOR_TARGET="-DHAVE_RENAME -DMALLOC_PROVIDED -DABORT_PROVIDED -DNO_FORK -mcpu=arm926ej-s -ffunction-sections -O3"
 export PATH="${PREFIX}/bin:${PATH}"
 
-OPTIONS_BINUTILS="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror"
+OPTIONS_BINUTILS="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror --enable-warn-rwx-segments=no"
 OPTIONS_GCC="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages=c,c++ --with-system-zlib --with-newlib --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
-OPTIONS_NEWLIB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --enable-newlib-io-long-long --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float"
+OPTIONS_NEWLIB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --enable-newlib-io-long-long --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float --enable-newlib-reent-binary-compat"
 OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --disable-werror"
 
 if [ -n "${PYTHON}" ]; then
