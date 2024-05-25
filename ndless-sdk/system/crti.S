@@ -2,7 +2,7 @@
  * http://creativecommons.org/publicdomain/zero/1.0/ */
 /* For C++ support */
 
-.section .init_array
+.section .init_array.0
 __cpp_init: .global __cpp_init
 	push {r0, r1, r4, r5, lr}
 	adr r4,ctors
