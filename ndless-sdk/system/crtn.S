@@ -9,5 +9,5 @@ exit: .weak exit /* If linked without newlib, used by crt0. Can't be defined in 
 .section .init_array
 	.long -1 /* Terminating character for ctor list */
     
-.section .fini_array
+.section .fini_array.0
 	.long -1
