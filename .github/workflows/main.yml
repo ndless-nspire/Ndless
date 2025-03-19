@@ -51,7 +51,7 @@ jobs:
       - name: Build
         run: make -j$(nproc --all)
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: output-${{ matrix.os }}
           path: ndless/calcbin/*.tns
