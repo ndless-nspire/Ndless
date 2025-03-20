@@ -53,5 +53,5 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: output
+          name: output-${{ matrix.os }}
           path: ndless/calcbin/*.tns
