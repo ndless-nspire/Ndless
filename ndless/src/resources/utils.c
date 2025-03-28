@@ -37,6 +37,10 @@ unsigned int ut_os_version_index;
 
 void __attribute__ ((noreturn)) ut_calc_reboot(void) {
 	*(volatile unsigned*)0x900A0008 = 2; //CPU reset
+	
+	asm ("bkpt"); 	// Temporary solution as 0x900A0008 doesn't work on the CX II - bkpt will crash anything anyways
+			// TODO: Watchdog
+	
 	__builtin_unreachable();
 }
 
