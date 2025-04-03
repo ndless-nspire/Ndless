@@ -73,7 +73,7 @@ case "$cmd" in
 		;;
 	_zehn_loader_path)
 		if [[ -z $_NDLESS_ZEHN_PATH ]]; then
-			MAKEFLAGS='' make -C "${SDKROOT}/tools/zehn_loader" -s all
+			MAKEFLAGS='' make -C "${SDKROOT}/tools/zehn_loader" -s all >&2
 			_NDLESS_ZEHN_PATH="$SDKROOT/tools/zehn_loader/"
 		fi
 		suffix=$1
