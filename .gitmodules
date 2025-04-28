@@ -7,7 +7,7 @@
 	ignore = dirty
 [submodule "freetype2"]
 	path = ndless-sdk/thirdparty/freetype2
-	url = git://git.sv.nongnu.org/freetype/freetype2.git
+	url = https://gitlab.freedesktop.org/freetype/freetype.git
 [submodule "ndless-sdk/tools/luna"]
 	path = ndless-sdk/tools/luna
 	url = https://github.com/ndless-nspire/luna
