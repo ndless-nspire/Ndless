@@ -36,8 +36,19 @@ struct next_descriptor ut_next_descriptor = {
 unsigned int ut_os_version_index;
 
 void __attribute__ ((noreturn)) ut_calc_reboot(void) {
+	// First try
 	*(volatile unsigned*)0x900A0008 = 2; //CPU reset
-	__builtin_unreachable();
+
+	// Whoops, try and starve the watchdog
+	volatile unsigned int *wdload = (volatile unsigned int*)0x90060000;
+	volatile unsigned int *wdcontrol = (volatile unsigned int*)0x90060008;
+	volatile unsigned int *wdlock = (volatile unsigned int*)0x90060C00;
+
+	*wdlock = 0x1ACCE551; // unlock the watchdog
+	*wdload = 0x1000; // set the timeout
+	*wdcontrol = 0x03; // enable the watchdog and reset on timeout
+
+	while (1);
 }
 
 /* Writes to ut_os_version_index a zero-based index identifying the OS version and HW model.
