@@ -412,7 +412,7 @@ int _open(const char *path, int flags)
 	{
 		NUC_FILE *f = syscall<e_fopen, NUC_FILE*>(path, static_cast<const char*>("a"));
 		if(f == 0)
-			return errno_update(0);
+			return errno_update(-1);
     
 		syscall<e_fclose, void>(f);
 	}
