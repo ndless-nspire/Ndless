@@ -76,7 +76,7 @@ void initialise_monitor_handles()
 
 static int newslot()
 {
-	for(int i = 0; i < MAX_OPEN_FILES; i++)
+	for(int i = 3; i < MAX_OPEN_FILES; i++)
 		if(openfiles[i] == 0)
 			return i;
     
