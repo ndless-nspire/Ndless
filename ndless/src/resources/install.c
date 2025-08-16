@@ -145,6 +145,10 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		// Load is_hww
 		lcd_compat_load_hwrev();
 
+		// Patch leftmost column on the CX II being cut off
+		if (nl_is_cx2() && *(volatile unsigned int*)0xC0000004 == 0x03780d3f)
+			*(volatile unsigned int *)0xC0000004 = 0x0720013F;
+
 		// 3.9, 4.0.3 and 4.2.0 don't need to be rebooted
 		if(ut_os_version_index < 10)
 		{
