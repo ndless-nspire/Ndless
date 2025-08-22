@@ -371,14 +371,6 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		memcpy(argvptr, args, argsn * sizeof(char*));
 
 	argv[argc] = NULL;
-
-	volatile uint32_t *cursorctrl = (volatile uint32_t*)0xC0000C00;
-	uint32_t saved_cursorctrl = 0;
-	if(is_cx2) {
-		// Disable the LCDC cursor overlay
-		saved_cursorctrl = *cursorctrl;
-		*cursorctrl &= ~1;
-	}
 	
 	if (has_colors) {
 		volatile unsigned *palette = (volatile unsigned*)0xC0000200;
@@ -387,8 +379,16 @@ int ld_exec_with_args(const char *path, int argsn, char *args[], void **resident
 		ut_disable_watchdog(); // seems to be sometimes renabled by the OS
 	}
 
-        if(!supports_hww)
+	if(!supports_hww)
 		lcd_compat_enable();
+
+	volatile uint32_t *cursorctrl = (volatile uint32_t*)0xC0000C00;
+	uint32_t saved_cursorctrl = 0;
+	if(is_cx2) {
+		// Disable the LCDC cursor overlay
+		saved_cursorctrl = *cursorctrl;
+		*cursorctrl &= ~1;
+	}
 	
 	clear_cache();
 	ret = entry(argc, argv); /* run the program */
