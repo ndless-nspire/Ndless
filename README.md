@@ -148,7 +148,7 @@ For CX and CX CAS please install 3.9.1.
 * Close the installer with Ctrl+W
 * Have fun!
 
-OS 3.6 <img src="https://github.com/user-attachments/assets/8247db9c-76f7-406c-9467-f2ff2164dd9a" align="right">
+OS 3.6 <img src="https://i.imgur.com/6cq8g7Z.png" align="right">
 ------
 
 Prerequisites: OS 3.6
