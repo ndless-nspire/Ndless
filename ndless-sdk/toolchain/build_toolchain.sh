@@ -78,7 +78,7 @@ if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
 	if [ ! -d "download/${BINUTILS}" ]; then
 		echo "Downloading Binutils..."
 		rm -rf download/binutils*
-		downloadAndExtract https://ftp.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+		downloadAndExtract https://ftpmirror.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
 	fi
 
 	echo "Building Binutils..."
@@ -96,7 +96,7 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	# gcc creates a sysroot with some includes from newlib.
@@ -145,7 +145,7 @@ if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract https://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	echo "Building GCC (step 2)..."
@@ -163,7 +163,7 @@ if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
 	if [ ! -d "download/${GDB}" ]; then
 		echo "Downloading GDB..."
 		rm -rf download/gdb*
-		downloadAndExtract https://ftp.gnu.org/gnu/gdb/${GDB}.tar.xz
+		downloadAndExtract https://ftpmirror.gnu.org/gnu/gdb/${GDB}.tar.xz
 	fi
 
 	echo "Building GDB..."
