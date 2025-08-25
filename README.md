@@ -148,7 +148,7 @@ For CX and CX CAS please install 3.9.1.
 * Close the installer with Ctrl+W
 * Have fun!
 
-OS 3.6 <img src="http://www.mirari.fr/NwM1" align="right">
+OS 3.6 <img src="https://github.com/user-attachments/assets/8247db9c-76f7-406c-9467-f2ff2164dd9a" align="right">
 ------
 
 Prerequisites: OS 3.6
