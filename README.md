@@ -1,4 +1,4 @@
-Ndless r2019 for TI-Nspire OS <= v5.3.0.564
+Ndless r2020 for TI-Nspire OS <= v6.2.0.333
 ===========================================
 
 Installing Ndless on your calculator makes it possible to run assembly programs.
@@ -29,6 +29,33 @@ For more in-depth info, visit the wiki:
 
 Quick guide
 ===========
+
+OS 6.2.0.333 <img src="https://i.imgur.com/5nnLNsN.gif" align="right">
+--------
+
+Prerequisites: OS 6.2.0.333 on CX II, CX II-T or CX II CAS
+
+* Transfer `ndless_installer_4.5.5-6.2.0.tns` into a folder named "`ndless`" (top-level)
+* Transfer `ndless_resources.tns` into the same folder
+* Open the installer, press any alphanumeric key and wait
+* If it fails or reboots, try again until it works
+* Have fun!
+
+
+OS 4.5.5.79 <img src="https://i.imgur.com/oJGpCsB.gif" align="right">
+--------
+
+Prerequisites: OS 4.5.5.79 on CX or CX CAS
+
+* Determine your "boot1" version (needed later).
+  * Press `[Home]` > `[5]` (Settings) > `[4]` (Status) > About button.
+  * Here is a YouTube [video](https://youtu.be/htr106_ggjg) for this.
+* Transfer `ndless_installer_4.5.5-6.2.0.tns` into a folder named "`ndless`" (top-level)
+* Transfer `ndless_resources.tns` into the same folder
+* Open the installer, press the corresponding key for your boot1 version and wait
+* If it fails or reboots, try again until it works
+* Have fun!
+
 
 OS 5.2.0.771 + 5.3.0.564 <img src="https://i.imgur.com/kozAxpP.png" align="right">
 --------
@@ -146,7 +173,7 @@ Creators:
   Geoffrey Anneheim aka geogeo - < geoffrey dot anneheim at free dot fr >
   Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
 
-Contributors and testers: Adriweb, bsl, critor, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, tangrs... and many others.  
+Contributors and testers: Adriweb, AtlassianDell, bsl, cherpixel, critor, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, sasdallas, satyamedh, tangrs, timmycraft... and many others.  
 More contributions can be seen on [the GitHub repo](https://github.com/ndless-nspire/Ndless/graphs/contributors).
 
 Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org

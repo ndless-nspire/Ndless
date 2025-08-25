@@ -17,7 +17,9 @@ $idc_files = array("OS_ncas-3.1.0.idc", "OS_cas-3.1.0.idc", "OS_ncascx-3.1.0.idc
 		"OS_ncascx-4.5.3.idc", "OS_cascx-4.5.3.idc",
 		"OS_ncascx2-5.2.0.771.idc", "OS_ncascx2t-5.2.0.771.idc", "OS_cascx2-5.2.0.771.idc",
 		"OS_ncascx-4.5.4.48.idc", "OS_cascx-4.5.4.48.idc",
-		"OS_ncascx2-5.3.0.564.idc", "OS_ncascx2t-5.3.0.564.idc", "OS_cascx2-5.3.0.564.idc");
+		"OS_ncascx2-5.3.0.564.idc", "OS_ncascx2t-5.3.0.564.idc", "OS_cascx2-5.3.0.564.idc",
+		"OS_ncascx-4.5.5.79.idc", "OS_cascx-4.5.5.79.idc",
+		"OS_ncascx2-6.2.0.333.idc", "OS_ncascx2t-6.2.0.333.idc", "OS_cascx2-6.2.0.333.idc");
 
 //If the file is listed, no warnings will be printed
 $unimportant = array("OS_ncascx-3.9.0.idc", "OS_cascx-3.9.0.idc", "OS_ncas-3.9.1.idc", "OS_cas-3.9.1.idc");

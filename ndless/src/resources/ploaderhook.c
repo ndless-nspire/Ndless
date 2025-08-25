@@ -158,7 +158,9 @@ static const uintptr_t tct_current_thread_addrs[NDLESS_MAX_OSID+1] =
 						0x103B436C, 0x103B4A8C,
 						0x1040F760, 0x1040FD70, 0x10410640,
 						0x103B4D5C, 0x103B547C,
-						0x10417F50, 0x104186F0, 0x10419030};
+						0x10417F50, 0x104186F0, 0x10419030,
+						0x103b2c2c, 0x103b32cc,
+						0x1042b0a0, 0x1042b810, 0x1042C0A0};
 
 /* Expand the stack of the currently running Task by 128K */
 static bool expand_stack()
@@ -481,6 +483,8 @@ void plh_startup() {
 		file_each("./ndless/startup", startup_file_each_cb, NULL);
 		plh_isstartup = FALSE;
 	}
+
+	clear_cache();
 	ins_install_successmsg_hook();
 }
 

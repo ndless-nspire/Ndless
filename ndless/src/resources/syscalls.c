@@ -393,6 +393,8 @@ static uintptr_t manuf_hwflags_ptr[NDLESS_MAX_OSID-FIRST_CXII_OSID+1] = {
     0x100114A8, 0x100114A8, 0x100114A8,
     0x0, 0x0,
     0x100114E8, 0x100114E8, 0x100114E8,
+    0x0, 0x0,
+    0x100115fc, 0x100115fc, 0x100115fc
 };
 
 static bool has_captivate()

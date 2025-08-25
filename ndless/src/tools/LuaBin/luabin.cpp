@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <cstring>
 
 std::string luaForOS(std::string installer_filename, std::string varname)
 {
@@ -59,9 +60,9 @@ std::string luaForOS(std::string installer_filename, std::string varname)
 
 int main(int argc, char **argv)
 {
-	if(argc != 3 && argc != 4)
+	if(argc < 3 || argc > 5)
 	{
-		std::cerr << "Usage: " << argv[0] << " installer.bin out.lua|- [varname]" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " installer.bin out.lua|- [varname] [noescape]" << std::endl;
 		return 1;
 	}
 
@@ -69,8 +70,9 @@ int main(int argc, char **argv)
 	std::string lua = luaForOS(argv[1], argc >= 4 ? argv[3] : "s");
 
 	//XML-Escape LUA
+	bool escape = argc >= 5 ? strcmp(argv[4], "noescape") != 0 : true;
 	size_t pos = 0;
-	while((pos = lua.find("\"", pos)) != std::string::npos)
+	while((pos = lua.find("\"", pos)) != std::string::npos && escape)
 	{
 		lua.replace(pos, 1, "&quot;");
 		pos += 5;
