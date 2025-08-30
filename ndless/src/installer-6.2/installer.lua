@@ -233,8 +233,8 @@ function exec(addr, beforeExecHook)
     return true
 end
 
-local do_install = false
-local installed  = false
+local do_install        = false
+local attemped_install  = false
 
 function install()
     resetHeap()
@@ -242,48 +242,45 @@ function install()
     return exec(space.bptr, refresh)
 end
 
+local installer_result = {"install_failed:os_invalid", "install_failed:no_resources", "install_done", "install_failed"}
+
+function getInstallerResult()
+    local payloadResult   = string.byte(installer, #installer - 3)
+
+    if payloadResult == 0 or payloadResult > #installer_result then
+        payloadResult = #installer_result
+    end
+
+    return installer_result[payloadResult]
+end
+
 function on.construction()
-    ipc_load()
     timer.start(0.1)
 
     platform.registerErrorHandler(function ()
-        ipc_send("install_failed")
+        ipc_send("install_failed", "setup")
+    end)
+
+    ipc_subscribe("install_start", function (s, override) 
+        do_install = true
+        device_override = override
     end)
 end
 
-local gmsg = ""
-
-function on.paint(gc)
-    gc:drawString("state:" .. tostring(gmsg), 0, 0, "top")
-end
-
-function on.ipcMsg(msg)
-    gmsg = msg
-    if msg == "install_start" then
-        do_install = true
-    elseif msg == "install_start3" then
-        do_install = true
-        device_override = "cx"
-    elseif msg == "install_start4" then
-        do_install = true
-        device_override = "cxw"
-    end
-    platform.window:invalidate()
-end
-
 function on.timer()
-    if not installed and do_install then
+    ipc_tick()
+
+    if not attemped_install and do_install then
         gmsg = "starting install"
         local res = install()
         if res then
             installed = true
-            ipc_send("install_done")
-            gmsg = "install finished"
+            ipc_send(getInstallerResult())
         else
-            ipc_send("install_failed")
-            gmsg = "install failed"
+            ipc_send("install_failed", "setup")
         end
+
+        attemped_install = true
     end
-    platform.window:invalidate()
 end
 

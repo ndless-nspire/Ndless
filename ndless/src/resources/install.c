@@ -270,6 +270,8 @@ void ins_install_successmsg_hook(void) {
 
 // chained after the startup programs execution
 HOOK_DEFINE(ins_successsuccessmsg_hook) {
+	unsigned short msg[] = u"Ndless successfully installed!";
+
 	static bool closed = false;
 	if (!closed && close_document_addrs[ut_os_version_index] && !ins_loaded_by_3rd_party_loader()) {
 		// To not close more than necessary and prevent recursion
@@ -281,8 +283,10 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	if (HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[2] == ins_successmsg_icon[ut_os_version_index]) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
 		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
-		gui_gc_setFont(gc, SerifRegular9);
-		gui_gc_drawString(gc, (char*) u"Ndless installed!", 25, 4, GC_SM_TOP);
+		gui_gc_setFont(gc, Bold9);
+		
+		int str_width = gui_gc_getStringWidth(gc, Bold9, (char*)msg, 0, 0xFFFFFFFF);
+		gui_gc_drawString(gc, (char*)msg, (320 - str_width) / 2, 212, GC_SM_TOP);
 
 		static int i = 6;
 		if (!i--) {

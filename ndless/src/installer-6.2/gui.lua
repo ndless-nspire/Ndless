@@ -366,7 +366,6 @@ local s_ndless_install_done = bI([[
 \_------------------------_/
 ]])
 
-
 local s_ndless_install_failed = bI([[
         /----------\
 /-------+  Ndless  +-------\
@@ -378,6 +377,34 @@ local s_ndless_install_failed = bI([[
 | Please restart device    |
 | and try again!           |
 |                          |
+\_------------------------_/
+]])
+
+local s_ndless_missing_resources_file = bI([[
+        /----------\
+/-------+  Ndless  +-------\
+|       \_--------_/       |
+| ERROR                    |
+|                          |
+| Missing resources file   |
+|                          |
+| Please copy resources    |
+| file to device and try   |
+| again!                   |
+\_------------------------_/
+]])
+
+local s_ndless_invalid_os = bI([[
+        /----------\
+/-------+  Ndless  +-------\
+|       \_--------_/       |
+| ERROR                    |
+|                          |
+| Unsupported OS           |
+|                          |
+| This version of Ndless   |
+| is not compatible with   |
+| this device!             |
 \_------------------------_/
 ]])
 
@@ -432,25 +459,25 @@ local fade    = false
 local blink   = true
 local max     = #mColorsH
 local status  = "ready"
+local failed  = false
 local cxii    = false
 local trigger = false
 local install_ts = 0
 
 function on.paint(gc)
-    if status ~= "install_failed" then
+    local offsetX, offsetY = 0,0
+    if status == "install_failed" then
+        offsetY = -27
+        offsetX = -2
+    else
         gc:begin()
     end
 
     gc:fillRect(0,0, 320, 240)
     
-    do
-        --drawGrid(gc)
-        --return
-    end
-    
     gc:setColorRGB(0x002000)
-    gc:fillRect(b_x + 8 * 8, b_y - 12, 11 * 8, 12)
-    gc:fillRect(b_x, b_y, b_w, b_h)
+    gc:fillRect(offsetX + b_x + 8 * 8, offsetY + b_y - 12, 11 * 8, 12)
+    gc:fillRect(offsetX + b_x, offsetY + b_y, b_w, b_h)
     
     for c = 1, columns do
         local mc = current + oMap[c]
@@ -465,7 +492,7 @@ function on.paint(gc)
             
           
             gc:setColorRGB(col)
-            gc:fillRect(x1, y1, blockSize, blockSize)
+            gc:fillRect(offsetX + x1, offsetX + y1, blockSize, blockSize)
         end
     end
 
@@ -478,12 +505,18 @@ function on.paint(gc)
     elseif status == "install_done" then
         msg = s_ndless_install_done
     elseif status == "install_failed" then
-        msg = s_ndless_install_failed
+        if failed == "os_invalid" then
+            msg = s_ndless_invalid_os
+        elseif failed == "no_resources" then
+            msg = s_ndless_missing_resources_file
+        else
+            msg = s_ndless_install_failed
+        end
     else
         msg = "Status:" .. tostring(status)
     end
     
-    drawMonoString(gc, msg, b_x - 8, b_y - 16)
+    drawMonoString(gc, msg, offsetX + b_x - 8, offsetY + b_y - 16)
     
     local counter_offset = 30
     local credit_pos = current < counter_offset and 0 or math.floor((current - counter_offset) / 2)
@@ -491,6 +524,8 @@ function on.paint(gc)
 end
 
 function on.timer()
+    ipc_tick()
+
     if fade then
         max = math.max(max - 1, 0) 
     end
@@ -506,10 +541,11 @@ function on.timer()
     if status == "install_start" and current - fade > 15 then
         status     = "install_requested"
         install_ts = now
+
         if not cxii and trigger == "3" then
-            ipc_send("install_start3")
+            ipc_send("install_start", "cx")
         elseif not cxii and trigger == "4" then
-            ipc_send("install_start4")
+            ipc_send("install_start", "cxw")
         else 
             ipc_send("install_start")
         end
@@ -541,11 +577,16 @@ on.returnKey = on.charIn
 on.tabKey    = on.charIn
 
 function on.create()
-    ipc_load()
     cxii = getDeviceType() == "cx2"
     timer.start(0.08)
+
+    ipc_subscribe("install_done", function (d) 
+        status = d
+    end)
+
+    ipc_subscribe("install_failed", function (f, reason) 
+        status = f
+        failed = reason
+    end)
 end
 
-function on.ipcMsg(msg)
-    status = msg
-end
