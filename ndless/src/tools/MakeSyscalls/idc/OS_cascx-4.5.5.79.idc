@@ -859,7 +859,7 @@ static main(void)
 	MakeName	(0x10a7c4bc,    "lua_math__evalexpr");
 	MakeName	(0x10a9de8c,    "cpSpace_addCollisionHandler");
 	MakeName	(0x10aa09f8,    "cpSpace_step");
-	MakeName	(0x1183b0d8,	"keypad_type");
+	MakeName	(0x112f5e2c,	"keypad_type");
     MakeName	(0x113b0f28,	"gui_gc_global_GC_ptr");
     MakeName	(0x114a3afc,	"stdin");
     MakeName	(0x114a3b48,	"stdout");
