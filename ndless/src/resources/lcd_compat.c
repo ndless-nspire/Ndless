@@ -34,10 +34,8 @@ static uint32_t *real_lcdc = (uint32_t*) 0xE0000000;
 static uint32_t saved_lcd_regs[7];
 bool is_hww;
 
-void lcd_compat_load_hwrev()
-{
-    is_hww = lcd_mirror_ptr[ut_os_version_index] != 0 && *(uint32_t*)lcd_mirror_ptr[ut_os_version_index] != 0;
-}
+static uint32_t madctl_set_value = 0x28; // Default MADCTL set value (XY-swap + BGR)
+static uint32_t madctl_reset_value = 0x48; // Default MADCTL reset value (CX2)
 
 // sp and lr are special, they are banked and thus not easily accessible.
 extern uint32_t sp_svc, lr_svc;
@@ -162,6 +160,26 @@ static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0x100241b0, 0x10024178,
                                                        0x10010838, 0x10010838, 0X10010838};
 
+
+// OS-specific: Function for receiving data from the LCD controller over SPI
+static uint32_t spi_recv_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
+                                                       0, 0, 0, 0,
+                                                       0, 0, 0, 0,
+                                                       0, 0, 0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0,
+                                                       0, 0, 0,
+                                                       0, 0,
+                                                       0, 0, 0,
+                                                       0, 0,
+                                                       0x10010610, 0x10010610, 0x10010610};
+
 static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
 {
     // Different method signatures
@@ -179,6 +197,16 @@ static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)
         memcpy(transfer + 4, data, data_count);
         os_spi_send(transfer);
     }
+}
+
+static void spi_recv(uint8_t cmd, uint8_t *data, unsigned int data_count)
+{
+    void (*os_spi_recv)(uint8_t*) = (typeof(os_spi_recv))spi_recv_ptr[ut_os_version_index];
+    uint8_t transfer[data_count+4];
+    transfer[0] = cmd;
+    transfer[1] = data_count;
+    os_spi_recv(transfer);
+    memcpy(data, transfer + 4, data_count);
 }
 
 #define SPI_SEND(cmd, ...) do { \
@@ -217,7 +245,7 @@ bool lcd_compat_enable()
         saved_lcd_regs[i] = lcdc[i];
 
     SPI_SEND(0xB0, 0x91, 0xF0); // Enable RGB bypass mode
-    SPI_SEND(0x36, 0x28); // Set MADCTL to XY-Swap + BGR panel
+    SPI_SEND(0x36, madctl_set_value); // Set MADCTL to detected value
     SPI_SEND(0x2A, 0x00, 0x00, 0x01, 0x3F); // Set column address to (0, 320)
     SPI_SEND(0x2B, 0x00, 0x00, 0x00, 0xEF); // Set page address to (0, 240)
 
@@ -266,7 +294,7 @@ void lcd_compat_disable()
 
     // Undo the changes again
     SPI_SEND(0xB0, 0x11, 0xF0);
-    SPI_SEND(0x36, nl_is_cx2() ? 0x48 : 0x08);
+    SPI_SEND(0x36, madctl_reset_value);
     SPI_SEND(0x2A, 0x00, 0x00, 0x00, 0xEF);
     SPI_SEND(0x2B, 0x00, 0x00, 0x01, 0x3F);
 
@@ -277,4 +305,29 @@ void lcd_compat_disable()
     lcdc[6] &= ~0x800; // Disable the LCD, the restoration below will reenable it
     for(unsigned int i = 0; i < sizeof(saved_lcd_regs)/sizeof(*saved_lcd_regs); ++i)
         lcdc[i] = saved_lcd_regs[i];
+}
+
+void lcd_compat_load_hwrev()
+{
+    is_hww = lcd_mirror_ptr[ut_os_version_index] != 0 && *(uint32_t*)lcd_mirror_ptr[ut_os_version_index] != 0;
+
+    if (nl_is_cx2() && spi_recv_ptr[ut_os_version_index] != 0x0)
+    {
+        /* On CX II, a new LCD revision "GP IPS" uses different MADCTL values
+         * than were configured previously. */
+        uint8_t data[3];
+        spi_recv(0x04, data, 3); // SPI "identify" request, used by the OS
+        if (data[0] == 0x06 && data[1] == 0x13)
+        {
+            // Enable GP IPS
+            madctl_set_value = 0x68;
+            madctl_reset_value = 0x08;
+        }
+    }
+
+    if (!nl_is_cx2())
+    {
+        // CX uses this reset value
+        madctl_reset_value = 0x08;
+    }
 }
