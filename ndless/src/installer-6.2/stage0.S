@@ -5,6 +5,10 @@ _start: .global _start
 push {r4-r12, lr}
 sub	sp, sp, #0x40
 
+@ status = 1
+mov r0, #1
+str r0, result
+
 @ r10 = pointer to osdata struct
 adr	r10, osdata
 mov	r0, #0x10000000
@@ -20,6 +24,10 @@ add	r10, r10, #(nextos-osdata)
 b osloop
 
 osfound: @ r10 points to the right OS now
+
+@ status = 2 
+mov r0, #2
+str r0, result
 
 adr	r0, respath
 mov	r1, sp
@@ -40,6 +48,11 @@ mov	lr, pc
 ldr	pc, [r10, #(os_fopen-osdata)] @ call fopen
 movs	r6, r0 @ r6 = FILE*
 beq	return
+
+@ status = 3
+mov r0, #3
+str r0, result
+
 mov	r0, r5
 mov	r1, r4
 mov	r2, #1
@@ -120,3 +133,10 @@ respath:
 
 oflags:
 .asciz "rb"
+
+@ result variable is periodically read by the installer through a hardcoded offset.
+@ will be used to determine the success
+
+.align 2
+result:
+.word 0x0

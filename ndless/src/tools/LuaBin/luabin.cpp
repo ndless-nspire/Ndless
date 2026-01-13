@@ -19,8 +19,8 @@ std::string luaForOS(std::string installer_filename, std::string varname)
 
 	buffer_content.insert(buffer_content.end(), std::istreambuf_iterator<char>{installer_bin}, std::istreambuf_iterator<char>{});
 
-	//4-byte alignment
-	buffer_content.resize((buffer_content.size() + 4) & ~3);
+	//Do 4-byte alignment if not already aligned
+	buffer_content.resize((buffer_content.size() + 3) & ~3);
 
 	std::cerr << "Size of buffer: 0x" << std::hex << buffer_content.size() << std::endl;
 
