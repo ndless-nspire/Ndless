@@ -989,11 +989,11 @@ __attribute__((naked)) int usb_register_driver(int p1, int(*p2[])(device_t), con
 }
 void* device_get_ivars(device_t p1)
 {
-	return syscall<e_device_get_softc, void*>(p1);
+	return syscall<e_device_get_ivars, void*>(p1);
 }
 void* device_get_softc(device_t p1)
 {
-	return syscall<e_device_get_ivars, void*>(p1);
+	return syscall<e_device_get_softc, void*>(p1);
 }
 int get_event(struct s_ns_event* p1)
 {
