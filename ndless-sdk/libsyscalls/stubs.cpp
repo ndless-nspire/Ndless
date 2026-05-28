@@ -889,7 +889,7 @@ usbd_status usbd_do_request(usbd_device_handle p1, usb_device_request_t *p2, voi
 {
 	return syscall<e_usbd_do_request, usbd_status>(p1,p2,p3);
 }
-__attribute__((naked)) usbd_status usbd_do_request_flags(usbd_device_handle p1, usb_device_request_t *p2, void *p3, uint16_t p4, int *p5)
+__attribute__((naked)) usbd_status usbd_do_request_flags(usbd_device_handle p1, usb_device_request_t *p2, void *p3, uint16_t p4, int *p5, uint32_t p6)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -911,7 +911,7 @@ __attribute__((naked)) usbd_status usbd_do_request_flags(usbd_device_handle p1, 
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_usbd_do_request_flags));
 }
-__attribute__((naked)) usbd_status usbd_do_request_flags_pipe(usbd_device_handle p1, usbd_pipe_handle p2, usb_device_request_t *p3, void *p4, uint16_t p5, int *p6)
+__attribute__((naked)) usbd_status usbd_do_request_flags_pipe(usbd_device_handle p1, usbd_pipe_handle p2, usb_device_request_t *p3, void *p4, uint16_t p5, int *p6, uint32_t p7)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
