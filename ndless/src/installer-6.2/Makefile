@@ -5,7 +5,7 @@ OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnuea
 LFLAGS := -nostdlib
 DISTDIR := ../../calcbin
 
-all: $(DISTDIR)/ndless_installer_4.5.5-6.2.0.tns
+all: $(DISTDIR)/ndless_installer_4.5.5-6.2.0-6.4.0.tns
 
 %.o: %.S
 	$(AS) $(GCCFLAGS) -c $< -o $@
@@ -26,7 +26,7 @@ $(DISTDIR)/ndless_installer_%.tns: Problem1.xml
 	mkdir -p $(DISTDIR)
 	../../../ndless-sdk/tools/luna/luna Problem1.xml $@
 
-test: $(DISTDIR)/ndless_installer_4.5.5-6.2.0.tns
+test: $(DISTDIR)/ndless_installer_4.5.5-6.2.0-6.4.0.tns
 	firebird-send $^ ndless
 
 clean:

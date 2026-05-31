@@ -98,7 +98,7 @@ static unsigned const error_msg_patch_addrs[NDLESS_MAX_OSID+1] =
 						0x101600AC, 0x10160354, 0x1016038C,
 						0x10124394, 0x10124290,
 						0x1016ABB8, 0x1016AE18, 0x1016ADDC,
-						0x1016ABfc, 0x1016AE68, 0x1016AE38
+						0x1016ABFC, 0x1016AE68, 0x1016AE38
 						};
 
 // OS-specific (only set if the installer document needs to be closed)
