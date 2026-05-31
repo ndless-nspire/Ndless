@@ -285,7 +285,7 @@ local s_ndless_cxii_a =  bI([[
         /----------\ 
 /-------+  Ndless  +-------\
 |       \_--------_/       |
-| Ndless for OS 6.2.0      |
+| Ndless for OS 6.2/6.4    |
 |                          |
 | Press any key to start   |
 | installation...          |
@@ -299,7 +299,7 @@ local s_ndless_cxii_b = bI([[
         /----------\
 /-------+  Ndless  +-------\
 |       \_--------_/       |
-| Ndless for OS 6.2.0      |
+| Ndless for OS 6.2/6.4    |
 |                          |
 | Press any key to start   |
 | installation...          |
