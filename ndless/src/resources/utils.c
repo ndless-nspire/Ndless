@@ -227,6 +227,17 @@ void ut_read_os_version_index(void) {
 			ut_os_version_index = 46;
 			break;
 #endif
+#if !defined(STAGE1)
+		case 0x10429ec0: // 6.4.0.74 non-CAS CX II
+			ut_os_version_index = 47;
+			break;
+		case 0x1042a600: // 6.4.0.74 non-CAS CX II-T
+			ut_os_version_index = 48;
+			break;
+		case 0x1042aee0: // 6.4.0.74 CAS CX II
+			ut_os_version_index = 49;
+			break;
+#endif
 		default:
 			ut_calc_reboot();
 	}

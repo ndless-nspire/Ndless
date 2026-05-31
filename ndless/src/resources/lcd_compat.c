@@ -158,7 +158,8 @@ static uint32_t spi_send_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0x100241B4, 0x10024188,
                                                        0x10010734, 0x10010734, 0x10010734,
                                                        0x100241b0, 0x10024178,
-                                                       0x10010838, 0x10010838, 0X10010838};
+                                                       0x10010838, 0x10010838, 0X10010838,
+                                                       0x10010838, 0x10010838, 0x10010838};
 
 
 // OS-specific: Function for receiving data from the LCD controller over SPI
@@ -178,6 +179,7 @@ static uint32_t spi_recv_ptr[NDLESS_MAX_OSID+1] = {0, 0, 0, 0, 0, 0,
                                                        0, 0,
                                                        0, 0, 0,
                                                        0, 0,
+                                                       0x10010610, 0x10010610, 0x10010610,
                                                        0x10010610, 0x10010610, 0x10010610};
 
 static void spi_send(uint8_t cmd, const uint8_t *data, unsigned int data_count)

@@ -122,6 +122,27 @@ nextos:
 .word 0x10424698 @ fread
 .word 0x10423F74 @ fclose
 
+.word 0x10429ec0 @ 6.4.0.74 CX II
+.word 0x104935d0 @ stat
+.word 0x1009a264 @ malloc
+.word 0x1042359c @ fopen
+.word 0x10423740 @ fread
+.word 0x1042301c @ fclose
+
+.word 0x1042a600 @ 6.4.0.74 CX II-T
+.word 0x10493d10 @ stat
+.word 0x1009a420 @ malloc
+.word 0x10423cdc @ fopen
+.word 0x10423e80 @ fread
+.word 0x1042375c @ fclose
+
+.word 0x1042aee0 @ 6.4.0.74 CX II CAS
+.word 0x104945f0 @ stat
+.word 0x10099ea8 @ malloc
+.word 0x104245bc @ fopen
+.word 0x10424760 @ fread
+.word 0x1042403c @ fclose
+
 @ If this gets too big for a column, there is overlap
 @ and this needs to divert execution to the lcd mirror!
 
