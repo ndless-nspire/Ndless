@@ -137,7 +137,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 	ut_read_os_version_index();
 	BOOL installed = FALSE;
 
-	if (!argv[0] || argv[0][0] == 'L') // not opened from the Documents screen
+	if (!argv[0] || argv[0][0] == 'L' || argv[0][0] == 'P') // not opened from the Documents screen
 	{
 		sc_install_compat();
 		ints_setup_handlers();
@@ -171,6 +171,11 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		}
 		else // 3.9, 4.0.3, 4.2.0, 4.4.0 and 4.5.0
 		{
+			// Do persistency if needed
+			if (argv[0] && argv[0][0] == 'P') {
+				persistency_install();
+			}
+
 			// Run startup programs (and successmsg hook installation) now
 			plh_startup();
 

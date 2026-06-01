@@ -123,6 +123,10 @@ BOOL nl_is_cx2(void);
 void lua_install_hooks(void);
 lua_State *luaext_getstate(void);
 
+/* persistency.c */
+void persistency_install();
+void persistency_uninstall_save_hook();
+
 #ifdef __cplusplus
 }
 #endif
