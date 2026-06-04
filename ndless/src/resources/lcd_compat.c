@@ -238,6 +238,14 @@ bool lcd_compat_enable()
             new_framebuffer = calloc(sizeof(uint16_t), 320*240);
         if(!new_framebuffer)
             return false;
+    } 
+    // only clear when it's OUR fb. We don't want to clear the OS's fb.
+    if (lcd_mirror_ptr[ut_os_version_index] == 0 || *(uint32_t*)lcd_mirror_ptr[ut_os_version_index] == 0)
+    {
+        // clear the framebuffer so every launch has a clean slate.
+        // the fb might not be cleared by the last launched app on exit.
+        // apps that reuse the previous fb and only write partially will look glitched without this.
+        memset(new_framebuffer, 0, sizeof(uint16_t)*320*240);
     }
 
     volatile uint32_t *lcdc = (volatile uint32_t*) 0xC0000000;
