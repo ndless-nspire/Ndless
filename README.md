@@ -35,6 +35,8 @@ OS 6.2.0.333 + 6.4.0.74 <img src="https://i.imgur.com/5nnLNsN.gif" align="right"
 
 Prerequisites: OS 6.2.0.333 or 6.4.0.74 on CX II, CX II-T or CX II CAS
 
+* Set your language to English through the Settings menu
+  * Press `[Home]` > `[5]` (Settings) > `[1]` (Change Language) -> `English`
 * Transfer `ndless_installer_4.5.5-6.2.0-6.4.0.tns` into a folder named "`ndless`" (top-level)
 * Transfer `ndless_resources.tns` into the same folder
 * Open the installer, press any alphanumeric key and wait
@@ -47,6 +49,8 @@ OS 4.5.5.79 <img src="https://i.imgur.com/oJGpCsB.gif" align="right">
 
 Prerequisites: OS 4.5.5.79 on CX or CX CAS
 
+* Set your language to English through the Settings meun
+  * Press `[Home]` > `[5]` (Settings) > `[1]` (Change Language) -> `English`
 * Determine your "boot1" version (needed later).
   * Press `[Home]` > `[5]` (Settings) > `[4]` (Status) > About button.
   * Here is a YouTube [video](https://youtu.be/htr106_ggjg) for this.
