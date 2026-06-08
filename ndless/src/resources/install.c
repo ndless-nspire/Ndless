@@ -209,6 +209,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 		if (show_msgbox_2b("Ndless", "Do you really want to uninstall Ndless r" STRINGIFY(NDLESS_REVISION) "?\nThe device will reboot.", "Yes", "No") == 2)
 			return 0;
 
+		persistency_uninstall();
 		ins_uninstall();
 	}
 
