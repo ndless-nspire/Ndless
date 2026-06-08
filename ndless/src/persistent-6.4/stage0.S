@@ -98,13 +98,6 @@ os_fclose:
 .word 0x10438E78 @ fclose
 nextos:
 
-.word 0x103B1F80 @ 4.5.5.79 CX CAS
-.word 0x10441FB8 @ stat
-.word 0x10434408 @ malloc
-.word 0x10439CF8 @ fopen
-.word 0x10439E9C @ fread
-.word 0x10439518 @ fclose
-
 .word 0x10429E10 @ 6.2.0.333 CX II
 .word 0x10493508 @ stat
 .word 0x1009A244 @ malloc

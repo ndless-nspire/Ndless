@@ -125,7 +125,7 @@ lua_State *luaext_getstate(void);
 
 /* persistency.c */
 void persistency_install();
-void persistency_uninstall_save_hook();
+void persistency_uninstall();
 
 #ifdef __cplusplus
 }

@@ -1,28 +1,3 @@
-/****************************************************************************
- * Ndless persistency mechanism
- * 
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- * 
- * The Original Code is Ndless code.
- ****************************************************************************/
-
-#include <stdio.h>
-#include <os.h>
-#include <sys/stat.h>
-#include <stdint.h>
-#include <keys.h>
-#include "ndless.h"
-#include "hook.h"
-#include <nucleus.h>
-
 /**
  * The way this persistency loader works:
  * On startup the operating system will try to execute /phoenix/syst/poweroff/currentdoc.tns
@@ -34,7 +9,18 @@
  * 
  * This does disable the operating system's mechanism to save documents.
  * The loader will be deleted on Ndless uninstall.
+ * 
+ * Contributors: @delta (primary loader), @sasdallas (cleanup + uninstaller)
  */
+
+#include <stdio.h>
+#include <os.h>
+#include <sys/stat.h>
+#include <stdint.h>
+#include <keys.h>
+#include "ndless.h"
+#include "hook.h"
+#include <nucleus.h>
 
 // OS-specific 
 // Address of the save dialog function
@@ -55,56 +41,57 @@ static unsigned const save_dialog_hook_addrs[NDLESS_MAX_OSID+1] =
                         0x0, 0x0,
                         0x0, 0x0, 0x0,
                         0x0, 0x0,
-                        0x10027bc8, 0x10027CA4, 0x10027CE4,
+                        0x10027BC8, 0x10027CA4, 0x10027CE4,
                         0x10027BDC, 0x10027CBC, 0x10027CEC};
 
 // OS-specific
 // TI_TM_CreateState hook address used to prevent the OS from creating the snapshot
-static unsigned const create_state_addrs[NDLESS_MAX_OSID+1] = {
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x10031d38, 0x10031E44, 0x10031E54,
-    0x10031D4C, 0x10031E5C, 0x10031E5C
-};
+static unsigned const create_state_addrs[NDLESS_MAX_OSID+1] =
+                            {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x10031D38, 0x10031E44, 0x10031E54,
+                        0x10031D4C, 0x10031E5C, 0x10031E5C};
 
 // OS-specific
 // TI_TM_ClearSnapshot hook address used to prevent the OS from clearing the snapshot
-static unsigned const clear_state_addrs[NDLESS_MAX_OSID+1] = {
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x0, 0x0, 0x0,
-    0x0, 0x0,
-    0x100319d8, 0x10031AE4, 0x10031AF4,
-    0x100319EC, 0x10031AFC, 0x10031AFC
-};
+static unsigned const clear_state_addrs[NDLESS_MAX_OSID+1] =
+                            {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x0, 0x0, 0x0,
+                        0x0, 0x0,
+                        0x100319d8, 0x10031AE4, 0x10031AF4,
+                        0x100319EC, 0x10031AFC, 0x10031AFC};
 
-static BOOL is_persistent = FALSE;
+// the installer tends to be around 1-2K so this is more than enough
+// stack-allocating this causes the calculator to complain on real hw but not emulator!
+static char buf[1024];
+
 
 // helper
 int copy_file(const char *src, const char *dst) {
@@ -113,10 +100,10 @@ int copy_file(const char *src, const char *dst) {
 	FILE *out = fopen(dst, "wb");
 	if (!out) { fclose(in); return 1; }
 
-	char buf[4096];
 	size_t n;
-	while ((n = fread(buf, 1, sizeof(buf), in)) > 0)
-		fwrite(buf, 1, n, out);
+	while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
+        fwrite(buf, n, 1, out);
+    }
 
 	fclose(in);
 	fclose(out);
@@ -183,6 +170,7 @@ void persistency_install() {
             // TODO: better error logging
             puts("persistency_install: failed to copy currentdoc.tns\n");
             unlink("/phoenix/syst/poweroff/currentdoc.data");
+
             return;
         }
     }
@@ -204,14 +192,12 @@ void persistency_install() {
     }
 
     unlink("/documents/!!!MyDocuments/!!!UnsavedDocument.tns");
-    is_persistent = TRUE;
 }
 
-void persistency_uninstall_save_hook() {
-    if (is_persistent) {
-        unsigned save_addr = save_dialog_hook_addrs[ut_os_version_index];
-        if (save_addr) {
-            HOOK_UNINSTALL(save_addr, save_dialog_hook);
-        }
-    }
+void persistency_uninstall() {
+    // unlink doesn't work here
+    // TODO: figure out why unlink doesnt work here, doesnt crash but doesnt delete the file
+    // this will truncate the file to 0 anyways
+    FILE *f = fopen("/phoenix/syst/poweroff/currentdoc.data", "wb");
+    fclose(f);
 }
