@@ -35,10 +35,8 @@ OS 6.2.0.333 + 6.4.0.74 <img src="https://i.imgur.com/5nnLNsN.gif" align="right"
 
 Prerequisites: OS 6.2.0.333 or 6.4.0.74 on CX II, CX II-T or CX II CAS. 
 
-Set your language to English through the Settings menu:
-* Press `[Home]` > `[5]` (Settings) > `[1]` (Change Language) -> `English`
-
 ### Standard Installation
+* Set your language to English through the Settings menu: Press `[Home]` > `[5]` (Settings) > `[1]` (Change Language) -> `English`
 * Transfer `ndless_installer_4.5.5-6.2.0-6.4.0.tns` into a folder named "`ndless`" (top-level)
 * Transfer `ndless_resources.tns` into the same folder
 * Open the installer, press any alphanumeric key and wait
@@ -46,13 +44,16 @@ Set your language to English through the Settings menu:
 * Have fun!
 
 ### Persistent Installation
+A persistent installation means Ndless will automatically load when you turn on or reboot the calculator, removing the need to run the installer every time you reset or reboot your calculator.
 **Warning:** This feature is experimental and not ready for daily use. The Ndless team is not responsible for any data loss, reboot-looped calculators, or any damage incurred to your Nspire. Ensure Ndless is not currently installed (reset your calculator first if it is).
 
+* Set your language to English through the Settings menu: Press `[Home]` > `[5]` (Settings) > `[1]` (Change Language) -> `English`
 * Transfer `persistent_6.2.0-6.4.0.tns` (from the release's `persistent` folder) into the "`ndless`" folder
 * Rename the file you just transferred to `persistent.tns`
 * Transfer `ndless_resources.tns` into the same folder
 * Open `persistent.tns` and wait for the automatic installation
 * If you get stuck in a reboot loop, hold `[ESC]`. If that fails, format your filesystem via the maintenance menu.
+* By running the `ndless_resources.tns` file after installing, you can uninstall the loader as well.
 * Have fun!
 
 
