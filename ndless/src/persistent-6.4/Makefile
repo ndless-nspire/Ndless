@@ -5,7 +5,7 @@ OBJCOPY := "$(shell (which arm-elf-objcopy arm-none-eabi-objcopy arm-linux-gnuea
 LFLAGS := -nostdlib
 DISTDIR := ../../calcbin
 
-all: $(DISTDIR)/currentdoc_6.2.0-6.4.0.tns
+all: $(DISTDIR)/persistent_6.2.0-6.4.0.tns
 
 %.o: %.S
 	$(AS) $(GCCFLAGS) -c $< -o $@
@@ -22,14 +22,14 @@ installer_payload.lua: ndless_installer.bin
 Problem1.xml: installer_payload.lua
 	sed -f template.sed Problem1_template.xml | sed -f template.sed | sed -f template.sed > Problem1.xml
 
-$(DISTDIR)/currentdoc_%.tns: Problem1.xml
+$(DISTDIR)/persistent_%.tns: Problem1.xml
 	mkdir -p $(DISTDIR)
 	../../../ndless-sdk/tools/luna/luna Problem1.xml $@
 
-test: $(DISTDIR)/currentdoc_6.2.0-6.4.0.tns
+test: $(DISTDIR)/persistent_6.2.0-6.4.0.tns
 	firebird-send $^ ndless
 
 clean:
-	rm -f Problem1.xml installer_payload.lua *.elf *.o *.bin $(DISTDIR)/currentdoc_6.2.0-6.4.0.tns
+	rm -f Problem1.xml installer_payload.lua *.elf *.o *.bin $(DISTDIR)/persistent_6.2.0-6.4.0.tns
 
 .PHONY: test clean

@@ -24,8 +24,10 @@ clean-%: %
 dist: all
 	rm -rf dist
 	mkdir -p dist/ndless/samples
+	mkdir -p dist/ndless/persistent
 	cp Mozilla-Public-License-v1.1.html README.md dist/ndless/
 	cp ndless/calcbin/* dist/ndless/
+	mv dist/ndless/persistent_*.tns dist/ndless/persistent/
 	rm dist/ndless/downgradefix_3.9*.tns dist/ndless/ndless_installer_3.9.0_classic.tns
 	cp ndless-sdk/samples/*/*.tns dist/ndless/samples/
 	rm dist/ndless/samples/freetype_demo.tns

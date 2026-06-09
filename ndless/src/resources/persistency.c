@@ -161,19 +161,19 @@ void persistency_install() {
         return;
     }
     
-    // Try to copy the file
-    int c = copy_file("/documents/ndless/currentdoc.tns", "/phoenix/syst/poweroff/currentdoc.tns");
-    if (c != 0) {
-        // We have Ndless generosity...
-        c = copy_file("/documents/currentdoc.tns", "/phoenix/syst/poweroff/currentdoc.tns");
-        if (c != 0) {
-            // TODO: better error logging
-            puts("persistency_install: failed to copy currentdoc.tns\n");
-            unlink("/phoenix/syst/poweroff/currentdoc.data");
+    // Try to copy the file (check persistent.tns first, fallback to currentdoc.tns)
+    int c = copy_file("/documents/ndless/persistent.tns", "/phoenix/syst/poweroff/currentdoc.tns");
+    if (c != 0) c = copy_file("/documents/persistent.tns", "/phoenix/syst/poweroff/currentdoc.tns");
+    if (c != 0) c = copy_file("/documents/ndless/currentdoc.tns", "/phoenix/syst/poweroff/currentdoc.tns");
+    if (c != 0) c = copy_file("/documents/currentdoc.tns", "/phoenix/syst/poweroff/currentdoc.tns");
 
-            return;
-        }
+    if (c != 0) {
+        // TODO: better error logging
+        puts("persistency_install: failed to copy persistent.tns or currentdoc.tns\n");
+        unlink("/phoenix/syst/poweroff/currentdoc.data");
+        return;
     }
+
 
     // Install hooks
     unsigned create_state_addr = create_state_addrs[ut_os_version_index];
