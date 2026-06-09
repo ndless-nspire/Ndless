@@ -85,25 +85,18 @@ add	sp, sp, #0x40
 pop {r4-r12, pc}
 
 osdata:
-.word 0x103B18E0 @ 4.5.5.79 CX
-os_stat:
-.word 0x104418D0 @ stat
-os_malloc:
-.word 0x10433D68 @ malloc
-os_fopen:
-.word 0x10439658 @ fopen
-os_fread:
-.word 0x104397FC @ fread
-os_fclose:
-.word 0x10438E78 @ fclose
-nextos:
-
 .word 0x10429E10 @ 6.2.0.333 CX II
+os_stat:
 .word 0x10493508 @ stat
+os_malloc:
 .word 0x1009A244 @ malloc
+os_fopen:
 .word 0x104234EC @ fopen
+os_fread:
 .word 0x10423690 @ fread
+os_fclose:
 .word 0x10422F6C @ fclose
+nextos:
 
 .word 0x1042A580 @ 6.2.0 CX II-T
 .word 0x10493c78 @ stat
