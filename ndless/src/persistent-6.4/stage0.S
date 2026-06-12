@@ -148,8 +148,9 @@ argv_0:
 .asciz "PER" @ for alignment, only P is checked for
 
 respath:
-.asciz "ndless/ndless_resources.tns"
+.asciz "A:\\documents\\ndless\\ndless_resources.tns"
 
+.align 2
 oflags:
 .asciz "rb"
 
