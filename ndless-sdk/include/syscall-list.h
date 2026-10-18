@@ -358,11 +358,44 @@
 #define e_get_res_string 340 // char* get_res_string(int p1, int p2)
 #define e_disp_str 341 // void disp_str(const char *p1, int *p2, int p3)
 #define e_TI_MS_MathExprToStr 342 // int TI_MS_MathExprToStr(void *p1, void *p2, uint16_t **p3)
-
+#define e_TI_DM_newDialog2 343 // int TI_DM_newDialog2(int p1, uint16_t* p2, int* p3)
+#define e_TI_CA_getContentPane 344 // int TI_CA_getContentPane(int p1)
+#define e_TI_DM_newPanel 345 // int TI_DM_newPanel(int p1, int p2)
+#define e_TI_DM_setPanelLayout 346 // void TI_DM_setPanelLayout(int p1, int p2)
+#define e_TI_DM_addLabel 347 // int TI_DM_addLabel(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7)
+#define e_TI_DM_addTextEntry 348 // int TI_DM_addTextEntry(int p1, int p2, int p3, int p4, int p5, int p6)
+#define e_TI_DM_addIntegerSpinBox 349 // int TI_DM_addIntegerSpinBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
+#define e_TI_DM_addRadioButton 350 // int TI_DM_addRadioButton(int p1, int p2, uint16_t* p3)
+#define e_TI_DM_addMeter 351 // int TI_DM_addMeter(int p1, int p2, int p3, int p4)
+#define e_TI_DM_addButton 352 // int TI_DM_addButton(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
+#define e_TI_DM_addCheckBox 353 // int TI_DM_addCheckBox(int p1, int p2, uint16_t* p3)
+#define e_TI_DM_addComboBox 354 // int TI_DM_addComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+#define e_TI_DM_groupControlWithLabel 355 // void TI_DM_groupControlWithLabel(int p1, int p2, int p3)
+#define e_TI_DM_AddButtonGroup 356 // int TI_DM_AddButtonGroup(int p1, int p2)
+#define e_TI_DM_ButtonGroupAdd 357 // void TI_DM_ButtonGroupAdd(int p1, int p2, int p3)
+#define e_TI_DM_setVisible 358 // void TI_DM_setVisible(int p1, int p2)
+#define e_TI_DM_setEscapeButton 359 // void TI_DM_setEscapeButton(int p1, int p2)
+#define e_TI_DM_setInitialFocusComponent 360 // void TI_DM_setInitialFocusComponent(int p1, int p2)
+#define e__TextEntry_getTextExpression 361 // uint16_t* _TextEntry_getTextExpression(int p1, int* p2)
+#define e_Meter_setValue 362 // void Meter_setValue(int p1, int p2)
+#define e__ComboBox_getSelectionIndex 363 // int _ComboBox_getSelectionIndex(int p1)
+#define e__ToggleButton_getToggleButtonState 364 // int _ToggleButton_getToggleButtonState(int p1)
+#define e_TI_DM_getIntegerSpinBoxResult 365 // int TI_DM_getIntegerSpinBoxResult(int p1)
+#define e__ToggleButton_setToggleButtonState 366 // void _ToggleButton_setToggleButtonState(int p1, int p2)
+#define e_TI_DM_setPanelLRBorder 367 // void TI_DM_setPanelLRBorder(int p1, int p2, int p3)
+#define e_TI_DM_setPanelTBBorder 368 // void TI_DM_setPanelTBBorder(int p1, int p2, int p3)
+#define e_TI_DM_addIconComboBox 369 // int TI_DM_addIconComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+#define e_TextEntry_setTextExpression 370 // void TextEntry_setTextExpression(int p1, const char* p2, int p3)
+#define e_TI_DM_addSeparatorLine 371 // int TI_DM_addSeparatorLine(int p1)
+#define e_ComboBox_setSelectedItem 372 // void ComboBox_setSelectedItem(int p1, int p2)
+#define e_TI_RM_GetString 373 // uint16_t* TI_RM_GetString(int p1, int p2)
+#define e_UiComponent_setPreferredSize 374 // void UiComponent_setPreferredSize(int p1, int p2, int p3)
+#define e_UiComponent_setMinSize 375 // void UiComponent_setMinSize(int p1, int p2, int p3)
+#define e_TI_DM_deleteDialog 376 // void TI_DM_deleteDialog(int p1)
 // END_OF_LIST (always keep this line after the last constant, used by mksyscalls.sh)
 
 // Must be kept up-to-date with the value of the last syscall
-#define __SYSCALLS_LAST 342
+#define __SYSCALLS_LAST 376
 
 // Flag: 3 higher bits of the 3-bytes comment field of the swi instruction
 #define __SYSCALLS_ISEXT 0x200000
