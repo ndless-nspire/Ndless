@@ -39,6 +39,7 @@ extern "C" {
 #include <os.h>
 #include <nucleus.h>
 #include <syscall-list.h>
+#include <ndialog.h>
 
 // WARNING: This is only here to trigger a build error.
 #define NDLESS_DIR ({"NDLESS_DIR got removed. Use get_documents_dir() to get the virtual root first."})
