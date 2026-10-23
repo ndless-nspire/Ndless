@@ -258,6 +258,40 @@ int TI_MS_evaluateExpr_ACBER(void *p1, void *p2, const uint16_t *p3, void *p4, v
 char* get_res_string(int p1, int p2);
 void disp_str(const char *p1, int *p2, int p3);
 int TI_MS_MathExprToStr(void *p1, void *p2, uint16_t **p3);
+int TI_DM_newDialog2(int p1, uint16_t* p2, int* p3);
+int TI_CA_getContentPane(int p1);
+int TI_DM_newPanel(int p1, int p2);
+void TI_DM_setPanelLayout(int p1, int p2);
+int TI_DM_addLabel(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7);
+int TI_DM_addTextEntry(int p1, int p2, int p3, int p4, int p5, int p6);
+int TI_DM_addIntegerSpinBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+int TI_DM_addRadioButton(int p1, int p2, uint16_t* p3);
+int TI_DM_addMeter(int p1, int p2, int p3, int p4);
+int TI_DM_addButton(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+int TI_DM_addCheckBox(int p1, int p2, uint16_t* p3);
+int TI_DM_addComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7);
+void TI_DM_groupControlWithLabel(int p1, int p2, int p3);
+int TI_DM_AddButtonGroup(int p1, int p2);
+void TI_DM_ButtonGroupAdd(int p1, int p2, int p3);
+void TI_DM_setVisible(int p1, int p2);
+void TI_DM_setEscapeButton(int p1, int p2);
+void TI_DM_setInitialFocusComponent(int p1, int p2);
+uint16_t* _TextEntry_getTextExpression(int p1, int* p2);
+void Meter_setValue(int p1, int p2);
+int _ComboBox_getSelectionIndex(int p1);
+int _ToggleButton_getToggleButtonState(int p1);
+int TI_DM_getIntegerSpinBoxResult(int p1);
+void _ToggleButton_setToggleButtonState(int p1, int p2);
+void TI_DM_setPanelLRBorder(int p1, int p2, int p3);
+void TI_DM_setPanelTBBorder(int p1, int p2, int p3);
+int TI_DM_addIconComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7);
+void TextEntry_setTextExpression(int p1, const char* p2, int p3);
+int TI_DM_addSeparatorLine(int p1);
+void ComboBox_setSelectedItem(int p1, int p2);
+uint16_t* TI_RM_GetString(int p1, int p2);
+void UiComponent_setPreferredSize(int p1, int p2, int p3);
+void UiComponent_setMinSize(int p1, int p2, int p3);
+void TI_DM_deleteDialog(int p1);
 #ifdef __cplusplus
 }
 #endif // __cplusplus

@@ -193,7 +193,7 @@ Creators:
   Geoffrey Anneheim aka geogeo - < geoffrey dot anneheim at free dot fr >
   Olivier Armand aka ExtendeD  - < olivier dot calc at gmail dot com >
 
-Contributors and testers: Adriweb, AtlassianDell, bsl, cherpixel, critor, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, sasdallas, satyamedh, tangrs, timmycraft... and many others.  
+Contributors and testers: Adriweb, bsl, cherpixel, critor, delta, Excale, Goplat, hoffa, Jim Bauwens, Legimet, Levak, Lionel Debroux, lkj, sasdallas, satyamedh, tangrs, timmycraft, vailithree... and many others.  
 More contributions can be seen on [the GitHub repo](https://github.com/ndless-nspire/Ndless/graphs/contributors).
 
 Ndless is brought to you by https://codewalr.us, https://www.omnimaga.org and https://tiplanet.org
