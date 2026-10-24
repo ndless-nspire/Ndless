@@ -80,6 +80,7 @@ return:
 add	sp, sp, #0x40
 pop {r4-r12, pc}
 
+
 osdata:
 .word 0x103B18E0 @ 4.5.5.79 CX
 os_stat:
@@ -143,12 +144,10 @@ nextos:
 .word 0x10424760 @ fread
 .word 0x1042403c @ fclose
 
-@ If this gets too big for a column, there is overlap
-@ and this needs to divert execution to the lcd mirror!
-
 endos:
 .word 0x0
 
+.align 2
 respath:
 .asciz "A:\\documents\\ndless\\ndless_resources.tns"
 
@@ -156,8 +155,7 @@ respath:
 oflags:
 .asciz "rb"
 
-@ result variable is periodically read by the installer through a hardcoded offset.
-@ will be used to determine the success
+@ result variable is read by the installer through a hardcoded offset
 
 .align 2
 result:
