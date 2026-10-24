@@ -2,7 +2,9 @@
 # Caution, must be kept compatible with dash used by some Linux distros.
 
 NDLESS="$(nspire-tools path)"
-export PATH="$(nspire-tools _toolchainpath):$PATH"
+# The SDK linker wrapper supplies Ndless startup code.
+PATH="${NDLESS}/bin:$(nspire-tools _toolchainpath):$PATH"
+export PATH
 
 home="${USERPROFILE:-$HOME}"
 mkdir -p "$home/.ndless/include"
