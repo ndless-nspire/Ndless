@@ -1,4 +1,5 @@
 build
+build-gcc
 download
 install
 .built*

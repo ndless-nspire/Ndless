@@ -11,6 +11,7 @@
 # 	For example, if you have installed them yourself in ${PREFIX}, you'll have to add --with-gmp=${PREFIX} --with-mpfr=${PREFIX} --with-mpc=${PREFIX}.
 # IMPORTANT NOTE #2: GDB needs some python includes for python support.
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
+# IMPORTANT NOTE #3: Downloading source archives requires curl.
 
 set -eu
 
@@ -63,14 +64,17 @@ rm -f test test.c
 mkdir -p build download
 
 downloadAndExtract() {
-	url="$1"
-	target="download/$(basename "${url}")"
-	if ! wget -c "$url" -O "${target}"; then
-		rm -f "${target}"
-		return 1
-	fi
-	echo "Extracting $(basename "${url}")..."
-	tar -xf "${target}" -C download
+	target="download/$(basename "$1")"
+	for url in "$@"; do
+		if curl --http1.1 --fail --location --retry 3 --retry-all-errors \
+				--connect-timeout 30 --output "${target}" "$url"; then
+			echo "Extracting $(basename "${url}")..."
+			tar -xf "${target}" -C download
+			return
+		fi
+	done
+	rm -f "${target}"
+	return 1
 }
 
 # Section 1: GNU Binutils.
@@ -78,7 +82,9 @@ if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
 	if [ ! -d "download/${BINUTILS}" ]; then
 		echo "Downloading Binutils..."
 		rm -rf download/binutils*
-		downloadAndExtract https://ftpmirror.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+		downloadAndExtract \
+			https://mirrors.kernel.org/gnu/binutils/${BINUTILS}.tar.bz2 \
+			https://ftpmirror.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
 	fi
 
 	echo "Building Binutils..."
@@ -96,7 +102,9 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract \
+			https://mirrors.kernel.org/gnu/gcc/${GCC}/${GCC}.tar.xz \
+			https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	# gcc creates a sysroot with some includes from newlib.
@@ -109,8 +117,8 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	fi
 
 	echo "Building GCC (step 1)..."
-	rm -rf build; mkdir build
-	cd build
+	rm -rf build-gcc; mkdir build-gcc
+	cd build-gcc
 		../download/${GCC}/configure ${OPTIONS_GCC} --with-headers=../download/${NEWLIB}/newlib/libc/include
 		make $PARALLEL all-gcc
 		make install-gcc
@@ -140,21 +148,24 @@ if [ "$(cat .built_newlib 2>/dev/null)" != "${NEWLIB}" ]; then
 	echo -n "${NEWLIB}" > .built_newlib
 fi
 
-# Section 4: GCC, step 2. Yes, this is necessary.
+# Section 4: GCC, step 2, reusing the compiler built before Newlib.
 if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadAndExtract \
+			https://mirrors.kernel.org/gnu/gcc/${GCC}/${GCC}.tar.xz \
+			https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
 	fi
 
 	echo "Building GCC (step 2)..."
-	rm -rf build; mkdir build
-	cd build
+	mkdir -p build-gcc
+	cd build-gcc
 		../download/${GCC}/configure ${OPTIONS_GCC}
 		make $PARALLEL
 		make install
 	cd ..
+	rm -rf build-gcc
 	echo -n "${GCC}" > .built_gcc_step2
 fi
 
@@ -163,7 +174,9 @@ if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
 	if [ ! -d "download/${GDB}" ]; then
 		echo "Downloading GDB..."
 		rm -rf download/gdb*
-		downloadAndExtract https://ftpmirror.gnu.org/gnu/gdb/${GDB}.tar.xz
+		downloadAndExtract \
+			https://mirrors.kernel.org/gnu/gdb/${GDB}.tar.xz \
+			https://ftpmirror.gnu.org/gnu/gdb/${GDB}.tar.xz
 	fi
 
 	echo "Building GDB..."

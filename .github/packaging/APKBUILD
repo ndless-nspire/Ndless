@@ -1,0 +1,16 @@
+pkgname=ndless-sdk
+pkgver=${PACKAGE_VERSION:?PACKAGE_VERSION is required}
+pkgrel=0
+pkgdesc="Ndless SDK, ARM toolchain and calculator programs"
+url="https://github.com/ndless-nspire/Ndless"
+arch="x86_64 aarch64"
+license="MPL-1.1 AND GPL-3.0-or-later AND LGPL-3.0-or-later AND BSD-3-Clause AND MIT AND LicenseRef-Public-Domain AND LicenseRef-CPOL-1.02"
+depends="bash make coreutils which musl libgcc libstdc++ gmp mpfr4 mpc1
+	zlib libbz2 xz-libs zstd-libs python3 boost1.84-program_options libncursesw"
+# Preserve ARM objects and declare host runtime dependencies explicitly.
+options="!check !strip !dbg !tracedeps"
+
+package() {
+	mkdir -p "$pkgdir"
+	cp -a /package-root/. "$pkgdir"/
+}
