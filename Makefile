@@ -6,6 +6,7 @@ ifneq ($(words $(wildcard ndless-sdk/thirdparty/nspire-io/Makefile) \
         $(error Run `git submodule init' and `git submodule update' to checkout the submodules)
 endif
 
+
 SUBDIRS = ndless-sdk ndless
 
 all: $(patsubst %, build-%, $(SUBDIRS))
