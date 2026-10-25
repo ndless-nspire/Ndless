@@ -61,8 +61,8 @@ typedef struct dialog_item {
 	int layout_id;
 	int pad_tb;
 	int pad_lr;
-	int ti_handle;
-	int *ti_sub_handles;
+	void *ti_handle;
+	void **ti_sub_handles;
 	struct dialog_item *next;
 } dialog_item_t;
 
@@ -74,11 +74,11 @@ struct ndialog {
 	int item_count;
 	int pad_tb;
 	int pad_lr;
-	int last_ti_handle;
+	void *last_ti_handle;
 };
 
 typedef struct dialog_exec_context {
-	int ti_dlg;
+	void *ti_dlg;
 	ndialog_t *dlg;
 	ndialog_result_t modal_result;
 	struct dialog_exec_context *prev;
@@ -175,7 +175,7 @@ void ndlg_set_padding(ndialog *dlg, int top_bottom, int left_right) {
 	}
 }
 
-int ndlg_get_last_widget(ndialog *dlg) {
+void *ndlg_get_last_widget(ndialog *dlg) {
 	return dlg ? dlg->last_ti_handle : 0;
 }
 
@@ -441,7 +441,7 @@ static int on_action_cancel(int w __attribute__((unused)), int e __attribute__((
 	return 1;
 }
 
-static int on_custom_button_click(int w, int e __attribute__((unused)), int val) {
+static int on_custom_button_click(void *w, int e __attribute__((unused)), int val) {
 	if (val == DLG_BUTTON_PRESS_VAL && active_context && active_context->dlg) {
 		for (dialog_item_t *it = active_context->dlg->items_head; it != NULL; it = it->next) {
 			if (it->type == ITEM_BUTTON && it->ti_handle == w) {
@@ -455,11 +455,11 @@ static int on_custom_button_click(int w, int e __attribute__((unused)), int val)
 	return 1;
 }
 
-static int get_widget_parent(ndialog *dlg, int current_container, int root) {
+static void *get_widget_parent(ndialog *dlg, void *current_container, void *root) {
 	if (current_container != root)
 		return current_container;
 
-	int row = TI_DM_newPanel(root, 0);
+	void *row = TI_DM_newPanel(root, 0);
 	TI_DM_setPanelLayout(row, DLG_LAYOUT_SETTINGS_ROW);
 	if (dlg->pad_tb >= 0)
 		TI_DM_setPanelTBBorder(row, dlg->pad_tb, dlg->pad_tb);
@@ -479,13 +479,13 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 	uint16_t id[] = {0};
 	int params[2] = {(int)id, DLG_DIALOG_FLAGS};
 
-	int ti_dlg = TI_DM_newDialog2(0, u16_title, params);
+	void *ti_dlg = TI_DM_newDialog2(0, u16_title, params);
 	free(u16_title);
 
 	if (!ti_dlg)
 		return NDLG_RESULT_ERROR;
 
-	int root = TI_CA_getContentPane(ti_dlg);
+	void *root = TI_CA_getContentPane(ti_dlg);
 	if (!root) {
 		TI_DM_deleteDialog(ti_dlg);
 		return NDLG_RESULT_ERROR;
@@ -499,7 +499,7 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 	active_context = &ctx;
 
 	/* Container stack for nested groups and panels */
-	int container_stack[16];
+	void *container_stack[16];
 	int container_sp = 0;
 	container_stack[0] = root;
 
@@ -511,8 +511,8 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 	for (dialog_item_t *it = dlg->items_head; it != NULL; it = it->next) {
 		switch (it->type) {
 			case ITEM_GROUP_BEGIN: {
-				int target = container_stack[container_sp];
-				int grp = TI_DM_newPanel(target, 0);
+				void *target = container_stack[container_sp];
+				void *grp = TI_DM_newPanel(target, 0);
 				TI_DM_setPanelLayout(grp, it->layout_id);
 				if (it->pad_tb >= 0)
 					TI_DM_setPanelTBBorder(grp, it->pad_tb, it->pad_tb);
@@ -529,9 +529,9 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_LABEL: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_text = alloc_utf16(it->label ? it->label : "");
-				int lbl = TI_DM_addLabel(parent, u_text, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+				void *lbl = TI_DM_addLabel(parent, u_text, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 				free(u_text);
 				TI_DM_groupControlWithLabel(parent, lbl, 0);
 				it->ti_handle = lbl;
@@ -539,14 +539,14 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_SEPARATOR: {
-				int target = container_stack[container_sp];
+				void *target = container_stack[container_sp];
 				TI_DM_addSeparatorLine(target);
 				break;
 			}
 			case ITEM_CHECKBOX: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_lbl = alloc_utf16(it->label ? it->label : "");
-				int chk = TI_DM_addCheckBox(parent, DLG_CHECKBOX_WIDGET_ID, u_lbl);
+				void *chk = TI_DM_addCheckBox(parent, DLG_CHECKBOX_WIDGET_ID, u_lbl);
 				free(u_lbl);
 
 				int st = (it->bound_val && *it->bound_val) ? DLG_CHECKBOX_ON : DLG_CHECKBOX_OFF;
@@ -557,9 +557,9 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_COMBOBOX: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_lbl = alloc_utf16(it->label ? it->label : "");
-				int lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+				void *lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 				free(u_lbl);
 				int *u16_items = (int *)calloc(it->option_count + 1, sizeof(int));
 				for (int i = 0; i < it->option_count; i++)
@@ -568,7 +568,7 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				u16_items[it->option_count] = 0;
 				if (combo_u16_ptrs)
 					combo_u16_ptrs[combo_count++] = u16_items;
-				int cmb = TI_DM_addComboBox(parent, DLG_COMBO_MAIN, (int)u16_items, DLG_COMBO_FOCUS, DLG_COMBO_STACK, 0, 0);
+				void *cmb = TI_DM_addComboBox(parent, DLG_COMBO_MAIN, (int)u16_items, DLG_COMBO_FOCUS, DLG_COMBO_STACK, 0, 0);
 				if (it->bound_val && *it->bound_val >= 0 && *it->bound_val < it->option_count)
 					ComboBox_setSelectedItem(cmb, *it->bound_val);
 
@@ -578,9 +578,9 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_SPINBOX: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_lbl = alloc_utf16(it->label ? it->label : "");
-				int lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+				void *lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 				free(u_lbl);
 				int min_val = (it->min_val >= 1) ? it->min_val : 1;
 				int cur_val = it->bound_val ? *it->bound_val : min_val;
@@ -588,18 +588,18 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 					cur_val = min_val;
 				if (cur_val > it->max_val)
 					cur_val = it->max_val;
-				int spin = TI_DM_addIntegerSpinBox(parent, cur_val, min_val, it->max_val, 0, DLG_LABEL_STYLE, DLG_COMBO_STACK, 0, 0);
+				void *spin = TI_DM_addIntegerSpinBox(parent, cur_val, min_val, it->max_val, 0, DLG_LABEL_STYLE, DLG_COMBO_STACK, 0, 0);
 				TI_DM_groupControlWithLabel(parent, lbl, spin);
 				it->ti_handle = spin;
 				dlg->last_ti_handle = spin;
 				break;
 			}
 			case ITEM_TEXT_ENTRY: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_lbl = alloc_utf16(it->label ? it->label : "");
-				int lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+				void *lbl = TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 				free(u_lbl);
-				int txt = TI_DM_addTextEntry(parent, 80001, 78001, 79003, 0, 0);
+				void *txt = TI_DM_addTextEntry(parent, 80001, 78001, 79003, 0, 0);
 				if (it->bound_str) {
 					uint16_t *u_val = alloc_utf16(it->bound_str);
 					TextEntry_setTextExpression(txt, (const char *)u_val, 0);
@@ -612,19 +612,19 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 			}
 			case ITEM_RADIO_GROUP: {
 				if (nl_hassyscall(TI_DM_AddButtonGroup) && nl_hassyscall(TI_DM_addRadioButton)) {
-					int target = container_stack[container_sp];
-					int sec = (target != root) ? target : TI_DM_newPanel(root, 0);
+					void *target = container_stack[container_sp];
+					void *sec = (target != root) ? target : TI_DM_newPanel(root, 0);
 					if (target == root) {
 						TI_DM_setPanelLayout(sec, DLG_LAYOUT_SETTINGS_ROW);
 						TI_DM_setPanelLRBorder(sec, 4, 4);
 						TI_DM_setPanelTBBorder(sec, 0, 0);
 					}
-					int grp = TI_DM_AddButtonGroup(ti_dlg, 2);
-					it->ti_sub_handles = (int *)calloc(it->option_count, sizeof(int));
+					void *grp = TI_DM_AddButtonGroup(ti_dlg, 2);
+					it->ti_sub_handles = (void **)calloc(it->option_count, sizeof(void *));
 					int sel_idx = (it->bound_val && *it->bound_val >= 0 && *it->bound_val < it->option_count) ? *it->bound_val : 0;
 					for (int i = 0; i < it->option_count; i++) {
 						uint16_t *u_opt = alloc_utf16(it->options[i]);
-						int rb = TI_DM_addRadioButton(sec, DLG_CHECKBOX_WIDGET_ID, u_opt);
+						void *rb = TI_DM_addRadioButton(sec, DLG_CHECKBOX_WIDGET_ID, u_opt);
 						free(u_opt);
 						if (it->ti_sub_handles)
 							it->ti_sub_handles[i] = rb;
@@ -641,10 +641,10 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_BUTTON: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				uint16_t *u_lbl = alloc_utf16(it->label ? it->label : "Button");
 				if (nl_hassyscall(TI_DM_addButton)) {
-					int btn = TI_DM_addButton(parent, u_lbl, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_custom_button_click);
+					void *btn = TI_DM_addButton(parent, u_lbl, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_custom_button_click);
 					if (nl_hassyscall(TI_DM_groupControlWithLabel))
 						TI_DM_groupControlWithLabel(parent, btn, 0);
 					it->ti_handle = btn;
@@ -654,8 +654,8 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_IMAGE: {
-				int target = container_stack[container_sp];
-				int pnl = (target != root) ? target : TI_DM_newPanel(root, 0);
+				void *target = container_stack[container_sp];
+				void *pnl = (target != root) ? target : TI_DM_newPanel(root, 0);
 				if (target == root) {
 					TI_DM_setPanelLayout(pnl, DLG_LAYOUT_FLOW);
 				}
@@ -668,7 +668,7 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				memset(spaces, ' ', space_count);
 				spaces[space_count] = '\0';
 				uint16_t *u_blank = alloc_utf16(spaces);
-				int lbl = TI_DM_addLabel(pnl, u_blank, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+				void *lbl = TI_DM_addLabel(pnl, u_blank, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 				free(u_blank);
 				dm_draw_image(lbl, it->img_data, w, h);
 				if (nl_hassyscall(TI_DM_groupControlWithLabel))
@@ -678,7 +678,7 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				break;
 			}
 			case ITEM_METER: {
-				int parent = get_widget_parent(dlg, container_stack[container_sp], root);
+				void *parent = get_widget_parent(dlg, container_stack[container_sp], root);
 				if (it->label && strlen(it->label) > 0) {
 					uint16_t *u_lbl = alloc_utf16(it->label);
 					TI_DM_addLabel(parent, u_lbl, 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
@@ -690,7 +690,7 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 				if (val > 100)
 					val = 100;
 				if (nl_hassyscall(TI_DM_addMeter)) {
-					int meter = TI_DM_addMeter(parent, DLG_METER_STYLE, DLG_METER_FLAGS, val);
+					void *meter = TI_DM_addMeter(parent, DLG_METER_STYLE, DLG_METER_FLAGS, val);
 					it->ti_handle = meter;
 					dlg->last_ti_handle = meter;
 				}
@@ -700,39 +700,39 @@ ndialog_result_t ndlg_show(ndialog *dlg) {
 	}
 
 	/* Action button bar */
-	int initial_focus = 0;
-	int escape_btn = 0;
+	void *initial_focus = 0;
+	void *escape_btn = 0;
 	if (dlg->button_style != NDLG_BTN_NONE) {
 		TI_DM_addSeparatorLine(root);
-		int bar = TI_DM_newPanel(root, 0);
+		void *bar = TI_DM_newPanel(root, 0);
 		TI_DM_setPanelLayout(bar, DLG_LAYOUT_BUTTON_BAR);
 
 		if (dlg->button_style == NDLG_BTN_SAVE_CANCEL) {
-			int b_save = TI_DM_addButton(bar, NULL, DLG_GLYPH_SAVE, DLG_RES_SYST, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
-			int b_canc = TI_DM_addButton(bar, NULL, DLG_GLYPH_CANCEL, DLG_RES_SYST, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
+			void *b_save = TI_DM_addButton(bar, NULL, DLG_GLYPH_SAVE, DLG_RES_SYST, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
+			void *b_canc = TI_DM_addButton(bar, NULL, DLG_GLYPH_CANCEL, DLG_RES_SYST, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
 			TI_DM_groupControlWithLabel(bar, b_save, b_canc);
 			initial_focus = b_save;
 			escape_btn = b_canc;
 		} else if (dlg->button_style == NDLG_BTN_OK_CANCEL) {
 			uint16_t *u_ok = alloc_utf16("OK");
-			int b_ok = TI_DM_addButton(bar, u_ok, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
+			void *b_ok = TI_DM_addButton(bar, u_ok, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
 			free(u_ok);
 			uint16_t *u_canc = alloc_utf16("Cancel");
-			int b_canc = TI_DM_addButton(bar, u_canc, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
+			void *b_canc = TI_DM_addButton(bar, u_canc, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
 			free(u_canc);
 			TI_DM_groupControlWithLabel(bar, b_ok, b_canc);
 			initial_focus = b_ok;
 			escape_btn = b_canc;
 		} else if (dlg->button_style == NDLG_BTN_OK) {
 			uint16_t *u_ok = alloc_utf16("OK");
-			int b_ok = TI_DM_addButton(bar, u_ok, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
+			void *b_ok = TI_DM_addButton(bar, u_ok, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_save);
 			free(u_ok);
 			TI_DM_groupControlWithLabel(bar, b_ok, 0);
 			initial_focus = b_ok;
 			escape_btn = b_ok;
 		} else if (dlg->button_style == NDLG_BTN_CLOSE) {
 			uint16_t *u_close = alloc_utf16("Close");
-			int b_close = TI_DM_addButton(bar, u_close, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
+			void *b_close = TI_DM_addButton(bar, u_close, 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_action_cancel);
 			free(u_close);
 			TI_DM_groupControlWithLabel(bar, b_close, 0);
 			initial_focus = b_close;

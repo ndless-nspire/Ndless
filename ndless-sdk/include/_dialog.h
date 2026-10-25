@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-void dm_draw_image(int widget, const char *img_data, int w, int h);
+void dm_draw_image(void *widget, const char *img_data, int w, int h);
 void dm_free_canvases(void);
 
 #define DLG_LAYOUT_BUTTON_BAR   0x128E3
