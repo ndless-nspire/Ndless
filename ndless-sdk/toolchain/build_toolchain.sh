@@ -12,13 +12,14 @@
 # IMPORTANT NOTE #2: GDB needs some python includes for python support.
 # 	If you don't have them and you don't need python support, remove the --with-python from OPTIONS_GDB below.
 # IMPORTANT NOTE #3: Downloading source archives requires curl.
+# 	Use --download-only to fetch sources before an offline build.
 
 set -eu
 
 TARGET=arm-none-eabi
 PREFIX="${PWD}/install" # or the directory where the toolchain should be installed in
 PARALLEL="${PARALLEL--j4}" # or "-j<number of build jobs>"
-PYTHON="${PYTHON-$(which python3 2>/dev/null)}" # or the full path to the python interpreter
+PYTHON="${PYTHON-$(command -v python3 || true)}" # or the full path to the python interpreter
 
 BINUTILS=binutils-2.44 # https://www.gnu.org/software/binutils/
 GCC=gcc-14.2.0 # https://gcc.gnu.org/
@@ -33,7 +34,7 @@ export PATH="${PREFIX}/bin:${PATH}"
 OPTIONS_BINUTILS="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --with-gnu-as --with-gnu-ld --disable-nls --with-float=soft --disable-werror --enable-warn-rwx-segments=no"
 OPTIONS_GCC="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages=c,c++ --with-system-zlib --with-newlib --disable-threads --disable-tls --disable-shared --with-gnu-as --with-gnu-ld --with-float=soft --disable-werror --disable-libstdcxx-verbose"
 OPTIONS_NEWLIB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ld --enable-newlib-io-long-long --disable-newlib-may-supply-syscalls --disable-newlib-supplied-syscalls --with-float=soft --disable-werror --disable-nls --enable-newlib-io-float --enable-newlib-reent-binary-compat"
-OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --disable-werror"
+OPTIONS_GDB="--target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-system-zlib --disable-werror"
 
 if [ -n "${PYTHON}" ]; then
 	OPTIONS_GDB="${OPTIONS_GDB} --with-python=${PYTHON}"
@@ -50,19 +51,6 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 mkdir -p "${PREFIX}"
 
-# Section 0: prerequisites
-echo 'int main() {return 0;}' > test.c
-error=0
-if ! gcc -lgmp       test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpfr      test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
-if ! gcc -lmpc       test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
-if ! gcc -lz         test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
-if [ -n "${PYTHON}" ] && [ ! -x "${PYTHON}-config" ]; then error=1; echo "${PYTHON}-config (python3-devel/python3-dev) dependency seems to be missing!"; fi
-rm -f test test.c
-[ $error -eq 1 ] && exit 1
-
-mkdir -p build download
-
 downloadAndExtract() {
 	target="download/$(basename "$1")"
 	for url in "$@"; do
@@ -77,14 +65,56 @@ downloadAndExtract() {
 	return 1
 }
 
+downloadSource() {
+	case "$1" in
+		"$BINUTILS")
+			downloadAndExtract \
+				https://mirrors.kernel.org/gnu/binutils/${BINUTILS}.tar.bz2 \
+				https://ftpmirror.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+			;;
+		"$GCC")
+			downloadAndExtract \
+				https://mirrors.kernel.org/gnu/gcc/${GCC}/${GCC}.tar.xz \
+				https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+			;;
+		"$NEWLIB")
+			downloadAndExtract https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+			;;
+		"$GDB")
+			downloadAndExtract \
+				https://mirrors.kernel.org/gnu/gdb/${GDB}.tar.xz \
+				https://ftpmirror.gnu.org/gnu/gdb/${GDB}.tar.xz
+			;;
+	esac
+}
+
+if [ "${1-}" = --download-only ]; then
+	mkdir -p download
+	for component in "$BINUTILS" "$GCC" "$NEWLIB" "$GDB"; do
+		[ -d "download/$component" ] || downloadSource "$component"
+	done
+	exit 0
+fi
+
+# Section 0: prerequisites
+echo 'int main() {return 0;}' > test.c
+error=0
+if ! gcc -lgmp       test.c -o test; then error=1; echo 'GMP (gmp-devel/libgmp-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpfr      test.c -o test; then error=1; echo 'MPFR (mpfr-devel/libmpfr-dev) dependency seems to be missing!'; fi
+if ! gcc -lmpc       test.c -o test; then error=1; echo 'MPC (mpc-devel/libmpc-dev) dependency seems to be missing!'; fi
+if ! gcc -lz         test.c -o test; then error=1; echo 'zlib (zlib-devel/zlib1g-dev) dependency seems to be missing!'; fi
+if [ -n "${PYTHON}" ] && [ ! -x "${PYTHON}-config" ]; then error=1; echo "${PYTHON}-config (python3-devel/python3-dev) dependency seems to be missing!"; fi
+rm -f test test.c
+[ $error -eq 1 ] && exit 1
+
+mkdir -p build download
+
 # Section 1: GNU Binutils.
 if [ "$(cat .built_binutils 2>/dev/null)" != "${BINUTILS}" ]; then
 	if [ ! -d "download/${BINUTILS}" ]; then
 		echo "Downloading Binutils..."
 		rm -rf download/binutils*
-		downloadAndExtract \
-			https://mirrors.kernel.org/gnu/binutils/${BINUTILS}.tar.bz2 \
-			https://ftpmirror.gnu.org/gnu/binutils/${BINUTILS}.tar.bz2
+		downloadSource "$BINUTILS"
 	fi
 
 	echo "Building Binutils..."
@@ -102,9 +132,7 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract \
-			https://mirrors.kernel.org/gnu/gcc/${GCC}/${GCC}.tar.xz \
-			https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadSource "$GCC"
 	fi
 
 	# gcc creates a sysroot with some includes from newlib.
@@ -113,7 +141,7 @@ if [ "$(cat .built_gcc_step1 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${NEWLIB}" ]; then
 		echo "Downloading Newlib..."
 		rm -rf download/newlib*
-		downloadAndExtract https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+		downloadSource "$NEWLIB"
 	fi
 
 	echo "Building GCC (step 1)..."
@@ -135,7 +163,7 @@ if [ "$(cat .built_newlib 2>/dev/null)" != "${NEWLIB}" ]; then
 	if [ ! -d "download/${NEWLIB}" ]; then
 		echo "Downloading Newlib..."
 		rm -rf download/newlib*
-		downloadAndExtract https://sourceware.org/pub/newlib/${NEWLIB}.tar.gz
+		downloadSource "$NEWLIB"
 	fi
 
 	echo "Building Newlib..."
@@ -153,9 +181,7 @@ if [ "$(cat .built_gcc_step2 2>/dev/null)" != "${GCC}" ]; then
 	if [ ! -d "download/${GCC}" ]; then
 		echo "Downloading GCC..."
 		rm -rf download/gcc*
-		downloadAndExtract \
-			https://mirrors.kernel.org/gnu/gcc/${GCC}/${GCC}.tar.xz \
-			https://ftpmirror.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.xz
+		downloadSource "$GCC"
 	fi
 
 	echo "Building GCC (step 2)..."
@@ -174,9 +200,7 @@ if [ "$(cat .built_gdb 2>/dev/null)" != "${GDB}" ]; then
 	if [ ! -d "download/${GDB}" ]; then
 		echo "Downloading GDB..."
 		rm -rf download/gdb*
-		downloadAndExtract \
-			https://mirrors.kernel.org/gnu/gdb/${GDB}.tar.xz \
-			https://ftpmirror.gnu.org/gnu/gdb/${GDB}.tar.xz
+		downloadSource "$GDB"
 	fi
 
 	echo "Building GDB..."
