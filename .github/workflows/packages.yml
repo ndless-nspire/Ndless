@@ -1,4 +1,4 @@
-name: Linux packages
+name: SDK packages
 
 on: [ push, pull_request, workflow_dispatch ]
 
@@ -41,7 +41,7 @@ jobs:
         run: |
           version="${REF_NAME#[vr]}"
           if [[ "$REF_TYPE" != tag || ! "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-            version="0.$(git rev-list --count HEAD)"
+            version="0.$(git rev-list --count HEAD).$GITHUB_RUN_ID.$GITHUB_RUN_ATTEMPT"
           fi
           echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
       - name: Cache toolchain
@@ -71,12 +71,54 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
+  macos:
+    name: ${{ matrix.manager }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        manager: [ homebrew, macports ]
+        arch: [ x86_64, aarch64 ]
+        include:
+          - arch: x86_64
+            runner: macos-15-intel
+          - arch: aarch64
+            runner: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Package version
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          version="${REF_NAME#[vr]}"
+          if [[ "$REF_TYPE" != tag || ! "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+            version="0.$(git rev-list --count HEAD).$GITHUB_RUN_ID.$GITHUB_RUN_ATTEMPT"
+          fi
+          echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
+      - name: Build package
+        env:
+          MANAGER: ${{ matrix.manager }}
+        run: sh ".github/packaging/$MANAGER.sh"
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: ndless-sdk-osx-${{ matrix.manager }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/packages/*
+          if-no-files-found: error
+          compression-level: 0
+
   nightly:
     if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-    needs: package
+    needs: [ package, macos ]
     runs-on: ubuntu-24.04
     concurrency:
-      group: linux-packages-nightly
+      group: sdk-packages-nightly
       cancel-in-progress: false
     permissions:
       contents: write
@@ -87,6 +129,7 @@ jobs:
           pattern: ndless-sdk-*
           path: packages
       - name: Update nightly release
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -98,29 +141,89 @@ jobs:
             exit 0
           fi
 
-          mkdir nightly
+          mkdir nightly definitions
           for package in packages/ndless-sdk-*; do
+            definitions="definitions/${package##*/}"
+            mkdir -p "$definitions"
             for file in "$package"/*; do
-              case "$file" in
-                *.rsa.pub) cp "$file" nightly/ ;;
-                *) cp "$file" "nightly/${package##*/}.${file##*.}" ;;
+              case "${file##*/}" in
+                ndless-sdk.rb|Portfile) cp "$file" "$definitions/" ;;
+                *) cp "$file" nightly/ ;;
               esac
             done
+            if [[ -f "$definitions/ndless-sdk.rb" || -f "$definitions/Portfile" ]]; then
+              tar -czf "nightly/${package##*/}-definitions-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT.tar.gz" \
+                -C "$definitions" .
+            fi
           done
 
-          notes="Unstable SDK packages built from $GH_REPO@$GITHUB_SHA."
-          if gh release view nightly >/dev/null 2>&1; then
+          release_id="$(gh api --paginate "repos/$GH_REPO/releases?per_page=100" \
+            --jq '.[] | select(.tag_name == "nightly") | .id')"
+          if [[ -n "$release_id" ]]; then
+            pages="$(gh api --paginate --slurp \
+              "repos/$GH_REPO/releases/$release_id/assets?per_page=100")"
+            assets="$(jq 'add' <<< "$pages")"
+          else
+            gh release create nightly --draft --target "$GITHUB_SHA" --prerelease \
+              --latest=false --title Nightly
+            assets='[]'
+          fi
+
+          # Keep published files until uploads finish.
+          for file in nightly/*; do
+            name="${file##*/}"
+            asset_id="$(jq -r --arg name "$name" \
+              '.[] | select(.name == $name) | .id' <<< "$assets")"
+            if [[ -n "$asset_id" ]]; then
+              checksum="$(sha256sum "$file")"
+              digest="$(jq -r --arg name "$name" \
+                '.[] | select(.name == $name) | .digest' <<< "$assets")"
+              if [[ "$digest" == "sha256:${checksum%% *}" ]]; then
+                continue
+              fi
+              state="$(jq -r --arg name "$name" \
+                '.[] | select(.name == $name) | .state' <<< "$assets")"
+              if [[ "$state" == starter ]]; then
+                gh api --method DELETE "repos/$GH_REPO/releases/assets/$asset_id"
+              else
+                echo "Asset already exists with different contents: $name" >&2
+                exit 1
+              fi
+            fi
+            gh release upload nightly "$file"
+          done
+
+          {
+            echo "Unstable SDK packages built from $GH_REPO@$GITHUB_SHA."
+            echo
+            echo "This prerelease is updated automatically after successful default-branch builds."
+            echo
+            for file in nightly/*; do
+              name="${file##*/}"
+              printf -- '- [%s](https://github.com/%s/releases/download/nightly/%s)\n' \
+                "$name" "$GH_REPO" "$name"
+            done
+          } > "$RUNNER_TEMP/nightly-notes.md"
+
+          tag="$(gh api "repos/$GH_REPO/git/matching-refs/tags/nightly" \
+            --jq '.[] | select(.ref == "refs/tags/nightly") | .object.sha')"
+          if [[ -n "$tag" ]]; then
             gh api --method PATCH "repos/$GH_REPO/git/refs/tags/nightly" \
               -f "sha=$GITHUB_SHA" -F force=true
-            gh release edit nightly --prerelease --latest=false --title Nightly --notes "$notes"
           else
-            gh release create nightly --target "$GITHUB_SHA" --prerelease --latest=false \
-              --title Nightly --notes "$notes"
+            gh api --method POST "repos/$GH_REPO/git/refs" \
+              -f ref=refs/tags/nightly -f "sha=$GITHUB_SHA"
           fi
-          gh release upload nightly --clobber nightly/*
-          gh release view nightly --json assets --jq '.assets[].name' |
-            while IFS= read -r asset; do
-              if [[ "$asset" == ndless-sdk-*@ndless.invalid-*.rsa.pub && ! -f "nightly/$asset" ]]; then
-                gh release delete-asset nightly "$asset" --yes
-              fi
-            done
+          gh release edit nightly --draft=false --prerelease --latest=false --title Nightly \
+            --notes-file "$RUNNER_TEMP/nightly-notes.md"
+
+          old_names="$(jq -r '.[].name' <<< "$assets")"
+          while IFS= read -r asset; do
+            case "$asset" in
+              ndless-sdk*.deb|ndless-sdk-*.rpm|ndless-sdk-*.apk|ndless-sdk-*@ndless.invalid-*.rsa.pub|ndless-sdk--*.bottle.*|ndless-sdk-*.darwin_*.tbz2|ndless-sdk-osx-*-definitions-*.tar.gz|ndless-sdk.rb|Portfile)
+                if [[ ! -f "nightly/$asset" ]]; then
+                  gh release delete-asset nightly "$asset" --yes
+                fi
+                ;;
+            esac
+          done <<< "$old_names"
