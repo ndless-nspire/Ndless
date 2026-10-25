@@ -70,7 +70,7 @@ void ndlg_set_meter_value(ndialog_t *dlg, int *bound_val, int new_val);
 int ndlg_begin_group(ndialog_t *dlg, int layout_id);
 int ndlg_end_group(ndialog_t *dlg);
 void ndlg_set_padding(ndialog_t *dlg, int top_bottom, int left_right);
-int ndlg_get_last_widget(ndialog_t *dlg);
+void *ndlg_get_last_widget(ndialog_t *dlg);
 
 #ifdef __cplusplus
 }

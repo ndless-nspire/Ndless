@@ -354,7 +354,7 @@ static int status_canvas_paint_hook(void *widget, void *event) {
 	return result;
 }
 
-static void status_dm_draw_image(int widget) {
+static void status_dm_draw_image(void *widget) {
 	uint32_t *raw = (uint32_t *)widget;
 	uint32_t *orig_vt = (uint32_t *)raw[0];
 
@@ -392,7 +392,7 @@ static unsigned status_orig_lr = 0;
 // this fires in the middle of the button panel builder, between about & ok
 HOOK_DEFINE(handheld_status_btn_hook) {
 	// OS-specific: reg number
-	int btn_panel = (int)HOOK_SAVED_REGS(handheld_status_btn_hook)[5];
+	void *btn_panel = (void *)HOOK_SAVED_REGS(handheld_status_btn_hook)[5];
 	if (btn_panel)
 		TI_DM_addButton(btn_panel, u"Ndless Credits", 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_credits_button_click);
 
@@ -401,7 +401,7 @@ HOOK_DEFINE(handheld_status_btn_hook) {
 
 static unsigned __attribute__((used)) handheld_status_post_hook_body(void) {
 	if (status_ctx[4]) { // bottom button panel
-		int btn_panel = (int)status_ctx[4];
+		void *btn_panel = (void *)status_ctx[4];
 		// handheld status builds the panel with the two btn layout 0x128ED, so we switch to 0x128E3 to allow 3 instead
 		TI_DM_setPanelLayout(btn_panel, DLG_LAYOUT_BUTTON_BAR);
 	}
@@ -425,14 +425,14 @@ HOOK_DEFINE(handheld_status_hook) {
 	unsigned *regs = HOOK_SAVED_REGS(handheld_status_hook);
 	uint32_t *ctx = (uint32_t *)regs[0];
 	if (ctx && ctx[1]) {
-		int root = (int)ctx[1];
+		void *root = (void *)ctx[1];
 		TI_DM_addSeparatorLine(root);
-		int row = TI_DM_newPanel(root, 0);
+		void *row = TI_DM_newPanel(root, 0);
 		if (row) {
 			TI_DM_setPanelLayout(row, DLG_LAYOUT_SETTINGS_ROW);
 			TI_DM_setPanelLRBorder(row, 6, 6);
 			TI_DM_setPanelTBBorder(row, 3, 2);
-			int lbl = TI_DM_addLabel(row, u"\t  Ndless r" STRINGIFY(NDLESS_REVISION), 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+			void *lbl = TI_DM_addLabel(row, u"\t  Ndless r" STRINGIFY(NDLESS_REVISION), 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
 			if (lbl) {
 				status_dm_draw_image(lbl);
 				TI_DM_groupControlWithLabel(row, lbl, 0);

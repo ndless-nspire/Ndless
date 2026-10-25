@@ -57,7 +57,7 @@ static int canvas_paint_hook(void *widget, void *event) {
 	return result;
 }
 
-void dm_draw_image(int widget, const char *img_data, int w, int h) {
+void dm_draw_image(void *widget, const char *img_data, int w, int h) {
 	if (!img_data)
 		return;
 

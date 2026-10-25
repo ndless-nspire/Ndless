@@ -1565,23 +1565,23 @@ int TI_MS_MathExprToStr(void *p1, void *p2, uint16_t **p3)
 {
 	return syscall<e_TI_MS_MathExprToStr, int>(p1,p2,p3);
 }
-int TI_DM_newDialog2(int p1, uint16_t* p2, int* p3)
+void* TI_DM_newDialog2(int p1, uint16_t* p2, int* p3)
 {
-	return syscall<e_TI_DM_newDialog2, int>(p1,p2,p3);
+	return syscall<e_TI_DM_newDialog2, void*>(p1,p2,p3);
 }
-int TI_CA_getContentPane(int p1)
+void* TI_CA_getContentPane(void* p1)
 {
-	return syscall<e_TI_CA_getContentPane, int>(p1);
+	return syscall<e_TI_CA_getContentPane, void*>(p1);
 }
-int TI_DM_newPanel(int p1, int p2)
+void* TI_DM_newPanel(void* p1, int p2)
 {
-	return syscall<e_TI_DM_newPanel, int>(p1,p2);
+	return syscall<e_TI_DM_newPanel, void*>(p1,p2);
 }
-void TI_DM_setPanelLayout(int p1, int p2)
+void TI_DM_setPanelLayout(void* p1, int p2)
 {
 	return syscall<e_TI_DM_setPanelLayout, void>(p1,p2);
 }
-__attribute__((naked)) int TI_DM_addLabel(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7)
+__attribute__((naked)) void* TI_DM_addLabel(void* p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1603,7 +1603,7 @@ __attribute__((naked)) int TI_DM_addLabel(int p1, uint16_t* p2, int p3, int p4, 
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addLabel));
 }
-__attribute__((naked)) int TI_DM_addTextEntry(int p1, int p2, int p3, int p4, int p5, int p6)
+__attribute__((naked)) void* TI_DM_addTextEntry(void* p1, int p2, int p3, int p4, int p5, int p6)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1625,7 +1625,7 @@ __attribute__((naked)) int TI_DM_addTextEntry(int p1, int p2, int p3, int p4, in
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addTextEntry));
 }
-__attribute__((naked)) int TI_DM_addIntegerSpinBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
+__attribute__((naked)) void* TI_DM_addIntegerSpinBox(void* p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1647,15 +1647,15 @@ __attribute__((naked)) int TI_DM_addIntegerSpinBox(int p1, int p2, int p3, int p
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addIntegerSpinBox));
 }
-int TI_DM_addRadioButton(int p1, int p2, uint16_t* p3)
+void* TI_DM_addRadioButton(void* p1, int p2, uint16_t* p3)
 {
-	return syscall<e_TI_DM_addRadioButton, int>(p1,p2,p3);
+	return syscall<e_TI_DM_addRadioButton, void*>(p1,p2,p3);
 }
-int TI_DM_addMeter(int p1, int p2, int p3, int p4)
+void* TI_DM_addMeter(void* p1, int p2, int p3, int p4)
 {
-	return syscall<e_TI_DM_addMeter, int>(p1,p2,p3,p4);
+	return syscall<e_TI_DM_addMeter, void*>(p1,p2,p3,p4);
 }
-__attribute__((naked)) int TI_DM_addButton(int p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
+__attribute__((naked)) void* TI_DM_addButton(void* p1, uint16_t* p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1677,11 +1677,11 @@ __attribute__((naked)) int TI_DM_addButton(int p1, uint16_t* p2, int p3, int p4,
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addButton));
 }
-int TI_DM_addCheckBox(int p1, int p2, uint16_t* p3)
+void* TI_DM_addCheckBox(void* p1, int p2, uint16_t* p3)
 {
-	return syscall<e_TI_DM_addCheckBox, int>(p1,p2,p3);
+	return syscall<e_TI_DM_addCheckBox, void*>(p1,p2,p3);
 }
-__attribute__((naked)) int TI_DM_addComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+__attribute__((naked)) void* TI_DM_addComboBox(void* p1, int p2, int p3, int p4, int p5, int p6, int p7)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1703,63 +1703,63 @@ __attribute__((naked)) int TI_DM_addComboBox(int p1, int p2, int p3, int p4, int
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addComboBox));
 }
-void TI_DM_groupControlWithLabel(int p1, int p2, int p3)
+void TI_DM_groupControlWithLabel(void* p1, void* p2, void* p3)
 {
 	return syscall<e_TI_DM_groupControlWithLabel, void>(p1,p2,p3);
 }
-int TI_DM_AddButtonGroup(int p1, int p2)
+void* TI_DM_AddButtonGroup(void* p1, int p2)
 {
-	return syscall<e_TI_DM_AddButtonGroup, int>(p1,p2);
+	return syscall<e_TI_DM_AddButtonGroup, void*>(p1,p2);
 }
-void TI_DM_ButtonGroupAdd(int p1, int p2, int p3)
+void TI_DM_ButtonGroupAdd(void* p1, void* p2, int p3)
 {
 	return syscall<e_TI_DM_ButtonGroupAdd, void>(p1,p2,p3);
 }
-void TI_DM_setVisible(int p1, int p2)
+void TI_DM_setVisible(void* p1, int p2)
 {
 	return syscall<e_TI_DM_setVisible, void>(p1,p2);
 }
-void TI_DM_setEscapeButton(int p1, int p2)
+void TI_DM_setEscapeButton(void* p1, void* p2)
 {
 	return syscall<e_TI_DM_setEscapeButton, void>(p1,p2);
 }
-void TI_DM_setInitialFocusComponent(int p1, int p2)
+void TI_DM_setInitialFocusComponent(void* p1, void* p2)
 {
 	return syscall<e_TI_DM_setInitialFocusComponent, void>(p1,p2);
 }
-uint16_t* _TextEntry_getTextExpression(int p1, int* p2)
+uint16_t* _TextEntry_getTextExpression(void* p1, int* p2)
 {
 	return syscall<e__TextEntry_getTextExpression, uint16_t*>(p1,p2);
 }
-void Meter_setValue(int p1, int p2)
+void Meter_setValue(void* p1, int p2)
 {
 	return syscall<e_Meter_setValue, void>(p1,p2);
 }
-int _ComboBox_getSelectionIndex(int p1)
+int _ComboBox_getSelectionIndex(void* p1)
 {
 	return syscall<e__ComboBox_getSelectionIndex, int>(p1);
 }
-int _ToggleButton_getToggleButtonState(int p1)
+int _ToggleButton_getToggleButtonState(void* p1)
 {
 	return syscall<e__ToggleButton_getToggleButtonState, int>(p1);
 }
-int TI_DM_getIntegerSpinBoxResult(int p1)
+int TI_DM_getIntegerSpinBoxResult(void* p1)
 {
 	return syscall<e_TI_DM_getIntegerSpinBoxResult, int>(p1);
 }
-void _ToggleButton_setToggleButtonState(int p1, int p2)
+void _ToggleButton_setToggleButtonState(void* p1, int p2)
 {
 	return syscall<e__ToggleButton_setToggleButtonState, void>(p1,p2);
 }
-void TI_DM_setPanelLRBorder(int p1, int p2, int p3)
+void TI_DM_setPanelLRBorder(void* p1, int p2, int p3)
 {
 	return syscall<e_TI_DM_setPanelLRBorder, void>(p1,p2,p3);
 }
-void TI_DM_setPanelTBBorder(int p1, int p2, int p3)
+void TI_DM_setPanelTBBorder(void* p1, int p2, int p3)
 {
 	return syscall<e_TI_DM_setPanelTBBorder, void>(p1,p2,p3);
 }
-__attribute__((naked)) int TI_DM_addIconComboBox(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+__attribute__((naked)) void* TI_DM_addIconComboBox(void* p1, int p2, int p3, int p4, int p5, int p6, int p7)
 {
 	asm volatile("push {r4-r6}\n"
 				"ldr r4, =savedlr_stack\n"
@@ -1781,15 +1781,15 @@ __attribute__((naked)) int TI_DM_addIconComboBox(int p1, int p2, int p3, int p4,
 				"bx lr\n"
 				".ltorg" :: [nr] "i" (e_TI_DM_addIconComboBox));
 }
-void TextEntry_setTextExpression(int p1, const char* p2, int p3)
+void TextEntry_setTextExpression(void* p1, const char* p2, int p3)
 {
 	return syscall<e_TextEntry_setTextExpression, void>(p1,p2,p3);
 }
-int TI_DM_addSeparatorLine(int p1)
+void* TI_DM_addSeparatorLine(void* p1)
 {
-	return syscall<e_TI_DM_addSeparatorLine, int>(p1);
+	return syscall<e_TI_DM_addSeparatorLine, void*>(p1);
 }
-void ComboBox_setSelectedItem(int p1, int p2)
+void ComboBox_setSelectedItem(void* p1, int p2)
 {
 	return syscall<e_ComboBox_setSelectedItem, void>(p1,p2);
 }
@@ -1797,15 +1797,15 @@ uint16_t* TI_RM_GetString(int p1, int p2)
 {
 	return syscall<e_TI_RM_GetString, uint16_t*>(p1,p2);
 }
-void UiComponent_setPreferredSize(int p1, int p2, int p3)
+void UiComponent_setPreferredSize(void* p1, int p2, int p3)
 {
 	return syscall<e_UiComponent_setPreferredSize, void>(p1,p2,p3);
 }
-void UiComponent_setMinSize(int p1, int p2, int p3)
+void UiComponent_setMinSize(void* p1, int p2, int p3)
 {
 	return syscall<e_UiComponent_setMinSize, void>(p1,p2,p3);
 }
-void TI_DM_deleteDialog(int p1)
+void TI_DM_deleteDialog(void* p1)
 {
 	return syscall<e_TI_DM_deleteDialog, void>(p1);
 }
