@@ -47,7 +47,7 @@ local config = {
 
     morphs = {
         {text = "NDLESS", x = 24},
-        {text = "r2022", x = 53},
+        {text = "r2023", x = 53},
     },
 
     sources = {
