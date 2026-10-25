@@ -2,12 +2,8 @@
     r installer.lua
     d
 }
-/ZZZ_GUI_LUA_ZZZ/{
-    r gui.lua
-    d
-}
-/ZZZ_IPC_LUA_ZZZ/{
-    r ipc.lua
+/ZZZ_ANIMATION_LUA_ZZZ/{
+    r animation.lua
     d
 }
 /ZZZ_INSTALLER_PAYLOAD_ZZZ/{
