@@ -34,7 +34,7 @@ For more in-depth info, visit the wiki:
 Quick guide
 ===========
 
-OS 6.2.0.333 + 6.4.0.74 <img src="https://i.imgur.com/cx02dje.gif" align="right">
+OS 6.2.0.333 + 6.4.0.74 <img src="https://i.imgur.com/TxjLO71.gif" align="right">
 --------
 
 Prerequisites: OS 6.2.0.333 or 6.4.0.74 on CX II, CX II-T or CX II CAS. 
@@ -60,7 +60,7 @@ A persistent installation means Ndless will automatically load when you turn on 
   * If you get stuck in a reboot loop, hold `[ESC]`. If that fails, format your filesystem via the maintenance menu.
   * By running the `ndless_resources.tns` file after installing, you can uninstall the loader as well.
 
-OS 4.5.5.79 <img src="https://i.imgur.com/cx02dje.gif" align="right">
+OS 4.5.5.79 <img src="https://i.imgur.com/S09QO3e.gif" align="right">
 --------
 
 Prerequisites: OS 4.5.5.79 on CX or CX CAS
