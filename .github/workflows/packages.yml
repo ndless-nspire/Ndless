@@ -71,10 +71,13 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
-  release:
-    if: github.event_name == 'push' && github.ref_type == 'tag'
+  nightly:
+    if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     needs: package
     runs-on: ubuntu-24.04
+    concurrency:
+      group: linux-packages-nightly
+      cancel-in-progress: false
     permissions:
       contents: write
     steps:
@@ -83,14 +86,41 @@ jobs:
         with:
           pattern: ndless-sdk-*
           path: packages
-          merge-multiple: true
-      - name: Publish release assets
+      - name: Update nightly release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          TAG: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          if ! gh release view -- "$TAG" >/dev/null 2>&1; then
-            gh release create --verify-tag --title "$TAG" --generate-notes -- "$TAG"
+          latest="$(gh api "repos/$GH_REPO/commits/$DEFAULT_BRANCH" --jq .sha)"
+          if [[ "$latest" != "$GITHUB_SHA" ]]; then
+            echo "Skipping nightly for superseded commit $GITHUB_SHA"
+            exit 0
           fi
-          gh release upload --clobber -- "$TAG" packages/*
+
+          mkdir nightly
+          for package in packages/ndless-sdk-*; do
+            for file in "$package"/*; do
+              case "$file" in
+                *.rsa.pub) cp "$file" nightly/ ;;
+                *) cp "$file" "nightly/${package##*/}.${file##*.}" ;;
+              esac
+            done
+          done
+
+          notes="Unstable SDK packages built from $GH_REPO@$GITHUB_SHA."
+          if gh release view nightly >/dev/null 2>&1; then
+            gh api --method PATCH "repos/$GH_REPO/git/refs/tags/nightly" \
+              -f "sha=$GITHUB_SHA" -F force=true
+            gh release edit nightly --prerelease --latest=false --title Nightly --notes "$notes"
+          else
+            gh release create nightly --target "$GITHUB_SHA" --prerelease --latest=false \
+              --title Nightly --notes "$notes"
+          fi
+          gh release upload nightly --clobber nightly/*
+          gh release view nightly --json assets --jq '.assets[].name' |
+            while IFS= read -r asset; do
+              if [[ "$asset" == ndless-sdk-*@ndless.invalid-*.rsa.pub && ! -f "nightly/$asset" ]]; then
+                gh release delete-asset nightly "$asset" --yes
+              fi
+            done

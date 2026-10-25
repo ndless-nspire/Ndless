@@ -1,0 +1,25 @@
+Include libintl's setlocale declaration before defining GCC's fallback macro.
+
+--- a/libcpp/system.h
++++ b/libcpp/system.h
+@@ -271,16 +271,16 @@
+ # include <langinfo.h>
+ #endif
+ 
+-#ifndef HAVE_SETLOCALE
+-# define setlocale(category, locale) (locale)
+-#endif
+-
+ #ifdef ENABLE_NLS
+ #include <libintl.h>
+ #else
+ /* Stubs.  */
+ # undef dgettext
+ # define dgettext(package, msgid) (msgid)
++#endif
++
++#ifndef HAVE_SETLOCALE
++# define setlocale(category, locale) (locale)
+ #endif
+ 
+ #ifndef _
