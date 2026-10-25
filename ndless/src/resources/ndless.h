@@ -56,6 +56,7 @@ extern unsigned emu_sysc_table[];
 BOOL ins_loaded_by_3rd_party_loader(void);
 void ins_uninstall(void);
 void ins_install_successmsg_hook(void);
+void ins_install_status_dialog_hook(void);
 
 /* ints.c */
 extern unsigned ints_scextnum;

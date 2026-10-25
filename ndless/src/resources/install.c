@@ -25,9 +25,11 @@
 
 #include <os.h>
 #include <ngc.h>
+#include <_dialog.h>
 
 #include "lcd_compat.h"
 #include "ndless.h"
+#include "icon.h"
 
 // OS-specific
 // Call to the dialog box display telling that the format isn't recognized.
@@ -198,6 +200,7 @@ int main(int __attribute__((unused)) argc, char* argv[]) {
 			HOOK_INSTALL(ploader_hook_addrs[ut_os_version_index], plh_hook_44);
 
 		lua_install_hooks();
+		ins_install_status_dialog_hook();
 	}
 
 	if (argv[0] && argv[0][0] == 'L') { // third-party launcher
@@ -297,7 +300,7 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 		Gc gc = (Gc)HOOK_SAVED_REGS(ins_successsuccessmsg_hook)[0];
 		gui_gc_setColor(gc, has_colors ? 0x32cd32 : 0x505050);
 		gui_gc_setFont(gc, Bold9);
-		
+
 		int str_width = gui_gc_getStringWidth(gc, Bold9, (char*)msg, 0, 0xFFFFFFFF);
 		gui_gc_drawString(gc, (char*)msg, (320 - str_width) / 2, 212, GC_SM_TOP);
 
@@ -309,4 +312,147 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 	}
 
 	HOOK_RESTORE_RETURN(ins_successsuccessmsg_hook);
+}
+
+// OS-specific
+// TI_UI_Dialog_HandheldStatus4 entry
+// This requires multiple system calls to be available (e.g. TI_DM_setPanelLayout) that may not be available on all OS versions.
+static unsigned const status_dialog_hook_addrs[NDLESS_MAX_OSID+1] =
+			       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+				0x0, 0x0, 0x0, 0x0,
+				0x0, 0x0, 0x0, 0x0,
+				0x0, 0x0, 0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0, 0x0,
+				0x0, 0x0,
+				0x0, 0x0, 0x0,
+				0x0, 0x0,
+				0x109D8C4C, 0x10A37134, 0x10A4091C,
+				0x109D9188, 0x10A376AC, 0x10A40F04};
+
+// We can't use draw_image from libndls here because it calls
+// UiComponent_setMinSize which clamps the widget to the icon's pixel dimensions and hides the lbl text
+static uint32_t status_vtable[32];
+static int (*status_orig_handler)(void *, void *);
+
+static int status_canvas_paint_hook(void *widget, void *event) {
+	unsigned char event_id = *(unsigned char *)event;
+	int result = status_orig_handler(widget, event);
+	if (event_id == 0x49) {
+		void *gc = *(void **)((uint32_t)event + 0xC);
+		if (gc)
+			gui_gc_drawImage(gc, (char *)ndless_icon_data, 0, 0);
+	}
+
+	return result;
+}
+
+static void status_dm_draw_image(int widget) {
+	uint32_t *raw = (uint32_t *)widget;
+	uint32_t *orig_vt = (uint32_t *)raw[0];
+
+	memcpy(status_vtable, orig_vt, 32 * sizeof(uint32_t));
+
+	status_orig_handler = (int(*)(void*,void*))orig_vt[1];
+	status_vtable[1] = (uint32_t)&status_canvas_paint_hook;
+
+	raw[0] = (uint32_t)status_vtable;
+}
+
+static int on_credits_button_click(int w __attribute__((unused)), int e __attribute__((unused)), int val) {
+	if (val == DLG_BUTTON_PRESS_VAL) {
+		show_msgbox("Ndless Credits",
+			"Lead Maintainer:\n"
+			"  Fabian Vogt (Vogtinator)\n\n"
+			"Creators:\n"
+			"  Geoffrey Anneheim (geogeo)\n"
+			"  Olivier Armand (ExtendeD)\n\n"
+			"Contributors & Testers:\n"
+			"  Adriweb, bsl, cherpixel, critor, delta,\n"
+			"  Excale, Goplat, hoffa, Jim Bauwens,\n"
+			"  Legimet, Levak, Lionel Debroux, lkj,\n"
+			"  sasdallas, satyamedh, tangrs,\n"
+			"  timmycraft, vailithree...\n\n"
+			"ndless.me - github.com/ndless-nspire");
+	}
+
+	return 0;
+}
+
+static uint32_t *status_ctx = NULL;
+static unsigned status_orig_lr = 0;
+
+// this fires in the middle of the button panel builder, between about & ok
+HOOK_DEFINE(handheld_status_btn_hook) {
+	// OS-specific: reg number
+	int btn_panel = (int)HOOK_SAVED_REGS(handheld_status_btn_hook)[5];
+	if (btn_panel)
+		TI_DM_addButton(btn_panel, u"Ndless Credits", 0, 0, 0, DLG_BUTTON_FLAGS, DLG_BUTTON_FLAGS2, 0, (int)on_credits_button_click);
+
+	HOOK_RESTORE_RETURN(handheld_status_btn_hook);
+}
+
+static unsigned __attribute__((used)) handheld_status_post_hook_body(void) {
+	if (status_ctx[4]) { // bottom button panel
+		int btn_panel = (int)status_ctx[4];
+		// handheld status builds the panel with the two btn layout 0x128ED, so we switch to 0x128E3 to allow 3 instead
+		TI_DM_setPanelLayout(btn_panel, DLG_LAYOUT_BUTTON_BAR);
+	}
+
+	return status_orig_lr;
+}
+
+// called on return from TI_UI handheld status function
+// just a simple utility to update the button panel's layout to button bar for 3 buttons
+static void __attribute__((naked)) handheld_status_post_hook(void) {
+	__asm volatile(
+		"push {r0-r3, lr}\n"
+		"bl handheld_status_post_hook_body\n"
+		"mov ip, r0\n"
+		"pop {r0-r3, lr}\n"
+		"bx ip\n"
+	);
+}
+
+HOOK_DEFINE(handheld_status_hook) {
+	unsigned *regs = HOOK_SAVED_REGS(handheld_status_hook);
+	uint32_t *ctx = (uint32_t *)regs[0];
+	if (ctx && ctx[1]) {
+		int root = (int)ctx[1];
+		TI_DM_addSeparatorLine(root);
+		int row = TI_DM_newPanel(root, 0);
+		if (row) {
+			TI_DM_setPanelLayout(row, DLG_LAYOUT_SETTINGS_ROW);
+			TI_DM_setPanelLRBorder(row, 6, 6);
+			TI_DM_setPanelTBBorder(row, 3, 2);
+			int lbl = TI_DM_addLabel(row, u"\t  Ndless r" STRINGIFY(NDLESS_REVISION), 0, 0, 0, DLG_LABEL_STYLE, DLG_LABEL_WRAP);
+			if (lbl) {
+				status_dm_draw_image(lbl);
+				TI_DM_groupControlWithLabel(row, lbl, 0);
+			}
+		}
+
+		status_ctx = ctx;
+		status_orig_lr = regs[13];
+		regs[13] = (unsigned)handheld_status_post_hook;
+	}
+
+	HOOK_RESTORE_RETURN(handheld_status_hook);
+}
+
+void ins_install_status_dialog_hook(void) {
+	if (status_dialog_hook_addrs[ut_os_version_index] == 0)
+		return;
+
+	HOOK_INSTALL(status_dialog_hook_addrs[ut_os_version_index], handheld_status_hook);
+
+	// +0x44 is after the about button is created & stored, before the ok button
+	HOOK_INSTALL(status_dialog_hook_addrs[ut_os_version_index] + 0x44, handheld_status_btn_hook);
 }
