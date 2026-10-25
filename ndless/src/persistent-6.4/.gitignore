@@ -2,3 +2,4 @@
 *.bin
 *.elf
 Problem1.xml
+installer_payload.lua
