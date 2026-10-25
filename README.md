@@ -9,6 +9,10 @@ The official website is available on:
 
 ->    http://ndless.me
 
+The official Discord server is available on:
+
+->    https://discord.gg/k3yjBdrx8P
+
 The source code can be found on:
 
 ->    https://github.com/ndless-nspire/Ndless 
