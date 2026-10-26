@@ -449,6 +449,7 @@ function on.timer()
     elseif exploitConfig then
         timer.stop()
 
+        payloadExecuted = true
         installerStatus = exec(installer, exploitConfig)
 
         if installerStatus == 0 or installerStatus > STATUS_CODE.UNKNOWN_ERROR then
