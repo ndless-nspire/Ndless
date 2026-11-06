@@ -293,6 +293,9 @@ HOOK_DEFINE(ins_successsuccessmsg_hook) {
 		// To not close more than necessary and prevent recursion
 		closed = true;
 		((void(*)())close_document_addrs[ut_os_version_index])();
+
+		// the startup save dialog has been handled by the close above, so we can uninstall it now
+		persistency_uninstall_save_hook();
 	}
 
 	// OS-specific: reg number
