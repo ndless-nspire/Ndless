@@ -92,6 +92,8 @@ static unsigned const clear_state_addrs[NDLESS_MAX_OSID+1] =
 // stack-allocating this causes the calculator to complain on real hw but not emulator!
 static char buf[1024];
 
+static BOOL is_persistent = FALSE;
+
 
 // helper
 int copy_file(const char *src, const char *dst) {
@@ -192,6 +194,16 @@ void persistency_install() {
     }
 
     unlink("/documents/!!!MyDocuments/!!!UnsavedDocument.tns");
+    is_persistent = TRUE;
+}
+
+void persistency_uninstall_save_hook() {
+    if (is_persistent) {
+        unsigned save_addr = save_dialog_hook_addrs[ut_os_version_index];
+        if (save_addr) {
+            HOOK_UNINSTALL(save_addr, save_dialog_hook);
+        }
+    }
 }
 
 void persistency_uninstall() {
