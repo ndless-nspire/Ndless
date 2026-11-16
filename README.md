@@ -1,35 +1,36 @@
 Ndless r2023 for TI-Nspire OS <= v6.4.0.74
 ===========================================
 
-Installing Ndless on your calculator makes it possible to run assembly programs.
+Ndless lets TI-Nspire calculators run third-party C, C++ and assembly programs.
+This repository contains the executable loader, OS-specific installers, and
+the SDK used to build calculator applications.
 
-Ndless combines an executable loader and utilities to open the TI-Nspire to third-party C and assembly development.
+To install Ndless, find the instructions for your calculator model and exact OS
+version in the quick guide below. The supported combinations are listed
+individually; the version range in the title does not mean every intermediate
+OS release is supported.
 
-The official website is available on:
+To develop an application or work on Ndless itself, start with the
+[repository overview and build guide](docs/overview.md).
 
-->    http://ndless.me
+| Path | Contents |
+| --- | --- |
+| [`ndless/src/resources/`](ndless/src/resources/) | Loader, installation support, OS hooks, and runtime resources |
+| [`ndless/src/`](ndless/src/) | Installers for each supported OS family and persistent installation |
+| [`ndless-sdk/`](ndless-sdk/) | Libraries, headers, compiler wrappers, tools, and sample applications |
+| [`ndless-sdk/toolchain/`](ndless-sdk/toolchain/) | Script and patches for building the ARM compiler toolchain |
+| [`.github/workflows/`](.github/workflows/) | Build, distribution, and SDK package automation |
+| [`Formula/`](Formula/) and [`ports/`](ports/) | Homebrew and MacPorts package definitions |
 
-The official Discord server is available on:
+Project resources:
 
-->    https://discord.gg/k3yjBdrx8P
+- [Website](http://ndless.me) and [Discord](https://discord.gg/k3yjBdrx8P)
+- [Upstream source and issues](https://github.com/ndless-nspire/Ndless)
+- [User and installation guide](https://tiplanet.org/ndless)
+- [Developer guide](https://ndlessly.wordpress.com/ndless-for-developers/)
+- [Hackspire wiki](https://hackspire.org)
 
-The source code can be found on:
-
-->    https://github.com/ndless-nspire/Ndless 
-
-A user guide is available online, make sure to read for more installation instructions:
-
-->    https://tiplanet.org/ndless
-
-A guide for Developers can be found here:
-
-->    https://ndlessly.wordpress.com/ndless-for-developers/
-
-Pull requests and and issues are welcome!
-
-For more in-depth info, visit the wiki:
-
-->    https://hackspire.org
+Pull requests and issues are welcome.
 
 Quick guide
 ===========
